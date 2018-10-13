@@ -3,34 +3,28 @@ from time import sleep
 
 class Motion(object):
     def __init__(self, left_motor, right_motor):
-        self.left_motor = left_motor
+        self.left_motor = left_motor,
         self.right_motor = right_motor
 
-    def stop(self):
-        self.left_motor.stop()
-        self.right_motor.stop()
-        sleep(0.2)
+    def _direction_map(self):
+        """Maps directions to motor instances, left first than right.
+        """
+        return {
+            "stop": ["stop", "stop"],
+            "forward": ["forward", "forward"],
+            "backward": ["backward", "backward"],
+            "right": ["backward", "forward"],
+            "right": ["forward", "backward"]
+        }
 
-    def forward(self, speed=1, duration=1):
-        self.stop()
-        self.left_motor.forward(speed=speed)
-        self.right_motor.forward(speed=speed)
-        sleep(duration)
+    def move(self, direction, speed=1, duration=None):
+        try:
+            left, right = self._direction_map()[direction]
+        except KeyError:
+            raise AttributeError("Mapping not found for direction '{}'".format(attr))
+        finally:
+            getattr(self.left_motor, left)(speed)
+            getattr(self.right_motor, right)(speed)
 
-    def backward(self, speed=1, duration=1):
-        self.stop()
-        self.left_motor.backward(speed=speed)
-        self.right_motor.backward(speed=speed)
-        sleep(duration)
-
-    def right(self, speed=1, duration=1):
-        self.stop()
-        self.left_motor.backward(speed=speed)
-        self.right_motor.forward(speed=speed)
-        sleep(duration)
-
-    def left(self, speed=1, duration=1):
-        self.stop()
-        self.left_motor.forward(speed=speed)
-        self.right_motor.backward(speed=speed)
-        sleep(duration)
+        if duration is not None:
+            sleep(duration)
