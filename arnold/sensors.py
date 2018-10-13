@@ -7,3 +7,7 @@ class Microphone(object):
 
 class Camera(object):
     pass
+
+
+class Distance(object):
+    pass
