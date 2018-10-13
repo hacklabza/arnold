@@ -8,15 +8,14 @@ class Arnold(object):
         super().__init__(*args, **kwargs)
         self.gpio_map = gpio_map
 
-    def motion(self, direction, speed=1, duration=1):
+    def motion(self, direction, speed=1, duration=None):
         left_motor_pins = self.gpio_map["motion"]["left"]["pins"]
         right_motor_pins = self.gpio_map["motion"]["right"]["pins"]
         arnold_motion = motion.Motion(
             left_motor=Motor(*left_motor_pins),
             right_motor=Motor(*right_motor_pins)
         )
-        command = getattr(arnold_motion, direction)
-        command(speed, duration)
+        arnold_motion.move(direction, speed, duration)
 
 
 def run():
