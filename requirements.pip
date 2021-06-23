@@ -1,3 +1,0 @@
-gpiozero==1.4.1
-RPi.GPIO==0.6.3
-spidev==3.2
