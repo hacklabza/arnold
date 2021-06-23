@@ -1,4 +1,4 @@
-VENV=./ve
+VENV=ve
 PYTHON=$(VENV)/bin/python3
 PIP=$(VENV)/bin/pip3
 PYTEST=$(VENV)/bin/pytest
@@ -12,17 +12,25 @@ CYAN=\033[0;36m
 # Define the params of the help command.
 help:
 	@echo "usage: make <target>"
-	@echo "    $(CYAN)build-dev$(CLEAR): Initialises the virtualenv and installs the python deps."
+	@echo "    $(CYAN)venv$(CLEAR): Initialises the virtualenv and activates it."
+	@echo "    $(CYAN)build-dev$(CLEAR): Installs the python deps."
 	@echo "    $(CYAN)install$(CLEAR): Installs arnold on the raspberrypi."
 	@echo "    $(CYAN)test$(CLEAR): Run unittest suite."
 
-# Installs arnold on the raspberrypi.
-build-dev: $(VENV)
+# Initialises the virtualenv and activates it.
+venv:
 	@echo "$(CYAN)Initialising virtualenv...$(CLEAR)"
 	python3 -m venv $(VENV)
 	@echo "$(GREEN)DONE$(CLEAR)"
+	@echo "$(CYAN)Activating virtualenv...$(CLEAR)"
+	. $(VENV)/bin/activate
+	cd .
+	@echo "$(GREEN)DONE$(CLEAR)"
+
+# Installs the python deps.
+deps: $(venv)
 	@echo "$(CYAN)Installing python deps...$(CLEAR)"
-	$(PIP) install -r requirement.txt
+	$(PIP) install -r requirements.txt
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs arnold on the raspberrypi.
@@ -31,7 +39,7 @@ install: build-virtualenv docker-build-image
 	@sudo $(VENV)/bin/docker-compose up --build
 
 # RRun unittest suite.
-test:
+test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
-	$(PIP) install -r requirement-test.txt
+	$(PIP) install -r requirements-test.txt
 	$(PYTEST) arnold

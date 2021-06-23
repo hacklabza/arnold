@@ -14,6 +14,21 @@ RPi 4 Based Robotic Platform
  - Git
  - Python 3.7+
 
+## Development
+
+```bash
+# Clone arnold locally
+git clone git@github.com:hacklabza/arnold.git
+cd arnold/
+
+# Setup the virtualenv and install the python deps
+make venv
+make deps
+
+# Run unittest
+make test
+```
+
 ## Installation
 
 ```bash
