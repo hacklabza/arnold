@@ -1,0 +1,2 @@
+class Lidar(object):
+    pass
