@@ -1,6 +1,11 @@
+from dotenv import load_dotenv
+from gpiozero import Motor
+
 from arnold import config, motion
 
-from gpiozero import Motor
+
+# Load the environmental variables
+load_dotenv()
 
 
 class Arnold(object):
