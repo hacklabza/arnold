@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 # Load the environmental variables
 load_dotenv()
 
+# Get the root directory
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# GPIO pin mapping
 GPIO_MAP = {
     'motion': {
         'left': {

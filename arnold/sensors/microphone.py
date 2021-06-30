@@ -1,9 +1,11 @@
 import logging
+import os
 
 import speech_recognition
 
 from arnold import config
 
+ROOT_DIR = config.ROOT_DIR
 CONFIG = config.SENSOR_CONFIG['microphone']
 
 _logger = logging.getLogger(__name__)
@@ -66,7 +68,7 @@ class Microphone(object):
         """
         if self.google_api_key_path:
             google_cloud_credentials = ''
-            with open(self.google_api_key_path, 'r') as file:
+            with open(os.path.join(config.ROOT_DIR, self.google_api_key_path), 'r') as file:
                 google_cloud_credentials = file.read()
             return self.speech_recogniser.recognize_google_cloud(
                 voice_command,
