@@ -1,6 +1,10 @@
 # Sensors
 
+Arnold is equiped with a number of sensors each of which is split into it's own module and main class.
+
 ## Microphone
+
+### Setup
 
 ```bash
 # Test that the USB mini microphone is working with a short sample
@@ -15,5 +19,3 @@ scp pi@192.168.1.115:~/voice.wav .
 ## Camera
 
 ## GPS
-
-
