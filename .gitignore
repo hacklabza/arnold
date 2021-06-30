@@ -38,3 +38,4 @@ celerybeat-schedule
 .idea/
 .AppleDouble/
 .env
+.keys/

@@ -14,6 +14,12 @@ RPi 4 Based Robotic Platform
  - Git
  - Python 3.7+
 
+## Build Requirements
+
+ - portaudio19-dev
+ - python3-dev
+ - flac
+
 ## Development
 
 ```bash

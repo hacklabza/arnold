@@ -6,3 +6,5 @@ def test_listen():
     text_command = mic.recognise_command(voice_command)
     print(text_command)
 
+
+test_listen()

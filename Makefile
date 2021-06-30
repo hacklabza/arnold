@@ -34,11 +34,12 @@ deps: $(venv)
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs arnold on the raspberrypi.
-install: build-virtualenv docker-build-image
-	@echo "$(CYAN)Running docker-compose...$(CLEAR)"
-	@sudo $(VENV)/bin/docker-compose up --build
+install:
+	@echo "$(CYAN)Installing Arnold...$(CLEAR)"
+	@sudo apt install portaudio19-dev python3-dev flac
 
-# RRun unittest suite.
+
+# Run unittest suite.
 test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
 	$(PIP) install -r requirements-test.txt
