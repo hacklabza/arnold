@@ -11,18 +11,18 @@ SPEECH_COMMAND_MAP = {
                         'params': [
                             {
                                 'tokens': ['seconds', 'steps'],
-                                'param': 'seconds',
+                                'param': 'duration',
                                 'param_value': 'suffix'
                             }
                         ]
                     },
                     {
                         'tokens': ['back', 'rear', 'backward', 'backwards', 'reverse'],
-                        'method': 'reverse',
+                        'method': 'back',
                         'params': [
                             {
                                 'tokens': ['seconds', 'steps'],
-                                'param': 'seconds',
+                                'param': 'duration',
                                 'param_value': 'suffix'
                             }
                         ]
@@ -33,13 +33,18 @@ SPEECH_COMMAND_MAP = {
                         'params': [
                             {
                                 'tokens': ['right', 'rightward', 'rightwards'],
-                                'param': 'right',
-                                'param_value': 'isset'
+                                'param': 'direction',
+                                'param_value': 'right'
                             },
                             {
                                 'tokens': ['left', 'leftward', 'leftwards'],
-                                'param': 'left',
-                                'param_value': 'isset'
+                                'param': 'direction',
+                                'param_value': 'left'
+                            },
+                            {
+                                'tokens': ['seconds', 'steps'],
+                                'param': 'duration',
+                                'param_value': 'suffix'
                             }
                         ]
                     }

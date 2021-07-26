@@ -4,7 +4,12 @@ from typing import Optional
 from gpiozero import Motor
 
 from arnold.config import MOTION_CONFIG
-from arnold.motion import exceptions
+
+
+class PauseDurationError(Exception):
+    def __init__(self, message: Optional[str]):
+        self.message = message or 'The pause duration must be greater than 0.1.'
+        super().__init__(message)
 
 
 class Drive(object):
@@ -44,11 +49,11 @@ class Drive(object):
         """Pauses motion between commands preventing weird seg faults.
 
         Raises:
-            exceptions.PauseDurationError: Raised if the pause duration is too
+            PauseDurationError: Raised if the pause duration is too
             low to prevent seg fault
         """
         if self.pause_duration < 0.1:
-            raise exceptions.PauseDurationError()
+            raise PauseDurationError()
 
         self.left_motor.stop()
         self.right_motor.stop()
@@ -60,7 +65,7 @@ class Drive(object):
 
         Args:
             direction (str): stop, forward, backward, right or left.
-            duration (int): the durance to of the motion in secs.
+            duration (int): the durance to run the motors in secs.
             speed (int, optional): The speed of the motors 0.0-1.0. Defaults to
                 0.5.
 
@@ -82,6 +87,15 @@ class Drive(object):
         if duration is not None:
             sleep(duration)
             self._pause()
+
+    def forward(self, duration: int) -> None:
+        self.go('forward', duration)
+
+    def back(self, duration: int) -> None:
+        self.go('back', duration)
+
+    def turn(self, direction: str, duration: int) -> None:
+        self.go(direction, duration)
 
     @property
     def status(self) -> dict:
