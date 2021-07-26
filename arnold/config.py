@@ -8,18 +8,6 @@ load_dotenv()
 # Get the root directory
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# GPIO pin mapping
-GPIO_MAP = {
-    'motion': {
-        'left': {
-            'pins': [23, 24]
-        },
-        'right': {
-            'pins': [17, 22]
-        }
-    }
-}
-
 # Integration config
 INTEGRATION_CONFIG = {
     'google_cloud': {
@@ -28,6 +16,18 @@ INTEGRATION_CONFIG = {
 }
 
 # Component config
+MOTION_CONFIG = {
+    'gpio': {
+        'left': {
+            'pins': [24, 23]
+        },
+        'right': {
+            'pins': [22, 17]
+        }
+    },
+    'pause_duration': 0.2
+}
+
 SENSOR_CONFIG = {
     'microphone': {
         'card_number': 1,
