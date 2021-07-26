@@ -12,7 +12,7 @@ class PauseDurationError(Exception):
         super().__init__(message)
 
 
-class Drive(object):
+class DriveTrain(object):
     """A controller class which initialises the motor gpio instances for the
     left and right hand side of Arnold.
 
