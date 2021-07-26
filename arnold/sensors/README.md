@@ -14,6 +14,22 @@ arecord --device=hw:1,0 --format S16_LE --rate 44000 -V mono -c1 voice.wav
 scp pi@192.168.1.115:~/voice.wav .
 ```
 
+### Config
+
+Update in `arnold/config.py`. Use command `arecord --list-devices` to find the correct config.
+
+```python
+SENSOR_CONFIG = {
+    'microphone': {
+        'card_number': 1,
+        'device_index': 0,
+        'sample_rate': 48000,
+        'phrase_time_limit': 10,
+        'energy_threshold': 700
+    }
+}
+```
+
 ## Lidar
 
 ## Camera
