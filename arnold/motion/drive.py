@@ -14,7 +14,7 @@ class Drive(object):
     Args:
         config (dict, optional): A dict containing left and right pin configs.
         pause_duration (float, optional): The duration to pause between direction
-        changes.
+            changes.
     """
 
     def __init__(self, config: Optional[dict], pause_duration: Optional[float]):
@@ -26,7 +26,7 @@ class Drive(object):
 
         self.pause_duration = pause_duration or self.config['pause_duration']
 
-    def _direction_map(self):
+    def _direction_map(self) -> dict:
         """Maps directions to motor instances.
 
         Returns:
@@ -40,7 +40,7 @@ class Drive(object):
             'left': ['forward', 'backward']
         }
 
-    def _pause(self):
+    def _pause(self) -> None:
         """Pauses motion between commands preventing weird seg faults.
 
         Raises:
@@ -55,19 +55,19 @@ class Drive(object):
         sleep(self.pause_duration)
 
 
-    def go(self, direction: str, duration: int, speed: Optional[float]=0.5):
+    def go(self, direction: str, duration: int, speed: Optional[float]=0.5) -> None:
         """Move Arnold in a specific direction for a specified duration.
 
         Args:
             direction (str): stop, forward, backward, right or left.
             duration (int): the durance to of the motion in secs.
             speed (int, optional): The speed of the motors 0.0-1.0. Defaults to
-            0.5.
+                0.5.
 
 
         Raises:
             KeyError: Raised if the direction map has been configured
-            incorrectly.
+                incorrectly.
         """
         try:
             left, right = self._direction_map()[direction]
@@ -84,7 +84,7 @@ class Drive(object):
             self._pause()
 
     @property
-    def status(self):
+    def status(self) -> dict:
         """The current status of the motors.
 
         Returns:
