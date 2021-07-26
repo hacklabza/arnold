@@ -20,6 +20,9 @@ RPi 4 Based Robotic Platform
  - portaudio19-dev
  - python3-dev
  - flac
+ - libespeak1
+ - espeak
+ - ffmpeg
 
 ## Development
 
