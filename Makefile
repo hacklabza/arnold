@@ -42,4 +42,4 @@ install:
 test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
 	$(PIP) install -r requirements-test.txt
-	$(PYTEST) arnold
+	GPIOZERO_PIN_FACTORY=mock $(PYTEST) arnold
