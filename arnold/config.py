@@ -17,15 +17,18 @@ INTEGRATION_CONFIG = {
 
 # Component config
 MOTION_CONFIG = {
-    'gpio': {
-        'left': {
-            'pins': [24, 23]
+    'drivetrain': {
+        'enable_pwm': True,
+        'gpio': {
+            'left': {
+                'pins': [24, 23]
+            },
+            'right': {
+                'pins': [22, 17]
+            }
         },
-        'right': {
-            'pins': [22, 17]
-        }
-    },
-    'pause_duration': 0.2
+        'pause_duration': 0.2
+    }
 }
 
 SENSOR_CONFIG = {
