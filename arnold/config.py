@@ -27,7 +27,7 @@ MOTION_CONFIG = {
                 'pins': [22, 17]
             }
         },
-        'pause_duration': 0.2
+        'pause_duration': 0.1
     }
 }
 

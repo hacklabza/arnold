@@ -14,20 +14,20 @@ class InterruptibleDelay(object):
         count = 0
         while count < duration * 10:
             if self.interrupt:
-                if self.halt_callback is not None:
-                    self.halt_callback()
+                self.interrupt = False
                 break
             time.sleep(0.1)
             count += 1
+        self.halt_callback()
         self.active = False
 
     def async_delay(self, duration: int) -> None:
         thread = threading.Thread(target=self.delay, args=(duration, ))
         thread.start()
 
-    def is_active(self):
+    def is_active(self) -> bool:
         return self.active
 
-    def terminate(self):
+    def terminate(self) -> None:
         self.interrupt = True
 

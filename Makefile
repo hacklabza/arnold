@@ -41,5 +41,4 @@ install:
 # Run unittest suite.
 test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
-	$(PIP) install -r requirements-test.txt
 	GPIOZERO_PIN_FACTORY=mock $(PYTEST) arnold
