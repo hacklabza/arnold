@@ -38,5 +38,9 @@ SENSOR_CONFIG = {
         'sample_rate': 48000,
         'phrase_time_limit': 10,
         'energy_threshold': 700
+    },
+    'lidar': {
+        'serial_port': '/dev/ttyS0',
+        'baudrate': 115200
     }
 }
