@@ -1,6 +1,10 @@
+import logging
 import time
 
 from arnold.motion import drivetrain
+
+
+logging.disable(logging.ERROR)
 
 
 class TestDrivetrain:

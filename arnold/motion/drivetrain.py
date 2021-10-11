@@ -26,11 +26,10 @@ class DriveTrain(object):
 
     def __init__(
         self,
-        config: Optional[dict] = None,
         pause_duration: Optional[float] = None,
         enable_pwm: Optional[bool] = None
-    ):
-        self.config = config or MOTION_CONFIG['drivetrain']
+    ) -> None:
+        self.config = MOTION_CONFIG['drivetrain']
         self.gpio_config = self.config['gpio']
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
@@ -107,7 +106,6 @@ class DriveTrain(object):
             PauseDurationError: Raised if the pause duration is too
             low to prevent seg fault
         """
-        print('_pause')
         if self.pause_duration < 0.1:
             raise PauseDurationError()
 

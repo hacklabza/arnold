@@ -81,8 +81,8 @@ class Microphone(object):
             return voice_command
 
     def recognise_command(self, voice_command: speech_recognition.AudioData) -> Optional[str]:
-        """Takes a voice command as input and calls the google voice to text
-        service to determine the text command which can be parsed.
+        """Takes a voice command audio bite as input and calls the google voice
+        to text service to determine the text command which can be parsed.
 
         Args:
             voice_command (speech_recognition.AudioData): Recorded voice command
