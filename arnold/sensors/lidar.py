@@ -1,7 +1,11 @@
+import logging
 import serial
 from typing import Optional
 
 from arnold.config import SENSOR_CONFIG
+
+
+_logger = logging.getLogger(__name__)
 
 
 class Lidar(object):
@@ -20,8 +24,13 @@ class Lidar(object):
         baudrate: Optional[int] = None
     ) -> None:
         self.config = SENSOR_CONFIG['lidar']
+
+        # UART serial config
         self.serial_port = serial_port or self.config['serial_port']
         self.baudrate = baudrate or self.config['baudrate']
+
+        # Setup logging
+        self._logger = _logger
 
         self.lidar_sensor = serial.Serial(port=self.serial_port, baudrate=self.baudrate)
 
@@ -40,6 +49,7 @@ class Lidar(object):
 
                 if bytes_serial[0] == 0x59 and bytes_serial[1] == 0x59:
                     distance = (bytes_serial[2] + bytes_serial[3]) * 256
+                    self.lidar_sensor.reset_input_buffer()
                     break
 
                 self.lidar_sensor.reset_input_buffer()
