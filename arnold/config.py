@@ -15,6 +15,12 @@ INTEGRATION_CONFIG = {
     }
 }
 
+# API config
+API = {
+    'host': '0.0.0.0',
+    'port': 8000
+}
+
 # Component config
 MOTION_CONFIG = {
     'drivetrain': {
