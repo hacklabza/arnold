@@ -30,25 +30,17 @@ class Weather(object):
     def __init__(self, location: Location) -> None:
         self.location = location
         self.config = config.INTEGRATION['weather']
-        self.cache_prefix = f'{self.__module__}.{self.__class__.__name__}'
 
     def _build_url(self) -> str:
         base_url, api_key = self.config['url'], self.config['api_key']
         return f'{base_url}?lat={self.location.latitude}&lon={self.location.longitude}&exclude=minutely,hourly&units=metric&appid={api_key}'
 
     def _get_weather_data(self) -> dict:
-        cache_key = f'{self.cache_prefix}._get_weather_data:{self.location}'
-        cache_result = cache.get(cache_key)
-        if cache_result:
-            return cache_result
-        else:
-            url = self._build_url()
-            response = requests.get(url)
-            response.raise_for_status()
-            weather_data = response.json()
-            if weather_data:
-                cache.set(cache_key, weather_data)
-                return weather_data
+        url = self._build_url()
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+
 
     @property
     def current(self) -> Optional[dict]:

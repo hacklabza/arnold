@@ -14,7 +14,8 @@ INTEGRATION = {
         'key_path': os.environ.get('ARNOLD_GOOGLE_CLOUD_KEY_PATH')
     },
     'weather': {
-
+        'url': 'https://api.openweathermap.org/data/2.5/onecall',
+        'api_key': os.environ.get('ARNOLD_OPENWEATHER_APIKEY', 'openweather-key'),
     }
 }
 
