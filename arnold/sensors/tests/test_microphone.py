@@ -1,10 +1,10 @@
-from arnold.config import SENSOR_CONFIG
+from arnold import config
 
 
 class TestMicrophone:
 
     def setup_method(self, method):
-        self.config = SENSOR_CONFIG['microphone']
+        self.config = config.SENSOR['microphone']
 
     def test_config(self):
         required_config = [

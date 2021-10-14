@@ -4,7 +4,7 @@ from typing import Optional
 
 from gpiozero import Motor
 
-from arnold.config import MOTION_CONFIG
+from arnold import config
 from arnold.utils import InterruptibleDelay
 
 
@@ -33,7 +33,7 @@ class DriveTrain(object):
         pause_duration: Optional[float] = None,
         enable_pwm: Optional[bool] = None
     ) -> None:
-        self.config = MOTION_CONFIG['drivetrain']
+        self.config = config.MOTION['drivetrain']
 
         # Pin configuration
         self.gpio_config = self.config['gpio']

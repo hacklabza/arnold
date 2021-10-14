@@ -2,7 +2,7 @@ import logging
 import serial
 from typing import Optional
 
-from arnold.config import SENSOR_CONFIG
+from arnold import config
 
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class Lidar(object):
         serial_port: Optional[str] = None,
         baudrate: Optional[int] = None
     ) -> None:
-        self.config = SENSOR_CONFIG['lidar']
+        self.config = config.SENSOR['lidar']
 
         # UART serial config
         self.serial_port = serial_port or self.config['serial_port']

@@ -9,9 +9,12 @@ load_dotenv()
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Integration config
-INTEGRATION_CONFIG = {
+INTEGRATION = {
     'google_cloud': {
         'key_path': os.environ.get('ARNOLD_GOOGLE_CLOUD_KEY_PATH')
+    },
+    'weather': {
+
     }
 }
 
@@ -22,7 +25,7 @@ API = {
 }
 
 # Component config
-MOTION_CONFIG = {
+MOTION = {
     'drivetrain': {
         'enable_pwm': True,
         'gpio': {
@@ -37,7 +40,7 @@ MOTION_CONFIG = {
     }
 }
 
-SENSOR_CONFIG = {
+SENSOR = {
     'microphone': {
         'card_number': 1,
         'device_index': 0,

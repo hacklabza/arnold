@@ -9,7 +9,7 @@ Arnold is equiped with two motors controlled by an L298M over PWM.
 Update in `arnold/config.py`. Pins are config left and than right.
 
 ```python
-MOTION_CONFIG = {
+MOTION = {
     'drivetrain': {
         'gpio': {
             'left': {

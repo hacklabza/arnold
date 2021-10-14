@@ -19,7 +19,7 @@ scp pi@raspberrypi.local:~/voice.wav .
 Update in `arnold/config.py`. Use command `arecord --list-devices` to find the correct config.
 
 ```python
-SENSOR_CONFIG = {
+SENSOR = {
     'microphone': {
         'card_number': 1,
         'device_index': 0,
@@ -68,7 +68,7 @@ Finally reboot for the changes to take effect.
 Update in `arnold/config.py`.
 
 ```python
-SENSOR_CONFIG = {
+SENSOR = {
     'lidar': {
         'serial_port': '/dev/ttyS0',
         'baudrate': 115200

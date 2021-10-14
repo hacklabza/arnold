@@ -1,4 +1,4 @@
-from arnold.config import SENSOR_CONFIG
+from arnold import config
 
 
 class TestSpeaker:

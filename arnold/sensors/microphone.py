@@ -4,7 +4,7 @@ from typing import Optional
 
 import speech_recognition
 
-from arnold.config import INTEGRATION_CONFIG, ROOT_DIR, SENSOR_CONFIG
+from arnold import config
 
 
 _logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class Microphone(object):
         google_api_key_path: Optional[int] = None
 
     ) -> None:
-        self.config = SENSOR_CONFIG['microphone']
+        self.config = config.SENSOR['microphone']
 
         # USB microphone adapter config
         self.card_number = self.config['card_number'] if card_number is None else card_number
@@ -53,7 +53,7 @@ class Microphone(object):
         # Google Cloud API integration
         try:
             self.google_api_key_path = (
-                google_api_key_path or INTEGRATION_CONFIG['google_cloud']['key_path']
+                google_api_key_path or config.INTEGRATION['google_cloud']['key_path']
             )
         except KeyError:
             self.google_api_key = None
@@ -86,7 +86,7 @@ class Microphone(object):
         """
         if self.google_api_key_path:
             google_cloud_credentials = ''
-            with open(os.path.join(ROOT_DIR, self.google_api_key_path), 'r') as file:
+            with open(os.path.join(config.ROOT_DIR, self.google_api_key_path), 'r') as file:
                 google_cloud_credentials = file.read()
             return self.speech_recogniser.recognize_google_cloud(
                 voice_command,

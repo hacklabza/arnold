@@ -1,10 +1,10 @@
-from arnold.config import SENSOR_CONFIG
+from arnold import config
 
 
 class TestLidar:
 
     def setup_method(self, method):
-        self.config = SENSOR_CONFIG['lidar']
+        self.config = config.SENSOR['lidar']
 
     def test_config(self):
         for config_key in ['serial_port', 'baudrate']:
