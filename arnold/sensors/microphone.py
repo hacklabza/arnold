@@ -4,63 +4,56 @@ from typing import Optional
 
 import speech_recognition
 
-from arnold import config
+from arnold.config import INTEGRATION_CONFIG, ROOT_DIR, SENSOR_CONFIG
 
-ROOT_DIR = config.ROOT_DIR
-CONFIG = config.SENSOR_CONFIG['microphone']
 
 _logger = logging.getLogger(__name__)
+
 
 class Microphone(object):
     """A sensor class which initialises the microphone component and add speech
     recognition and command parsing to Arnold.
 
-    Kwargs:
+    Args:
         card_number (int, optional): The microphone device card number.
-            Defaults to 1.
         device_index (int, optional): The microphone device index.
-            Defaults to 0.
         sample_rate (int, optional): The microphone sample rate.
-            Defaults to 48000.
-        sample_rate (int, optional): The microphone sample rate.
-            Defaults to 48000.
         phrase_time_limit (int, optional): How long to listen for a phrase.
-            Defaults to 10 seconds.
         energy_threshold (int, optional): The microphones energy threshold.
-            Defaults to 700.
         google_api_key_path (str, optional): The file path to the json api key.
 
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        card_number: Optional[int] = None,
+        device_index: Optional[int] = None,
+        sample_rate: Optional[int] = None,
+        phrase_time_limit: Optional[int] = None,
+        energy_threshold: Optional[int] = None,
+        google_api_key_path: Optional[int] = None
+
+    ) -> None:
+        self.config = SENSOR_CONFIG['microphone']
 
         # USB microphone adapter config
-        self.card_number = kwargs.pop(
-            'card_number', CONFIG.get('card_number', 1)
-        )
-        self.device_index = kwargs.pop(
-            'device_index', CONFIG.get('device_index', 0)
-        )
-        self.sample_rate = kwargs.pop(
-            'sample_rate', CONFIG.get('sample_rate', 48000)
-        )
+        self.card_number = self.config['card_number'] if card_number is None else card_number
+        self.device_index = self.config['device_index'] if device_index is None else device_index
+        self.sample_rate = sample_rate or self.config['sample_rate']
 
         # Setup logging
         self._logger = _logger
 
         # Speech recognition
-        self.phrase_time_limit = kwargs.pop(
-            'phrase_time_limit', CONFIG.get('phrase_time_limit', 10)
-        )
+        self.phrase_time_limit = phrase_time_limit or self.config['phrase_time_limit']
         self.speech_recogniser = speech_recognition.Recognizer()
-        self.speech_recogniser.energy_threshold = kwargs.pop(
-            'energy_threshold', CONFIG.get('energy_threshold', 700)
+        self.speech_recogniser.energy_threshold = (
+            energy_threshold or self.config['energy_threshold']
         )
 
         # Google Cloud API integration
         try:
-            self.google_api_key_path = kwargs.pop(
-                'google_api_key_path',
-                config.INTEGRATION_CONFIG['google_cloud']['key_path']
+            self.google_api_key_path = (
+                google_api_key_path or INTEGRATION_CONFIG['google_cloud']['key_path']
             )
         except KeyError:
             self.google_api_key = None
@@ -93,12 +86,12 @@ class Microphone(object):
         """
         if self.google_api_key_path:
             google_cloud_credentials = ''
-            with open(os.path.join(config.ROOT_DIR, self.google_api_key_path), 'r') as file:
+            with open(os.path.join(ROOT_DIR, self.google_api_key_path), 'r') as file:
                 google_cloud_credentials = file.read()
             return self.speech_recogniser.recognize_google_cloud(
                 voice_command,
                 credentials_json=google_cloud_credentials,
-                language="en-ZA"
+                language='en-ZA'
             )
         else:
             self._logger.error(
