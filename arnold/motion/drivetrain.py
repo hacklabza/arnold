@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 from typing import Optional
 
@@ -5,6 +6,9 @@ from gpiozero import Motor
 
 from arnold.config import MOTION_CONFIG
 from arnold.utils import InterruptibleDelay
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PauseDurationError(Exception):
@@ -30,9 +34,12 @@ class DriveTrain(object):
         enable_pwm: Optional[bool] = None
     ) -> None:
         self.config = MOTION_CONFIG['drivetrain']
+
+        # Pin configuration
         self.gpio_config = self.config['gpio']
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
+        # Motor setup
         self.left_motor = Motor(
             *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
         )
@@ -40,8 +47,11 @@ class DriveTrain(object):
             *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
         )
 
-        self.pause_duration = pause_duration or self.config['pause_duration']
+        # Setup logging
+        self._logger = _logger
 
+        # Pause duration and delay class setup
+        self.pause_duration = pause_duration or self.config['pause_duration']
         self.delay = InterruptibleDelay(halt_callback=self._pause)
 
     def release(self):
