@@ -1,6 +1,6 @@
 # Sensors
 
-Arnold is equiped with a number of sensors each of which is split into it's own module and main class.
+Arnold is equipped with a number of sensors each of which is split into it's own module and main class.
 
 ## Microphone
 
@@ -11,7 +11,7 @@ Arnold is equiped with a number of sensors each of which is split into it's own 
 arecord --device=hw:1,0 --format S16_LE --rate 44000 -V mono -c1 voice.wav
 
 # Test the file on another machine with sound if the speaker is not yet hooked up
-scp pi@192.168.1.115:~/voice.wav .
+scp pi@raspberrypi.local:~/voice.wav .
 ```
 
 ### Config
@@ -31,7 +31,67 @@ SENSOR_CONFIG = {
 }
 ```
 
+### Testing
+
+```bash
+arnold test microphone -c 1 -i 0
+```
+
+### Usage
+
+```python
+from arnold.sensors.microphone import Microphone
+
+microphone = Microphone()
+audio = microphone.listen()
+text = microphone.microphone.recognise_command(audio)
+print(text)
+```
+
 ## Lidar
+
+### Setup
+
+Enable UART on the raspberrypi:
+
+```bash
+ssh pi@raspberrypi.local
+sudo raspi-config
+```
+
+Select option 9: Advanced Options then;
+A7: Serial and enable it.
+Finally reboot for the changes to take effect.
+
+### Config
+
+Update in `arnold/config.py`.
+
+```python
+SENSOR_CONFIG = {
+    'lidar': {
+        'serial_port': '/dev/ttyS0',
+        'baudrate': 115200
+    },
+    ...
+}
+```
+
+### Testing
+
+```bash
+arnold test lidar -p /dev/ttyS0 -b 115200 -c 5
+```
+
+### Usage
+
+```python
+from arnold.sensors.lidar import Lidar
+
+lidar = Lidar()
+distance = lidar.get_distance()
+print(distance)
+```
 
 ## Camera
 
