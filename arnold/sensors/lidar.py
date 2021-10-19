@@ -51,7 +51,7 @@ class Lidar(object):
                 bytes_serial = self.lidar_sensor.read(9)
 
                 if bytes_serial[0] == 0x59 and bytes_serial[1] == 0x59:
-                    distance = (bytes_serial[2] + bytes_serial[3]) * 256
+                    distance = (bytes_serial[2] + bytes_serial[3])
                     self.lidar_sensor.reset_input_buffer()
                     break
 
