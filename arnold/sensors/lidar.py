@@ -57,4 +57,6 @@ class Lidar(object):
 
                 self.lidar_sensor.reset_input_buffer()
 
+        self._logger.info(f'Distance: {distance}')
+
         return distance

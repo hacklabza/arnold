@@ -1,6 +1,10 @@
 import click
+import logging
 
 from arnold import main, config, sensors
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 @click.group()
