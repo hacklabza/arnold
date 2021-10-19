@@ -65,13 +65,15 @@ def microphone(card_number, device_index):
 
 @cli.command()
 @click.option(
-    '--autonomous', '-a', default=False, help='Run arnold in autonomous mode.'
+    '--autonomous', '-a', is_flag=True, default=False,
+    help='Run arnold in autonomous mode.'
 )
 @click.option(
-    '--voice-command', '-v', default=False, help='Run arnold in voice command mode.'
+    '--voice-command', '-v', is_flag=True, default=False,
+    help='Run arnold in voice command mode.'
 )
 @click.option(
-    '--manual', '-m', default=False,
+    '--manual', '-m', is_flag=True, default=False,
     help='Run arnold in manual mode - controlled via the API.'
 )
 def run(autonomous, voice_command):
