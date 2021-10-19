@@ -11,6 +11,6 @@ PyAudio==0.2.11
 pyserial==3.5
 python-dotenv==0.18.0
 pyttsx3==2.90
-smbus2==0.4.1
+smbus==1.1.post2
 SpeechRecognition==3.8.1
 uvicorn==0.14.0
