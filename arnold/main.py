@@ -29,7 +29,7 @@ class Arnold(object):
             distance = self.lidar.get_distance()
             if distance < 30:
                 self.drivetrain.turn(
-                    random.choices['right', 'left'],
+                    random.choice(['right', 'left']),
                     duration=2
                 )
                 break
