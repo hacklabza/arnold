@@ -123,12 +123,18 @@ class DriveTrain(object):
         self.right_motor.stop()
         sleep(self.pause_duration)
 
-    def go(self, direction: str, duration: int, speed: Optional[float]=1) -> None:
+    def go(
+        self,
+        direction: str,
+        duration: Optional[int] = 30,
+        speed: Optional[float] = 1
+    ) -> None:
         """Move Arnold in a specific direction for a specified duration.
 
         Args:
             direction (str): stop, forward, backward, right or left.
-            duration (int): the durance to run the motors in secs.
+            duration (int, optional): the durance to run the motors in secs.
+                Defaults to 30 secs.
             speed (int, optional): The speed of the motors 0.0-1.0. Defaults to
                 0.5.
 
@@ -152,13 +158,13 @@ class DriveTrain(object):
 
         self.delay.async_delay(duration)
 
-    def forward(self, duration: int) -> None:
+    def forward(self, duration: Optional[int]) -> None:
         self.go('forward', duration)
 
-    def back(self, duration: int) -> None:
+    def back(self, duration: Optional[int]) -> None:
         self.go('back', duration)
 
-    def turn(self, direction: str, duration: int) -> None:
+    def turn(self, direction: str, duration: Optional[int]) -> None:
         self.go(direction, duration)
 
     def stop(self) -> None:

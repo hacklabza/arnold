@@ -16,6 +16,20 @@ def test():
 
 @test.command()
 @click.option(
+    '--address', '-a', default=config.SENSOR['accelerometer']['address'], type=str,
+    help='I2C address of the device.'
+)
+@click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
+def accelerometer(address, count):
+    click.echo(f'Testing Accelerometer at {address}')
+    accelerometer = sensors.accelerometer.Accelerometer(address=address)
+    for _ in range(count):
+        axes = accelerometer.get_axes()
+        click.echo(f'Axes: {axes}')
+
+
+@test.command()
+@click.option(
     '--serial-port', '-p', default=config.SENSOR['lidar']['serial_port'],
     help='Serial port of the lidar sensor.'
 )
@@ -57,12 +71,16 @@ def microphone(card_number, device_index):
 @click.option(
     '--voice-command', '-v', default=False, help='Run arnold in voice command mode.'
 )
+@click.option(
+    '--manual', '-m', default=False,
+    help='Run arnold in manual mode - controlled via the API.'
+)
 def run(autonomous, voice_command):
     mode = 'manual'
     if autonomous:
         mode = 'autonomous'
     elif voice_command:
-        mode = 'voice_command'
+        mode = 'voicecommand'
 
     arnold = main.Arnold(mode=mode)
     arnold.run()

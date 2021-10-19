@@ -1,1 +1,1 @@
-from arnold.sensors import camera, lidar, microphone
+from arnold.sensors import accelerometer, camera, lidar, microphone
