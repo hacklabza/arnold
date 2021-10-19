@@ -32,7 +32,10 @@ class Lidar(object):
         # Setup logging
         self._logger = _logger
 
-        self.lidar_sensor = serial.Serial(port=self.serial_port, baudrate=self.baudrate)
+        self.lidar_sensor = serial.Serial(
+            port=self.serial_port,
+            baudrate=self.baudrate
+        )
 
     def get_distance(self) -> int:
         """The calculated distance to the nearest object in range.

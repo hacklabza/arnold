@@ -3,7 +3,6 @@ import click
 from arnold import main, config, sensors
 
 
-
 @click.group()
 def cli():
     pass
