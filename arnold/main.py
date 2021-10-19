@@ -44,4 +44,9 @@ class Arnold(object):
         pass
 
     def run(self):
-        pass
+        mode_map = {
+            'autonomous': self._run_autonomous,
+            'voicecommand': self._run_voicecommand,
+            'manual': self._run_manual,
+        }
+        mode_map[self.mode]()
