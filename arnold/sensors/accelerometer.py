@@ -20,12 +20,12 @@ class Accelerometer(object):
         self.config = config.SENSOR['accelerometer']
 
         # Module config
-        self.address = address or config['address']
+        self.address = int(address or config['address'], 16)
 
         # Setup logging
         self._logger = _logger
 
-        self.sensor = adxl345.ADXL345(address=hex(int(self.address, 16)))
+        self.sensor = adxl345.ADXL345(address=self.address)
 
     def get_axes(self) -> dict:
         """Get the current axes from the module.
