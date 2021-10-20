@@ -170,14 +170,18 @@ class DriveTrain(object):
         self.delay.async_delay(duration)
 
     def forward(self, duration: Optional[int]) -> None:
+        self._logger.info(f'Go Forward: {duration} sec')
         self.go('forward', duration)
 
     def back(self, duration: Optional[int]) -> None:
+        self._logger.info(f'Go Back: {duration} sec')
         self.go('back', duration)
 
     def turn(self, direction: str, duration: Optional[int]) -> None:
+        self._logger.info(f'Go {direction.capitalize()}: {duration} sec')
         self.go(direction, duration)
 
     def stop(self) -> None:
+        self._logger.info(f'Stopped')
         self.delay.terminate()
         self._pause()

@@ -38,9 +38,9 @@ class Arnold(object):
                     if distance > 50:
                         self.drivetrain.stop()
                         time.sleep(0.5)
-                        self._run_autonomous(is_active=False)
+                        return self._run_autonomous(is_active=False)
             else:
-                self._run_autonomous(is_active=self.drivetrain.is_active)
+                return self._run_autonomous(is_active=self.drivetrain.is_active)
 
 
     def _run_manual(self):
