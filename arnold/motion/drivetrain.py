@@ -93,6 +93,17 @@ class DriveTrain(object):
             }
         }
 
+    @property
+    def is_active(self) -> bool:
+        """Shortcut to assert if drivetrain is active.
+
+        Returns:
+            bool: either left or right motor is active
+        """
+        return (
+            self.status['left']['is_active'] or self.status['right']['is_active']
+        )
+
     def _get_motor_direction(self, motor: Motor) -> str:
         """Get the current direction for a motor instance.
 
