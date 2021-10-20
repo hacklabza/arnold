@@ -21,20 +21,27 @@ class Arnold(object):
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
 
-    def _run_autonomous(self):
+    def _run_autonomous(self, is_active: bool = False) -> None:
+        if not is_active:
+            self.drivetrain.forward(duration=10)
 
-        # Scan enviroment for possible path
-        self.drivetrain.forward(duration=30)
         while True:
             distance = self.lidar.get_distance()
             if distance < 30:
+                self.drivetrain.stop()
                 self.drivetrain.turn(
                     random.choice(['right', 'left']),
-                    duration=2
+                    duration=5
                 )
-                break
+                while True:
+                    distance = self.lidar.get_distance()
+                    if distance > 50:
+                        self.drivetrain.stop()
+                        time.sleep(0.5)
+                        self._run_autonomous(is_active=False)
+            else:
+                self._run_autonomous(is_active=self.drivetrain.is_active)
 
-        self._run_autonomous()
 
     def _run_manual(self):
         pass
