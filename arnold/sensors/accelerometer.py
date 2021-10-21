@@ -33,4 +33,6 @@ class Accelerometer(object):
         Returns:
             dict: X, Y & Z axes
         """
+        axes = self.sensor.get_axes()
+        self._logger.info(f'Axes: {axes}')
         return self.sensor.get_axes()
