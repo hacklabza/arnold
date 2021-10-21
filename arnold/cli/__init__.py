@@ -88,10 +88,10 @@ def run(autonomous, voice_command, manual):
     elif manual:
         mode = 'manual'
 
+    click.echo(f'Running arnold in {mode} mode.')
+
     arnold = main.Arnold(mode=mode)
     arnold.run()
-
-    click.echo(f'Running arnold in {mode} mode.')
 
 
 cli.add_command(test)
