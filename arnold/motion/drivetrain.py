@@ -100,9 +100,9 @@ class DriveTrain(object):
         Returns:
             bool: either left or right motor is active
         """
-        return (
-            self.status['left']['is_active'] or self.status['right']['is_active']
-        )
+        is_active = self.delay.is_active()
+        self._logger.info(f'Is Active: {is_active}')
+        return is_active
 
     def _get_motor_direction(self, motor: Motor) -> str:
         """Get the current direction for a motor instance.
@@ -125,7 +125,7 @@ class DriveTrain(object):
 
         Raises:
             PauseDurationError: Raised if the pause duration is too
-            low to prevent seg fault
+                low to prevent seg fault
         """
         if self.pause_duration < 0.1:
             raise PauseDurationError()

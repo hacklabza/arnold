@@ -1,5 +1,6 @@
 import logging
 import serial
+import statistics
 from typing import Optional
 
 from arnold import config
@@ -41,7 +42,7 @@ class Lidar(object):
         """The calculated distance to the nearest object in range.
 
         Returns:
-            float: The distance in cm to the closest object
+            int: Distance in cm to the closest object
         """
         distance = 0
         while True:
@@ -60,3 +61,18 @@ class Lidar(object):
         self._logger.info(f'Distance: {distance}')
 
         return distance
+
+    def get_mean_distance(self, sample_size: int) -> int:
+        """The calculated the mean distance to the nearest object in range for a
+        selected sample size.
+
+        Args:
+        sample_size (int): Sample size to take measurement of
+
+        Returns:
+            int: The mean distance in cm to the closest object
+        """
+        return int(
+            statistics.mean([self.get_distance() for _ in range(sample_size)])
+        )
+

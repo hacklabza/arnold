@@ -93,6 +93,56 @@ distance = lidar.get_distance()
 print(distance)
 ```
 
+## Accelerometer
+
+### Setup
+
+Enable I2C on the raspberrypi:
+
+```bash
+ssh pi@raspberrypi.local
+sudo raspi-config
+```
+
+Select option 3: Interface Options then;
+P5: I2C
+Finally reboot for the changes to take effect.
+
+### Config
+
+Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the coorect address.
+
+```python
+SENSOR = {
+    'accelerometer': {
+        'address': '53'
+    },
+    ...
+}
+```
+
+### Testing
+
+```bash
+arnold test accelerometer -a 53
+```
+
+### Usage
+
+```python
+from arnold.sensors.accelerometer import Accelerometer
+
+accelerometer = Accelerometer()
+axes = accelerometer.get_axes()
+print(axes)
+```
+
 ## Camera
 
-## GPS
+### Setup
+
+### Config
+
+### Testing
+
+### Usage

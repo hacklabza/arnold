@@ -21,35 +21,42 @@ class Arnold(object):
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
 
-    def _run_autonomous(self, is_active: bool = False) -> None:
-        if not is_active:
-            self.drivetrain.forward(duration=10)
+    def _run_autonomous(self) -> None:
+        """Run Arnold in autonomous mode.
+        """
+        try:
+            while True:
+                distance = self.lidar.get_mean_distance(10)
+                if distance < 40:
+                    self.drivetrain.turn(
+                        random.choice(['right', 'left']),
+                        duration=10
+                    )
+                    while True:
+                        distance = self.lidar.get_mean_distance(10)
+                        if distance > 80:
+                            self.drivetrain.stop()
+                            break
 
-        while True:
-            distance = self.lidar.get_distance()
-            if distance < 30:
-                self.drivetrain.stop()
-                self.drivetrain.turn(
-                    random.choice(['right', 'left']),
-                    duration=5
-                )
-                while True:
-                    distance = self.lidar.get_distance()
-                    if distance > 50:
-                        self.drivetrain.stop()
-                        time.sleep(0.5)
-                        return self._run_autonomous(is_active=False)
-            else:
-                return self._run_autonomous(is_active=self.drivetrain.is_active)
+                if not self.drivetrain.is_active:
+                    self.drivetrain.forward(duration=60)
 
+        except KeyboardInterrupt:
+            self.drivetrain.stop()
 
     def _run_manual(self):
+        """Run Arnold in manual mode.
+        """
         pass
 
     def _run_voicecommand(self):
+        """Run Arnold in voice command mode.
+        """
         pass
 
     def run(self):
+        """Run Arnold in a selected mode. Maps the mode to a 'private' method.
+        """
         mode_map = {
             'autonomous': self._run_autonomous,
             'voicecommand': self._run_voicecommand,
