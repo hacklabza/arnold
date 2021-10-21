@@ -20,7 +20,7 @@ class Accelerometer(object):
         self.config = config.SENSOR['accelerometer']
 
         # Module config
-        self.address = int(address or config['address'], 16)
+        self.address = int(address or self.config['address'], 16)
 
         # Setup logging
         self._logger = _logger
