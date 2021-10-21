@@ -16,16 +16,35 @@ class Accelerometer(object):
         address (str, optional): The I2C address of the device
     """
 
-    def __init__(self, address: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        address: Optional[str] = None,
+        orientation: Optional[dict] = None
+    ) -> None:
         self.config = config.SENSOR['accelerometer']
 
         # Module config
         self.address = int(address or self.config['address'], 16)
+        self.orientation = orientation or self.config['orientation']
 
         # Setup logging
         self._logger = _logger
 
         self.sensor = adxl345.ADXL345(address=self.address)
+
+    def _map_orientation(self, axes: dict) -> dict:
+        """Map the x, y & z axes based on the physical orientation of the module.
+
+        Args:
+            axes (dict): The original axes to be mapped
+
+        Returns:
+            dict: Mapped axes dict
+        """
+        return {
+            new_key: axes[old_key]
+            for new_key, old_key in self.orientation.items()
+        }
 
     def get_axes(self) -> dict:
         """Get the current axes from the module.
@@ -35,4 +54,4 @@ class Accelerometer(object):
         """
         axes = self.sensor.get_axes()
         self._logger.info(f'Axes: {axes}')
-        return self.sensor.get_axes()
+        return self._map_orientation(axes)

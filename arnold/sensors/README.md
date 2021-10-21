@@ -115,7 +115,12 @@ Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the coorect add
 ```python
 SENSOR = {
     'accelerometer': {
-        'address': '53'
+        'address': '53',
+        'orientation': {
+            'x': 'x',
+            'y': 'z',
+            'z': 'y'
+        }
     },
     ...
 }

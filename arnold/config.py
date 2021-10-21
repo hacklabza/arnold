@@ -43,7 +43,12 @@ MOTION = {
 
 SENSOR = {
     'accelerometer': {
-        'address': '53'
+        'address': '53',
+        'orientation': {
+            'x': 'x',
+            'y': 'z',
+            'z': 'y'
+        }
     },
     'lidar': {
         'serial_port': '/dev/ttyS0',
