@@ -1,7 +1,7 @@
 import click
 import logging
 
-from arnold import main, config, sensors
+from arnold import main, config, output, sensors
 
 
 logging.basicConfig(level=logging.INFO)
@@ -17,6 +17,18 @@ def test():
     pass
 
 
+# Output device tests
+@test.command()
+@click.option(
+    '--phrase', '-p', required=True, help='The phrase that should be spoken.'
+)
+def speaker(phrase):
+    click.echo(f'Testing Speaker with "{phrase}"')
+    speaker = output.speaker.Speaker()
+    speaker.say(phrase)
+
+
+# Sensor tests
 @test.command()
 @click.option(
     '--address', '-a', default=config.SENSOR['accelerometer']['address'], type=str,
@@ -52,11 +64,11 @@ def lidar(serial_port, baudrate, count):
 @test.command()
 @click.option(
     '--card-number', '-c', default=config.SENSOR['microphone']['card_number'],
-    help='Microphone device card number as per `arecord --list-devices`'
+    help='Microphone device card number as per `arecord --list-devices`.'
 )
 @click.option(
     '--device-index', '-i', default=config.SENSOR['microphone']['device_index'],
-    help='Microphone device index as per `arecord --list-devices`'
+    help='Microphone device index as per `arecord --list-devices`.'
 )
 def microphone(card_number, device_index):
     click.echo(f'Testing Microphone at {card_number}:{device_index}')
@@ -81,6 +93,7 @@ def microphone(card_number, device_index):
     help='Run arnold in manual mode - controlled via the API.'
 )
 def run(autonomous, voice_command, manual):
+    mode = 'manual'
     if autonomous:
         mode = 'autonomous'
     elif voice_command:
