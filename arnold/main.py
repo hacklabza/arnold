@@ -1,7 +1,7 @@
 import random
-import time
 from typing import Optional
 
+from arnold import api
 from arnold.motion import drivetrain
 from arnold.sensors import accelerometer, lidar
 
@@ -27,7 +27,6 @@ class Arnold(object):
         """
         try:
             while True:
-                axes = self.accelerometer.get_axes()
                 distance = self.lidar.get_mean_distance(10)
                 if distance < 40:
                     self.drivetrain.turn(
@@ -35,7 +34,6 @@ class Arnold(object):
                         duration=10
                     )
                     while True:
-                        # axes = self.accelerometer.get_axes()
                         distance = self.lidar.get_mean_distance(10)
                         if distance > 80:
                             self.drivetrain.stop()
@@ -48,9 +46,9 @@ class Arnold(object):
             self.drivetrain.stop()
 
     def _run_manual(self):
-        """Run Arnold in manual mode.
+        """Run Arnold in manual mode over the API.
         """
-        pass
+        api.runserver()
 
     def _run_voicecommand(self):
         """Run Arnold in voice command mode.
