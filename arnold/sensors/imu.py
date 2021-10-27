@@ -65,6 +65,11 @@ class IMU(object):
             for new_key, old_key in self.orientation.items()
         }
 
+    def calibrate(self) -> None:
+        """Calibrate all 3 MPU-9250 sensors.
+        """
+        self.sensor.calibrate()
+
     def get_accelerometer_data(self) -> dict:
         """Get the current accelerometer data from the module.
 

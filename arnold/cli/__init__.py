@@ -34,10 +34,17 @@ def speaker(phrase):
     '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
     help='I2C address of the device.'
 )
+@click.option(
+    '--calibrate', is_flag=True, help='Calibrate the 3 sensors befor testing.'
+)
 @click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
-def imu(address, count):
+def imu(address, calibrate, count):
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
+
+    if calibrate:
+        imu.calibrate()
+
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
