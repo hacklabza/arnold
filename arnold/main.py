@@ -3,7 +3,7 @@ from typing import Optional
 
 from arnold import api
 from arnold.motion import drivetrain
-from arnold.sensors import accelerometer, lidar
+from arnold.sensors import imu, lidar
 
 
 class Arnold(object):
@@ -18,7 +18,7 @@ class Arnold(object):
     def __init__(self, mode: Optional[str] = None) -> None:
         self.mode = mode or 'manual'
 
-        self.accelerometer = accelerometer.Accelerometer()
+        self.imu = imu.IMU()
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
 
