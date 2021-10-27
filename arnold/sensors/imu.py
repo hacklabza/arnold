@@ -15,9 +15,9 @@ class IMU(object):
     sensor and magnetometer on the MPU-9250 module.
 
     Args:
-        address (str, optional): The I2C address of the device
-        orientation (dict, optional): The orientation map based on how the module
-            has been mounted
+        address (str, optional): I2C address of the device
+        orientation (dict, optional): Orientation map based on the physical position
+            of the module on Arnold
     """
 
     def __init__(
@@ -40,17 +40,28 @@ class IMU(object):
         )
         self.sensor.configure()
 
-    def _map_orientation(self, axes: dict) -> dict:
-        """Map the x, y & z axes based on the physical orientation of the module.
+    def _get_data(self, data: list) -> dict:
+        """Map the x, y & z list to a dict.
 
         Args:
-            axes (dict): The original axes to be mapped
+            data (dict): The original axes to be mapped
+
+        Returns:
+            dict: Mapped axes dict
+        """
+        return {'x': data[0], 'y': data[1], 'z': data[2]}
+
+    def _map_orientation(self, data: dict) -> dict:
+        """Map x, y & z based on the physical orientation of the module.
+
+        Args:
+            data (dict): The original axes to be mapped
 
         Returns:
             dict: Mapped axes dict
         """
         return {
-            new_key: axes[old_key]
+            new_key: data[old_key]
             for new_key, old_key in self.orientation.items()
         }
 
@@ -60,7 +71,9 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        data = self.sensor.readAccelerometerMaster()
+        data = self._get_data(
+            self.sensor.readAccelerometerMaster()
+        )
         self._logger.info(f'Accelerometer: {data}')
         return self._map_orientation(data)
 
@@ -70,7 +83,9 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        data = self.sensor.readGyroscopeMaster()
+        data = self._get_data(
+            self.sensor.readGyroscopeMaster()
+        )
         self._logger.info(f'Gyroscope: {data}')
         return self._map_orientation(data)
 
@@ -80,7 +95,9 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        data = self.sensor.readMagnetometerMaster()
+        data = self._get_data(
+            self.sensor.readMagnetometerMaster()
+        )
         self._logger.info(f'Magnetometer: {data}')
         return self._map_orientation(data)
 
