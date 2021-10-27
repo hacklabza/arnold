@@ -17,6 +17,11 @@ def test():
     pass
 
 
+@click.group()
+def calibrate():
+    pass
+
+
 # Output device tests
 @test.command()
 @click.option(
@@ -34,27 +39,23 @@ def speaker(phrase):
     '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
     help='I2C address of the device.'
 )
-@click.option(
-    '--calibrate', is_flag=True, help='Calibrate the 3 sensors befor testing.'
-)
 @click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
-def imu(address, calibrate, count):
+def imu(address, count):
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
-
-    if calibrate:
-        imu.calibrate()
 
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
         magnetometer_data = imu.get_magnetometer_data()
         temperature = imu.get_temperature()
+        attitude = imu.get_attitude()
 
         click.echo(f'Accelerometer: {accelerometer_data}')
         click.echo(f'Gyroscope: {gyroscope_data}')
         click.echo(f'Magnetometer: {magnetometer_data}')
         click.echo(f'Temperature: {temperature}')
+        click.echo(f'Attitude: {attitude}')
 
 
 @test.command()
@@ -93,6 +94,19 @@ def microphone(card_number, device_index):
     print(microphone.recognise_command(audio))
 
 
+# Calibration commands
+@calibrate.command()
+@click.option(
+    '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
+    help='I2C address of the device.'
+)
+def imu(address):
+    click.echo(f'Calibrating IMU at {address}')
+    imu = sensors.imu.IMU(address=address)
+    imu.calibrate()
+
+
+# Main run command
 @cli.command()
 @click.option(
     '--autonomous', is_flag=True,

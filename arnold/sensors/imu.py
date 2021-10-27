@@ -1,4 +1,5 @@
 import logging
+import math
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
@@ -115,3 +116,41 @@ class IMU(object):
         temperature = self.sensor.readTemperatureMaster()
         self._logger.info(f'Temperature: {temperature}')
         return temperature
+
+    def get_attitude(self) -> dict:
+        """Get the roll, pitch and yaw as calculated by the 9 axes module.
+
+        Returns:
+            dict: Roll, pitch and yaw estimates
+        """
+        accelerometer_data = self.get_accelerometer_data()
+        gyroscope_data = self.get_gyroscope_data()
+        magnetometer_data = self.get_magnetometer_data()
+
+        roll = math.atan2(2.0 * ())
+        pitch = math.atan2(
+            accelerometer_data['y'],
+            math.sqrt(
+                (
+                    math.sqrt(accelerometer_data['x']) +
+                    math.sqrt(accelerometer_data['z'])
+                )
+            )
+        )
+        yaw = math.atan2(
+            (
+                (accelerometer_data['y'] * math.cos(roll)) -
+                (accelerometer_data['z'] * math.sin(roll))
+            ),
+            (
+                (magnetometer_data['x'] * math.cos(pitch)) +
+                (magnetometer_data['y'] * math.sin(roll) * math.sin(pitch)) +
+                (magnetometer_data['z'] * math.cos(roll) * math.sin(pitch))
+            )
+        )
+
+        return {
+            'roll': roll,
+            'pitch': pitch,
+            'yaw': yaw
+        }
