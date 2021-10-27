@@ -127,7 +127,12 @@ class IMU(object):
         gyroscope_data = self.get_gyroscope_data()
         magnetometer_data = self.get_magnetometer_data()
 
-        roll = math.atan2(2.0 * ())
+        roll = math.atan2(
+            -accelerometer_data['x'],
+            math.sqrt(
+                math.sqrt(accelerometer_data['x']) + math.sqrt(accelerometer_data['z'])
+            )
+        )
         pitch = math.atan2(
             accelerometer_data['y'],
             math.sqrt(
