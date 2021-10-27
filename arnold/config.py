@@ -42,8 +42,8 @@ MOTION = {
 }
 
 SENSOR = {
-    'accelerometer': {
-        'address': '53',
+    'imu': {
+        'address': '68',
         'orientation': {
             'x': 'x',
             'y': 'z',

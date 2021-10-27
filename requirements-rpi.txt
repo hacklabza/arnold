@@ -1,4 +1,3 @@
 -r requirements.txt
 
 RPi.GPIO==0.7.0
-smbus==1.1.post2
