@@ -42,7 +42,7 @@ class IMU(object):
         self.sensor.configure()
 
     def _get_data(self, data: list) -> dict:
-        """Map the x, y & z list to a dict.
+        """Map the x, y & z list to a dict and round the readings.
 
         Args:
             data (dict): The original axes to be mapped
@@ -117,41 +117,51 @@ class IMU(object):
         self._logger.info(f'Temperature: {temperature}')
         return temperature
 
-    def get_attitude(self) -> dict:
+    def get_attitude(
+        self,
+        accelerometer_data: Optional[dict] = None,
+        magnetometer_data: Optional[dict] = None,
+    ) -> dict:
         """Get the roll, pitch and yaw as calculated by the 9 axes module.
+
+        Args:
+            accelerometer_data (dict): Accelerometer's x, y, z data. Defaults
+                to getting the data from the sensor
+            magnetometer_data (dict): Magnetometer's x, y, z data. Defaults to
+                getting the data from the sensor
 
         Returns:
             dict: Roll, pitch and yaw estimates
         """
-        accelerometer_data = self.get_accelerometer_data()
-        gyroscope_data = self.get_gyroscope_data()
-        magnetometer_data = self.get_magnetometer_data()
+        accelerometer_data = accelerometer_data or self.get_accelerometer_data()
+        magnetometer_data = magnetometer_data or self.get_magnetometer_data()
 
-        roll = math.atan2(
-            -accelerometer_data['x'],
+        roll = 180 * math.atan2(
+            accelerometer_data['x'],
             math.sqrt(
-                math.sqrt(accelerometer_data['x']) + math.sqrt(accelerometer_data['z'])
-            )
+                (accelerometer_data['y'] * accelerometer_data['y']) +
+                (accelerometer_data['z'] * accelerometer_data['z'])
+            ) / math.pi
         )
-        pitch = math.atan2(
+        pitch = 180 * math.atan2(
             accelerometer_data['y'],
             math.sqrt(
                 (
-                    math.sqrt(accelerometer_data['x']) +
-                    math.sqrt(accelerometer_data['z'])
-                )
+                    (accelerometer_data['x'] * accelerometer_data['x']) +
+                    (accelerometer_data['z'] * accelerometer_data['z'])
+                ) / math.pi
             )
         )
-        yaw = math.atan2(
-            (
-                (accelerometer_data['y'] * math.cos(roll)) -
-                (accelerometer_data['z'] * math.sin(roll))
+        yaw = 180 * math.atan2(
+            -(
+                (magnetometer_data['y'] * math.cos(roll)) -
+                (magnetometer_data['z'] * math.sin(roll))
             ),
             (
                 (magnetometer_data['x'] * math.cos(pitch)) +
                 (magnetometer_data['y'] * math.sin(roll) * math.sin(pitch)) +
                 (magnetometer_data['z'] * math.cos(roll) * math.sin(pitch))
-            )
+            ) / math.pi
         )
 
         return {
