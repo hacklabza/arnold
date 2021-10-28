@@ -1,3 +1,4 @@
+import json
 import os
 
 from dotenv import load_dotenv
@@ -46,9 +47,19 @@ SENSOR = {
         'address': '68',
         'orientation': {
             'x': 'x',
-            'y': 'z',
-            'z': 'y'
-        }
+            'y': 'y',
+            'z': 'z'
+        },
+        'bias': json.loads(
+            os.environ.get(
+                'ARNOLD_SENSOR_IMU_BIAS',
+                json.dumps({
+                    'accelerometer': [0, 0, 0],
+                    'gyroscope': [0, 0, 0],
+                    'magnetometer': [0, 0, 0]
+                })
+            )
+        )
     },
     'lidar': {
         'serial_port': '/dev/ttyS0',

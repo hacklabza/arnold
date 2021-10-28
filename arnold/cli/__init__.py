@@ -1,3 +1,6 @@
+import json
+import os
+
 import click
 import logging
 
@@ -32,6 +35,17 @@ def imu(address):
     click.echo(f'Calibrating IMU at {address}')
     imu = sensors.imu.IMU(address=address)
     imu.calibrate()
+
+    click.echo(f'Save the following values to environmental vars.')
+    click.echo(f'Accelerometer Bias: {imu.sensor.abias}')
+    click.echo(f'Gyroscope Bias: {imu.sensor.gbias}')
+    click.echo(f'Magnetometer Bias: {imu.sensor.mbias}')
+
+    os.environ['ARNOLD_SENSOR_IMU_BIAS'] = json.dumps({
+        'accelerometer': imu.sensor.abias,
+        'gyroscope': imu.sensor.gbias,
+        'magnetometer': imu.sensor.mbias
+    })
 
 
 # Output device tests

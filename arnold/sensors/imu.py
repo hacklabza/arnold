@@ -37,8 +37,14 @@ class IMU(object):
 
         self.sensor = MPU9250(
             address_mpu_master=self.address,
-            mode=AK8963_MODE_C100HZ
+            mode=AK8963_MODE_C100HZ,
         )
+
+        # Set the bias from a previous calibration using the saved config
+        self.abias = self.config['bias']['accelerometer']
+        self.gbias = self.config['bias']['gyroscope']
+        self.mbias = self.config['bias']['magnetometer']
+
         self.sensor.configure()
 
     def _get_data(self, data: list) -> dict:
