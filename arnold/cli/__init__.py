@@ -22,6 +22,18 @@ def calibrate():
     pass
 
 
+# Calibration commands
+@calibrate.command()
+@click.option(
+    '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
+    help='I2C address of the device.'
+)
+def imu(address):
+    click.echo(f'Calibrating IMU at {address}')
+    imu = sensors.imu.IMU(address=address)
+    imu.calibrate()
+
+
 # Output device tests
 @test.command()
 @click.option(
@@ -94,18 +106,6 @@ def microphone(card_number, device_index):
     print(microphone.recognise_command(audio))
 
 
-# Calibration commands
-@calibrate.command()
-@click.option(
-    '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
-    help='I2C address of the device.'
-)
-def imu(address):
-    click.echo(f'Calibrating IMU at {address}')
-    imu = sensors.imu.IMU(address=address)
-    imu.calibrate()
-
-
 # Main run command
 @cli.command()
 @click.option(
@@ -135,4 +135,5 @@ def run(autonomous, voice_command, manual):
     arnold.run()
 
 
+cli.add_command(calibrate)
 cli.add_command(test)
