@@ -123,11 +123,11 @@ def microphone(card_number, device_index):
 # Main run command
 @cli.command()
 @click.option(
-    '--autonomous', is_flag=True,
+    '--autonomous', '-a', is_flag=True,
     help='Run arnold in autonomous mode.'
 )
 @click.option(
-    '--voice-command', is_flag=True,
+    '--voice-command', '-v', is_flag=True,
     help='Run arnold in voice command mode.'
 )
 @click.option(

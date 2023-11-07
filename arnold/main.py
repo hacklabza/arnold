@@ -56,8 +56,8 @@ class Arnold(object):
         """
         audio = self.microphone.listen()
         command = self.microphone.recognise_command(audio)
-        command_result = utils.CommandParser(command)
-        print(command_result)
+        command_parser = utils.CommandParser(command)
+        command_parser.parse()
 
     def run(self):
         """Run Arnold in a selected mode. Maps the mode to a 'private' method.

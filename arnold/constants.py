@@ -2,7 +2,7 @@ COMMAND_MAP = {
     'motion': {
         'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn'],
         'map': {
-            'class': 'motion.drivetrain.Drive',
+            'class': 'motion.drivetrain.DriveTrain',
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],
