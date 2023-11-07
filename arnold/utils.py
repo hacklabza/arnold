@@ -172,7 +172,10 @@ class CommandParser(object):
                     value_index = (
                         self.command_parts.index(list(recognised_param_token)[0]) + index_modifier
                     )
-                    param_value = self.command_parts[value_index]
+                    try:
+                        param_value = int(self.command_parts[value_index])
+                    except TypeError:
+                        param_value = self.command_parts[value_index]
 
                 method_params.update({
                     param_map['param']: param_value
