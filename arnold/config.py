@@ -8,7 +8,7 @@ load_dotenv()
 
 # Get the root directory
 ROOT_DIR = os.environ.get(
-    'ROOT_DIR',
+    'ARNOLD_ROOT_DIR',
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 
