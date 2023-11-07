@@ -57,15 +57,29 @@ COMMAND_MAP = {
             'methods': [
                 {
                     'tokens': ['today', 'now'],
-                    'method': 'today',
-                    'params': []
+                    'method': 'current',
+                    'params': [],
+                    'formatter': 'The humidity is {humidity}% and the current temperature is {temperature} C'
                 },
                 {
                     'tokens': ['tomorrow'],
                     'method': 'tomorrow',
-                    'params': []
+                    'params': [],
+                    'formatter': 'The humidity is {humidity}% and the current temperature is {temperature}'
                 }
             ]
         }
     }
+}
+
+INT_MAP = {
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
 }

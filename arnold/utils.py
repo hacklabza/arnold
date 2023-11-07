@@ -4,7 +4,7 @@ import threading
 import time
 from typing import Any, Callable, Dict, List, Optional, Set
 
-from arnold.constants import COMMAND_MAP
+from arnold.constants import COMMAND_MAP, INT_MAP
 
 
 class InterruptibleDelay(object):
@@ -172,10 +172,14 @@ class CommandParser(object):
                     value_index = (
                         self.command_parts.index(list(recognised_param_token)[0]) + index_modifier
                     )
-                    try:
-                        param_value = int(self.command_parts[value_index])
-                    except TypeError:
-                        param_value = self.command_parts[value_index]
+                    param_value = self.command_parts[value_index]
+                    if param_value in INT_MAP:
+                        param_value = INT_MAP[param_value]
+                    else:
+                        try:
+                            param_value = int(param_value)
+                        except TypeError:
+                            pass
 
                 method_params.update({
                     param_map['param']: param_value
