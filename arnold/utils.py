@@ -92,7 +92,7 @@ class CommandParser(object):
         """
         class_path_list = class_path.split('.')
         class_name = class_path_list[-1]
-        module_path = ''.join(class_path_list[:-1])
+        module_path = '.'.join(class_path_list[:-1])
         module = importlib.import_module(f'arnold.{module_path}')
         cls = getattr(module, class_name)
         instance = cls()
