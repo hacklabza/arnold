@@ -1,9 +1,9 @@
 import random
 from typing import Optional
 
-from arnold import api
+from arnold import api, utils
 from arnold.motion import drivetrain
-from arnold.sensors import imu, lidar
+from arnold.sensors import imu, lidar, microphone
 
 
 class Arnold(object):
@@ -21,6 +21,7 @@ class Arnold(object):
         self.imu = imu.IMU()
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
+        self.microphone = microphone.Microphone()
 
     def _run_autonomous(self) -> None:
         """Run Arnold in autonomous mode.
@@ -53,7 +54,9 @@ class Arnold(object):
     def _run_voicecommand(self):
         """Run Arnold in voice command mode.
         """
-        pass
+        audio = self.microphone.listen()
+        command = microphone.recognise_command(audio)
+        utils.CommandParser(command)
 
     def run(self):
         """Run Arnold in a selected mode. Maps the mode to a 'private' method.

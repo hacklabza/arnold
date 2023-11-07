@@ -27,8 +27,9 @@ venv:
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs the python deps.
-deps: $(venv)
+deps:
 	@echo "$(CYAN)Installing python deps...$(CLEAR)"
+
 	$(PIP) install .
 	@echo "$(GREEN)DONE$(CLEAR)"
 
@@ -36,7 +37,6 @@ deps: $(venv)
 install:
 	@echo "$(CYAN)Installing Arnold...$(CLEAR)"
 	@sudo apt install portaudio19-dev python3-dev flac
-
 
 # Run unittest suite.
 test: $(VENV)

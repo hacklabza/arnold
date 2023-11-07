@@ -1,8 +1,8 @@
 COMMAND_MAP = {
     'motion': {
-        'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive'],
+        'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn'],
         'map': {
-            'class': 'motion.drive.Drive',
+            'class': 'motion.drivetrain.Drive',
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],
@@ -11,7 +11,7 @@ COMMAND_MAP = {
                         {
                             'tokens': ['seconds', 'steps'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 },
@@ -22,7 +22,7 @@ COMMAND_MAP = {
                         {
                             'tokens': ['seconds', 'steps'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 },
@@ -43,7 +43,7 @@ COMMAND_MAP = {
                         {
                             'tokens': ['seconds', 'steps'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 }
