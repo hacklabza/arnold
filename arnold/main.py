@@ -55,7 +55,7 @@ class Arnold(object):
         """Run Arnold in voice command mode.
         """
         audio = self.microphone.listen()
-        command = microphone.recognise_command(audio)
+        command = self.microphone.recognise_command(audio)
         utils.CommandParser(command)
 
     def run(self):
