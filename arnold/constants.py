@@ -9,7 +9,7 @@ COMMAND_MAP = {
                     'method': 'forward',
                     'params': [
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
                             'param_value': 'prefix'
                         }
@@ -20,7 +20,7 @@ COMMAND_MAP = {
                     'method': 'back',
                     'params': [
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
                             'param_value': 'prefix'
                         }
@@ -46,7 +46,7 @@ COMMAND_MAP = {
                             'param_value': 'left'
                         },
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
                             'param_value': 'prefix'
                         }
