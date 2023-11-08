@@ -2,7 +2,7 @@ import importlib
 import string
 import threading
 import time
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 from arnold.constants import COMMAND_MAP, INT_MAP
 
@@ -80,7 +80,7 @@ class CommandParser(object):
         )
         return clean_command.split(' ')
 
-    def _get_method(self, class_path: str, method_name: str) -> Callable:
+    def _get_method(self, class_path: str, method_name: str) -> Tuple[object, Callable]:
         """Import and initiate the class and return the method.
 
         Args:
@@ -88,7 +88,8 @@ class CommandParser(object):
             method_name (str): the method to return
 
         Returns:
-            callable: the method the command is calling
+            tuple (object, callable): the class instance and method the command
+                is calling
         """
         class_path_list = class_path.split('.')
         class_name = class_path_list[-1]
@@ -96,7 +97,7 @@ class CommandParser(object):
         module = importlib.import_module(f'arnold.{module_path}')
         cls = getattr(module, class_name)
         instance = cls()
-        return getattr(instance, method_name)
+        return instance, getattr(instance, method_name)
 
     def _get_recognised_tokens(self, tokens: List) -> Set:
         """
@@ -198,14 +199,21 @@ class CommandParser(object):
         if class_map is not None:
             method_map = self._parse_class_map(class_map)
             if method_map is not None:
-                method = self._get_method(
+                instance, method = self._get_method(
                     class_path=class_map['class'],
                     method_name=method_map['method']
                 )
                 method_params = self._get_method_params(method_map)
 
                 # Executed the method
-                return method(**method_params)
+                method_result = method(**method_params)
+
+                # If a post hook is defined, get the method and execute it
+                if class_map['post_hook'] is not None:
+                    post_hook_method = getattr(instance, class_map['post_hook'])
+                    post_hook_method()
+
+                return method_result
 
 
 

@@ -3,6 +3,7 @@ COMMAND_MAP = {
         'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
             'class': 'motion.drivetrain.DriveTrain',
+            'post_hook': 'release',
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],
@@ -59,6 +60,7 @@ COMMAND_MAP = {
         'tokens': ['weather'],
         'map': {
             'class': 'lookup.weather.Weather',
+            'post_hook': None,
             'methods': [
                 {
                     'tokens': ['today', 'now'],
