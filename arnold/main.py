@@ -4,6 +4,7 @@ from typing import Optional
 
 from arnold import api, utils
 from arnold.motion import drivetrain
+from arnold.output import speaker
 from arnold.sensors import imu, lidar, microphone
 
 
@@ -27,6 +28,7 @@ class Arnold(object):
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
         self.microphone = microphone.Microphone()
+        self.speaker = speaker.Speaker()
 
         # Setup logging
         self._logger = _logger
@@ -70,7 +72,9 @@ class Arnold(object):
         while True:
             audio = self.microphone.listen()
             command = self.microphone.recognise_command(audio)
-            self._logger.info(f'Voice command recieved: "{command}"')
+            log_message = f'Voice command recieved: "{command}"'
+            self._logger.info(log_message)
+            self.speaker.say(log_message)
             command_parser = utils.CommandParser(command)
             command_parser.parse()
 
