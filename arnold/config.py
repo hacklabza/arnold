@@ -46,6 +46,11 @@ MOTION = {
 }
 
 SENSOR = {
+    'camera': {
+        'camera_number': 0,
+        'width': 640,
+        'height': 480,
+    },
     'imu': {
         'address': '68',
         'orientation': {
