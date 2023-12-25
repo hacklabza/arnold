@@ -146,8 +146,37 @@ print(axes)
 
 ### Setup
 
+Mounting and enabling the camera: https://raspberry-valley.azurewebsites.net/Mount-PiCamera/
+
 ### Config
+
+```python
+SENSOR = {
+    'camera': {
+        'camera_number': 0,
+        'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
+        'width': 640,
+        'height': 480,
+        'frame_rate': 15,
+        'duration': 10.0,
+    },
+    ...
+}
+```
 
 ### Testing
 
+```bash
+arnold test camera -f test.jpg
+```
+
 ### Usage
+
+```python
+from arnold.sensors.camera import Camera
+
+camera = Camera()
+camera.capture_image()
+camera.capture_video()
+camera.stream_video()
+```
