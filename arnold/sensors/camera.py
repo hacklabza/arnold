@@ -45,9 +45,9 @@ class Camera(object):
         width = width or self.config['width']
         height = height or self.config['height']
 
-        self._logger.info(f'Captured image to {file_path}.')
+        self._logger.info(f'Capturing image to {file_path}.')
 
-        # Capture and save image
+        # Capture and save the image
         camera = cv2.VideoCapture(self.camera_number)
         camera.set(3, width)
         camera.set(4, height)
@@ -57,3 +57,6 @@ class Camera(object):
 
         if image is not None:
             cv2.imwrite(file_path, image)
+            self._logger.info(f'Image captured to {file_path}.')
+        else:
+            self._logger.error(f'Failed to capture image.')

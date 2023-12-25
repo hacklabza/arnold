@@ -16,12 +16,12 @@ def cli():
 
 
 @click.group()
-def test():
+def calibrate():
     pass
 
 
 @click.group()
-def calibrate():
+def test():
     pass
 
 
@@ -117,7 +117,34 @@ def microphone(card_number, device_index):
         card_number=card_number, device_index=device_index
     )
     audio = microphone.listen()
-    print(microphone.recognise_command(audio))
+    click.echo(microphone.recognise_command(audio))
+
+
+@test.command()
+@click.option(
+    '--camera-number', '-c', default=config.SENSOR['camera']['camera_number'],
+    help='Camera number, usually set to 0 (zero).'
+)
+@click.option(
+    '--file-path', '-f', default=config.SENSOR['camera']['file_path'],
+    help='The file path to save the test image to.'
+)
+@click.option(
+    '--image-width', '-w', default=config.SENSOR['camera']['width'],
+    help='The width of the image to be captured.'
+)
+@click.option(
+    '--image-height', '-h', default=config.SENSOR['camera']['height'],
+    help='The height of the image to be captured.'
+)
+def camera(camera_number, file_path, width, height):
+    click.echo(f'Testing Camera at {camera_number}')
+    camera = sensors.camera.Camera(camera_number=camera_number)
+    camera.capture_image(
+        file_path=file_path,
+        width=width,
+        height=height
+    )
 
 
 # Main run command
