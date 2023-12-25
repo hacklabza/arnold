@@ -126,6 +126,12 @@ def microphone(card_number, device_index):
     help='Camera number, usually set to 0 (zero).'
 )
 @click.option(
+    '--video', '-v', is_flag=True, help='Test camera in video mode.'
+)
+@click.option(
+    '--image', '-i', is_flag=True, default=True, help='Test camera in image mode.'
+)
+@click.option(
     '--file-path', '-f', default=config.SENSOR['camera']['file_path'],
     help='The file path to save the test image to.'
 )
@@ -137,14 +143,34 @@ def microphone(card_number, device_index):
     '--image-height', '-h', default=config.SENSOR['camera']['height'],
     help='The height of the image to be captured.'
 )
-def camera(camera_number, file_path, width, height):
+@click.option(
+    '--frame-rate', '-r', default=config.SENSOR['camera']['frame_rate'],
+    help='The frame rate of the video to be captured.'
+)
+@click.option(
+    '--duration', '-d', default=config.SENSOR['camera']['duration'],
+    help='The duration of the video to be captured.'
+)
+def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
     click.echo(f'Testing Camera at {camera_number}')
     camera = sensors.camera.Camera(camera_number=camera_number)
-    camera.capture_image(
-        file_path=file_path,
-        width=width,
-        height=height
-    )
+
+    if image:
+        camera.capture_image(
+            file_path=file_path,
+            width=width,
+            height=height
+        )
+    elif video:
+        camera.capture_video(
+            file_path=file_path,
+            width=width,
+            height=height,
+            frame_rate=frame_rate,
+            duration=duration,
+        )
+    else:
+        click.echo('No camera mode selected. Selected either video or image.')
 
 
 # Main run command
