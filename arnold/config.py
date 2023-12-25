@@ -51,6 +51,8 @@ SENSOR = {
         'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
         'width': 640,
         'height': 480,
+        'frame_rate': 15,
+        'duration': 10.0,
     },
     'imu': {
         'address': '68',
