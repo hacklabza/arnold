@@ -1,16 +1,18 @@
 from typing import Optional
 
-from bottle import request, route, run
+from bottle import request, route, run, Response
 import uvicorn
 
 from arnold import config
 from arnold.output.speaker import Speaker
+from arnold.sensors.camera import Camera
 
 
 API_CONFIG = config.API
 
 # Module class instances, rather than init everytime
 speaker = Speaker()
+camera = Camera()
 
 
 # TODO (qoda): Make this super generic
@@ -26,6 +28,12 @@ def speak():
     phrase = request.json.get('phrase', 'No input')
     speaker.say(phrase)
     return {'success': True}
+
+
+@route('/sensor/camera', method='GET')
+def stream():
+    stream = camera.stream_video()
+    return Response(stream, mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 def runserver(host: Optional[str] = None, port: Optional[int] = None):
