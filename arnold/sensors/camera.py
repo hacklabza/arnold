@@ -71,12 +71,14 @@ class Camera(object):
         duration: Optional[float]
     ) -> None:
         """
-        Capture a video from the camera with option width and height.
+        Capture a video from the camera with option width, height, frame rate and
+        duration.
 
         Args:
             file_path (str): The file path to save the video to.
             width (str, optional): The wigth of the captured video.
             height (str, optional): The height of the captured video.
+            frame_rate (str, optional): The frame rate of the captured video.
             duration (str, optional): The duration of the captured video.
         """
         width = width or self.config['width']
@@ -107,3 +109,43 @@ class Camera(object):
         video.release()
 
         self._logger.info(f'Video captured to {file_path}.')
+
+    def stream_video(
+            self,
+            width: Optional[int],
+            height: Optional[int],
+            frame_rate: Optional[int]
+        ) -> None:
+        """Stream video from the camera with optional width, height and frame rate.
+
+        Args:
+            width (str, optional): The wigth of the captured video.
+            height (str, optional): The height of the captured video.
+            frame_rate (str, optional): The frame rate of the captured video.
+        """
+        width = width or self.config['width']
+        height = height or self.config['height']
+        frame_rate = frame_rate or self.config['frame_rate']
+
+        self._logger.info(f'Streaming video from camera.')
+
+        # Stream video from the camera
+        camera = cv2.VideoCapture(self.camera_number)
+        camera.set(3, width)
+        camera.set(4, height)
+
+        while True:
+            _, frame = camera.read()
+            _, jpeg = cv2.imencode('.jpg', frame)
+            jpeg_frame = jpeg.tobytes()
+
+            yield (
+                b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + jpeg_frame + b'\r\n\r\n'
+            )
+
+            if cv2.waitKey(1) == 27:
+                break
+
+        camera.release()
+        cv2.destroyAllWindows()
