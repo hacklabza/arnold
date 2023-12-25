@@ -14,7 +14,7 @@ setup(
     url="http://github.com/hacklabza/arnold",
     packages=find_packages(),
     dependency_links=[],
-    install_requires=list(open('requirements-rpi.txt', 'r').read().splitlines()),
+    install_requires=list(open('requirements.txt', 'r').read().splitlines()),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
