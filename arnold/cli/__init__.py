@@ -131,10 +131,12 @@ def microphone(card_number, device_index):
     '--file-path', '-f', default=None, help='The file path to save the test image to.'
 )
 @click.option(
-    '--width', '-w', default=None, help='The width of the image to be captured.'
+    '--width', '-w', default=None, type=int,
+    help='The width of the image to be captured.'
 )
 @click.option(
-    '--height', '-h', default=None, help='The height of the image to be captured.'
+    '--height', '-h', default=None, type=int,
+    help='The height of the image to be captured.'
 )
 @click.option(
     '--frame-rate', '-r', default=config.SENSOR['camera']['video']['frame_rate'],
