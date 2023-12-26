@@ -47,7 +47,6 @@ MOTION = {
 
 SENSOR = {
     'camera': {
-        'camera_number': 0,
         'image': {
             'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
             'height': 480,

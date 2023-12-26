@@ -122,10 +122,6 @@ def microphone(card_number, device_index):
 
 @test.command()
 @click.option(
-    '--camera-number', '-c', default=config.SENSOR['camera']['camera_number'],
-    help='Camera number, usually set to 0 (zero).'
-)
-@click.option(
     '--video', '-v', is_flag=True, help='Test camera in video mode.'
 )
 @click.option(
@@ -149,8 +145,9 @@ def microphone(card_number, device_index):
     help='The duration of the video to be captured.'
 )
 def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
-    click.echo(f'Testing Camera at {camera_number}')
-    camera = sensors.camera.Camera(camera_number=camera_number)
+    capture_mode = 'image' if image else 'video'
+    click.echo(f'Testing Camera in `{capture_mode}` mode.')
+    camera = sensors.camera.Camera()
 
     if image:
         camera.capture_image(
