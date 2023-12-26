@@ -13,7 +13,6 @@ PyAudio>=0.2.11
 pyserial>=3.5
 python-dotenv>=0.18.0
 pyttsx3>=2.90
-RPi.GPIO==0.7.1
 smbus2>=0.4.1
 SpeechRecognition>=3.8.1
 uvicorn>=0.22.0
