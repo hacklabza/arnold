@@ -23,6 +23,21 @@ RPi 4 Based Robotic Platform
  - libespeak1
  - espeak
  - ffmpeg
+ - ibjpeg-dev
+ - libtiff5-dev
+ - libjasper-dev
+ - libpng12-dev
+ - libavcodec-dev
+ - libavformat-dev
+ - libswscale-dev
+ - libatlas-base-dev
+ - libhdf5-103
+
+Run the following command to install
+
+```bash
+make install
+```
 
 ## Development
 

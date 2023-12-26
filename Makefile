@@ -36,9 +36,12 @@ deps:
 # Installs arnold on the raspberrypi.
 install:
 	@echo "$(CYAN)Installing Arnold...$(CLEAR)"
-	@sudo apt install portaudio19-dev python3-dev flac
+	@sudo apt install -y portaudio19-dev python3-dev flac libespeak1 espeak ffmpeg
+	@sudo apt install -y libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev libavcodec-dev libavformat-dev libswscale-dev
+	@sudo apt install -y qt4-dev-tools libatlas-base-dev libhdf5-103
 
 # Run unittest suite.
 test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
+	pip install -r requirements-test.txt
 	GPIOZERO_PIN_FACTORY=mock $(PYTEST) arnold
