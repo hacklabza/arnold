@@ -30,7 +30,6 @@ venv:
 deps:
 	@echo "$(CYAN)Installing python deps...$(CLEAR)"
 	$(PIP) install .
-	$(PIP) install -r requirements-rpi.txt
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs arnold on the raspberrypi.

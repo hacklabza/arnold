@@ -2,8 +2,7 @@ import logging
 import time
 from typing import Optional
 
-from picamera import PiCamera
-from picamera.array import PiRGBArray
+import picamera
 
 from arnold import config
 
@@ -42,7 +41,7 @@ class Camera(object):
         self._logger.info(f'Capturing image to {file_path}.')
 
         # Capture and save the image
-        camera = PiCamera()
+        camera = picamera.PiCamera()
         camera.resolution = (width, height)
         camera.start_preview()
 
@@ -60,7 +59,7 @@ class Camera(object):
         width: Optional[int] = None,
         height: Optional[int] = None,
         frame_rate: Optional[int] = None,
-        duration: Optional[float] = None,
+        duration: Optional[int] = None,
     ) -> None:
         """Capture a video from the camera with option width, height, frame rate and
         duration.
@@ -80,13 +79,13 @@ class Camera(object):
         self._logger.info(f'Capturing video to {file_path}.')
 
         # Capture and save the video
-        camera = PiCamera()
+        camera = picamera.PiCamera()
         camera.resolution = (width, height)
         camera.framerate = frame_rate
         camera.start_preview()
 
         # Allow the camera to warm up
-        time.sleep(0.1)
+        time.sleep(2)
 
         camera.start_recording(file_path)
         camera.wait_recording(duration)
