@@ -136,11 +136,11 @@ def microphone(card_number, device_index):
     help='The file path to save the test image to.'
 )
 @click.option(
-    '--image-width', '-w', default=config.SENSOR['camera']['width'],
+    '--width', '-w', default=config.SENSOR['camera']['width'],
     help='The width of the image to be captured.'
 )
 @click.option(
-    '--image-height', '-h', default=config.SENSOR['camera']['height'],
+    '--height', '-h', default=config.SENSOR['camera']['height'],
     help='The height of the image to be captured.'
 )
 @click.option(
