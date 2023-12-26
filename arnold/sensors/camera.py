@@ -33,8 +33,8 @@ class Camera(object):
     def capture_image(
             self,
             file_path: str,
-            width: Optional[int],
-            height: Optional[int]
+            width: Optional[int] = None,,
+            height: Optional[int] = None,
         ) -> None:
         """Capture an image to file from the camera with optional width and height.
 
@@ -65,10 +65,10 @@ class Camera(object):
     def capture_video(
         self,
         file_path: str,
-        width: Optional[int],
-        height: Optional[int],
-        frame_rate: Optional[int],
-        duration: Optional[float]
+        width: Optional[int] = None,,
+        height: Optional[int] = None,,
+        frame_rate: Optional[int] = None,,
+        duration: Optional[float] = None,
     ) -> None:
         """
         Capture a video from the camera with option width, height, frame rate and
@@ -112,9 +112,9 @@ class Camera(object):
 
     def stream_video(
             self,
-            width: Optional[int],
-            height: Optional[int],
-            frame_rate: Optional[int]
+            width: Optional[int] = None,
+            height: Optional[int] = None,
+            frame_rate: Optional[int] = None,
         ) -> None:
         """Stream video from the camera with optional width, height and frame rate.
 
