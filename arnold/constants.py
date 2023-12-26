@@ -1,6 +1,6 @@
 COMMAND_MAP = {
     'motion': {
-        'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
+        'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
             'class': 'motion.drivetrain.DriveTrain',
             'post_hook': 'release',
@@ -33,7 +33,7 @@ COMMAND_MAP = {
                     'params': []
                 },
                 {
-                    'tokens': ['turn', 'twist', 'swing'],
+                    'tokens': ['move', 'turn', 'go'],
                     'method': 'turn',
                     'params': [
                         {
