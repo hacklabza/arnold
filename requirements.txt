@@ -3,8 +3,7 @@ pip>=23.3
 bottle>=0.12.19
 click>=8.0.1
 google-api-python-client>=2.10.0
-gpiozero>=1.6.2
-importlib-metadata>=6.7.0
+gpiozero==1.6.2
 mpu9250-jmdev>=1.0.12
 nltk>=3.6.4
 numpy>=1.17.0
@@ -14,6 +13,7 @@ PyAudio>=0.2.11
 pyserial>=3.5
 python-dotenv>=0.18.0
 pyttsx3>=2.90
+RPi.GPIO==0.7.1
 smbus2>=0.4.1
 SpeechRecognition>=3.8.1
 uvicorn>=0.22.0

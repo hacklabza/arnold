@@ -129,7 +129,7 @@ def microphone(card_number, device_index):
     '--video', '-v', is_flag=True, help='Test camera in video mode.'
 )
 @click.option(
-    '--image', '-i', is_flag=True, default=True, help='Test camera in image mode.'
+    '--image', '-i', is_flag=True, help='Test camera in image mode.'
 )
 @click.option(
     '--file-path', '-f', default=config.SENSOR['camera']['file_path'],
