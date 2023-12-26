@@ -33,7 +33,7 @@ class Camera(object):
     def capture_image(
             self,
             file_path: str,
-            width: Optional[int] = None,,
+            width: Optional[int] = None,
             height: Optional[int] = None,
         ) -> None:
         """Capture an image to file from the camera with optional width and height.
@@ -65,9 +65,9 @@ class Camera(object):
     def capture_video(
         self,
         file_path: str,
-        width: Optional[int] = None,,
-        height: Optional[int] = None,,
-        frame_rate: Optional[int] = None,,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        frame_rate: Optional[int] = None,
         duration: Optional[float] = None,
     ) -> None:
         """
