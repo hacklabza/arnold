@@ -22,7 +22,7 @@ venv:
 	@echo "$(CYAN)Initialising virtualenv...$(CLEAR)"
 	python3 -m venv $(VENV)
 	@echo "$(CYAN)Activating virtualenv...$(CLEAR)"
-	source $(VENV)/bin/activate
+	. $(VENV)/bin/activate
 	cd .
 	@echo "$(GREEN)DONE$(CLEAR)"
 
