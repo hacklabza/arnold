@@ -15,7 +15,7 @@ class Camera(object):
     """A sensor class which initialises the camera component and adds image capture,
     video streaming and object recognition to Arnold.
     """
-    def __init__(self,) -> None:
+    def __init__(self) -> None:
         self.config = config.SENSOR['camera']
         self.image_config = self.config['image']
         self.video_config = self.config['video']

@@ -144,7 +144,7 @@ def microphone(card_number, device_index):
     '--duration', '-d', default=config.SENSOR['camera']['video']['duration'],
     help='The duration of the video to be captured.'
 )
-def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
+def camera(video, image, file_path, width, height, frame_rate, duration):
     capture_mode = 'image' if image else 'video'
     click.echo(f'Testing Camera in `{capture_mode}` mode.')
     camera = sensors.camera.Camera()
