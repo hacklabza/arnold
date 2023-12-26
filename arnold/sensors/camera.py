@@ -23,6 +23,8 @@ class Camera(object):
 
     ) -> None:
         self.config = config.SENSOR['camera']
+        self.image_config = self.config['image']
+        self.video_config = self.config['video']
 
         # RPi camera config
         self.camera_number = self.config['camera_number'] if camera_number is None else camera_number
@@ -43,8 +45,8 @@ class Camera(object):
             width (str, optional): The wigth of the captured image.
             height (str, optional): The height of the captured image.
         """
-        width = width or self.config['width']
-        height = height or self.config['height']
+        width = width or self.image_config['width']
+        height = height or self.image_config['height']
 
         self._logger.info(f'Capturing image to {file_path}.')
 
@@ -81,10 +83,10 @@ class Camera(object):
             frame_rate (str, optional): The frame rate of the captured video.
             duration (str, optional): The duration of the captured video.
         """
-        width = width or self.config['width']
-        height = height or self.config['height']
-        frame_rate = frame_rate or self.config['frame_rate']
-        duration = duration or self.config['duration']
+        width = width or self.video_config['width']
+        height = height or self.video_config['height']
+        frame_rate = frame_rate or self.video_config['frame_rate']
+        duration = duration or self.video_config['duration']
 
         self._logger.info(f'Capturing video to {file_path}.')
 
@@ -123,9 +125,9 @@ class Camera(object):
             height (str, optional): The height of the captured video.
             frame_rate (str, optional): The frame rate of the captured video.
         """
-        width = width or self.config['width']
-        height = height or self.config['height']
-        frame_rate = frame_rate or self.config['frame_rate']
+        width = width or self.video_config['width']
+        height = height or self.video_config['height']
+        frame_rate = frame_rate or self.video_config['frame_rate']
 
         self._logger.info(f'Streaming video from camera.')
 

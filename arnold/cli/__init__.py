@@ -132,23 +132,20 @@ def microphone(card_number, device_index):
     '--image', '-i', is_flag=True, help='Test camera in image mode.'
 )
 @click.option(
-    '--file-path', '-f', default=config.SENSOR['camera']['file_path'],
-    help='The file path to save the test image to.'
+    '--file-path', '-f', default=None, help='The file path to save the test image to.'
 )
 @click.option(
-    '--width', '-w', default=config.SENSOR['camera']['width'],
-    help='The width of the image to be captured.'
+    '--width', '-w', default=None, help='The width of the image to be captured.'
 )
 @click.option(
-    '--height', '-h', default=config.SENSOR['camera']['height'],
-    help='The height of the image to be captured.'
+    '--height', '-h', default=None, help='The height of the image to be captured.'
 )
 @click.option(
-    '--frame-rate', '-r', default=config.SENSOR['camera']['frame_rate'],
+    '--frame-rate', '-r', default=config.SENSOR['camera']['video']['frame_rate'],
     help='The frame rate of the video to be captured.'
 )
 @click.option(
-    '--duration', '-d', default=config.SENSOR['camera']['duration'],
+    '--duration', '-d', default=config.SENSOR['camera']['video']['duration'],
     help='The duration of the video to be captured.'
 )
 def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
@@ -157,15 +154,15 @@ def camera(camera_number, video, image, file_path, width, height, frame_rate, du
 
     if image:
         camera.capture_image(
-            file_path=file_path,
-            width=width,
-            height=height
+            file_path=file_path or config.SENSOR['camera']['image']['file_path'],
+            width=width or config.SENSOR['camera']['image']['width'],
+            height=height or config.SENSOR['camera']['image']['height'],
         )
     elif video:
         camera.capture_video(
-            file_path=file_path,
-            width=width,
-            height=height,
+            file_path=file_path or config.SENSOR['camera']['video']['file_path'],
+            width=width or config.SENSOR['camera']['video']['width'],
+            height=height or config.SENSOR['camera']['video']['height'],
             frame_rate=frame_rate,
             duration=duration,
         )

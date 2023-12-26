@@ -48,11 +48,18 @@ MOTION = {
 SENSOR = {
     'camera': {
         'camera_number': 0,
-        'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
-        'width': 640,
-        'height': 480,
-        'frame_rate': 15,
-        'duration': 10.0,
+        'image': {
+            'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
+            'height': 480,
+            'width': 640,
+        },
+        'video': {
+            'duration': 10.0,
+            'file_path': os.path.join(ROOT_DIR, 'video.avi'),
+            'frame_rate': 15,
+            'height': 480,
+            'width': 640,
+        }
     },
     'imu': {
         'address': '68',
