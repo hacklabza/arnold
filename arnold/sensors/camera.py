@@ -17,11 +17,7 @@ class Camera(object):
     Args:
         camera_number (int, optional): The camera device number.
     """
-    def __init__(
-        self,
-        camera_number: Optional[int] = None,
-
-    ) -> None:
+    def __init__(self, camera_number: Optional[int] = None) -> None:
         self.config = config.SENSOR['camera']
         self.image_config = self.config['image']
         self.video_config = self.config['video']
