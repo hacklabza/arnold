@@ -153,6 +153,7 @@ Mounting and enabling the camera: https://raspberry-valley.azurewebsites.net/Mou
 ```python
 SENSOR = {
     'camera': {
+        'camera_number': 0,
         'image': {
             'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
             'height': 480,
