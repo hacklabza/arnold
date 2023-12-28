@@ -23,15 +23,15 @@ def health():
     return {'success': True}
 
 
-@route('/output/speaker', method='POST')
-def speak():
+@route('/output/speaker/say', method='POST')
+def say():
     phrase = request.json.get('phrase', 'No input')
     speaker.say(phrase)
     return {'success': True}
 
 
-@route('/sensor/camera', method='GET')
-def stream():
+@route('/sensor/camera/stream', method='GET')
+def video_stream():
     stream = camera.stream_video()
     return Response(stream, mimetype='multipart/x-mixed-replace; boundary=frame')
 
