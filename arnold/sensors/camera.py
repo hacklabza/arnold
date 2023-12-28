@@ -132,16 +132,22 @@ class Camera(object):
 
         while True:
             _, frame = camera.read()
-            _, jpeg = cv2.imencode('.jpg', frame)
+            created, jpeg = cv2.imencode('.jpg', frame)
+            if not created:
+                continue
+
             jpeg_frame = jpeg.tobytes()
+            content_length = len(jpeg_frame)
 
             yield (
                 b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + jpeg_frame + b'\r\n\r\n'
+                b'Content-Type: image/jpeg\r\n'
+                b'Content-Length: ' + str(content_length).encode() + b'\r\n'
+                b'\r\n' + jpeg_frame + b'\r\n\r\n'
             )
 
             if cv2.waitKey(1) == 27:
                 break
 
-        camera.release()
         cv2.destroyAllWindows()
+        camera.release()
