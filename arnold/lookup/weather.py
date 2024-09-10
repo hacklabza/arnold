@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
@@ -5,6 +6,8 @@ from typing import Optional
 import requests
 
 from arnold import config
+
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -31,6 +34,9 @@ class Weather(object):
         self.location = location
         self.config = config.INTEGRATION['weather']
 
+        # Setup logging
+        self._logger = _logger
+
     def _build_url(self) -> str:
         base_url, api_key = self.config['url'], self.config['api_key']
         return f'{base_url}?lat={self.location.latitude}&lon={self.location.longitude}&exclude=minutely,hourly&units=metric&appid={api_key}'
@@ -53,6 +59,7 @@ class Weather(object):
                     'temperature': current_weather_data['temp'],
                 }
             except (KeyError, IndexError):
+                self._logger.warning(f'No weather data returned for {self.location}')
                 return None
 
     @property
@@ -78,5 +85,6 @@ class Weather(object):
                         }
                     )
                 except (KeyError, IndexError):
+                    self._logger.warning(f'No weather data returned for {self.location}')
                     return None
             return parsed_forecast_weather_data
