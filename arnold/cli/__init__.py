@@ -16,12 +16,12 @@ def cli():
 
 
 @click.group()
-def test():
+def calibrate():
     pass
 
 
 @click.group()
-def calibrate():
+def test():
     pass
 
 
@@ -117,17 +117,70 @@ def microphone(card_number, device_index):
         card_number=card_number, device_index=device_index
     )
     audio = microphone.listen()
-    print(microphone.recognise_command(audio))
+    click.echo(microphone.recognise_command(audio))
+
+
+@test.command()
+@click.option(
+    '--camera-number', '-c', default=config.SENSOR['camera']['camera_number'],
+    help='Camera number to test.'
+)
+@click.option(
+    '--video', '-v', is_flag=True, help='Test camera in video mode.'
+)
+@click.option(
+    '--image', '-i', is_flag=True, help='Test camera in image mode.'
+)
+@click.option(
+    '--file-path', '-f', default=None, help='The file path to save the test image to.'
+)
+@click.option(
+    '--width', '-w', default=None, type=int,
+    help='The width of the image to be captured.'
+)
+@click.option(
+    '--height', '-h', default=None, type=int,
+    help='The height of the image to be captured.'
+)
+@click.option(
+    '--frame-rate', '-r', default=config.SENSOR['camera']['video']['frame_rate'],
+    help='The frame rate of the video to be captured.'
+)
+@click.option(
+    '--duration', '-d', default=config.SENSOR['camera']['video']['duration'],
+    help='The duration of the video to be captured.'
+)
+def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
+    capture_mode = 'image' if image else 'video'
+    click.echo(f'Testing Camera in `{capture_mode}` mode.')
+    camera = sensors.camera.Camera(camera_number=camera_number)
+
+    if image:
+        camera.capture_image(
+            file_path=file_path or config.SENSOR['camera']['image']['file_path'],
+            width=width or config.SENSOR['camera']['image']['width'],
+            height=height or config.SENSOR['camera']['image']['height'],
+        )
+    elif video:
+        camera.capture_video(
+            file_path=file_path or config.SENSOR['camera']['video']['file_path'],
+            width=width or config.SENSOR['camera']['video']['width'],
+            height=height or config.SENSOR['camera']['video']['height'],
+            frame_rate=frame_rate,
+            duration=duration,
+        )
+    else:
+        click.echo('No camera mode selected. Selected either video or image.')
 
 
 # Main run command
 @cli.command()
 @click.option(
-    '--autonomous', is_flag=True,
+    '--autonomous', '-a', is_flag=True,
     help='Run arnold in autonomous mode.'
 )
 @click.option(
-    '--voice-command', is_flag=True,
+    '--voice-command', '-v', is_flag=True,
     help='Run arnold in voice command mode.'
 )
 @click.option(

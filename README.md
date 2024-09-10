@@ -23,6 +23,13 @@ RPi 4 Based Robotic Platform
  - libespeak1
  - espeak
  - ffmpeg
+ - python3-opencv
+
+Run the following command to install
+
+```bash
+make install
+```
 
 ## Development
 

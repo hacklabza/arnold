@@ -22,12 +22,12 @@ venv:
 	@echo "$(CYAN)Initialising virtualenv...$(CLEAR)"
 	python3 -m venv $(VENV)
 	@echo "$(CYAN)Activating virtualenv...$(CLEAR)"
-	source $(VENV)/bin/activate
+	. $(VENV)/bin/activate
 	cd .
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs the python deps.
-deps: $(venv)
+deps:
 	@echo "$(CYAN)Installing python deps...$(CLEAR)"
 	$(PIP) install .
 	@echo "$(GREEN)DONE$(CLEAR)"
@@ -35,10 +35,13 @@ deps: $(venv)
 # Installs arnold on the raspberrypi.
 install:
 	@echo "$(CYAN)Installing Arnold...$(CLEAR)"
-	@sudo apt install portaudio19-dev python3-dev flac
-
+	@sudo apt update -y
+	@sudo apt ugrade -y
+	@sudo apt install -y portaudio19-dev python3-dev flac libespeak1 espeak ffmpeg
+	@sudo apt install -y python3-opencv
 
 # Run unittest suite.
 test: $(VENV)
 	@echo "$(CYAN)Running unittests...$(CLEAR)"
+	pip install -r requirements-test.txt
 	GPIOZERO_PIN_FACTORY=mock $(PYTEST) arnold

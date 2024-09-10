@@ -41,7 +41,6 @@ class Weather(object):
         response.raise_for_status()
         return response.json()
 
-
     @property
     def current(self) -> Optional[dict]:
         weather_data = self._get_weather_data()
@@ -75,6 +74,7 @@ class Weather(object):
                                 'maximum': forecast['temp']['max'],
                                 'minimum': forecast['temp']['min'],
                             },
+                            'summary': forecast.get('summary', None)
                         }
                     )
                 except (KeyError, IndexError):

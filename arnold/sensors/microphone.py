@@ -97,8 +97,3 @@ class Microphone(object):
             self._logger.error(
                 'Can\'t proceed. Google Cloud API key not found.'
             )
-
-        return ''
-
-
-

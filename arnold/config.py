@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get the root directory
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.environ.get(
+    'ARNOLD_ROOT_DIR',
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 
 # Integration config
 INTEGRATION = {
@@ -43,6 +46,21 @@ MOTION = {
 }
 
 SENSOR = {
+    'camera': {
+        'camera_number': 0,
+        'image': {
+            'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
+            'height': 480,
+            'width': 640,
+        },
+        'video': {
+            'duration': 10,
+            'file_path': os.path.join(ROOT_DIR, 'video.avi'),
+            'frame_rate': 15,
+            'height': 480,
+            'width': 640,
+        }
+    },
     'imu': {
         'address': '68',
         'orientation': {
