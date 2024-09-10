@@ -2,7 +2,8 @@ pip>=24.0.0
 
 bottle==0.12.20
 click==8.0.1
-google-api-python-client==2.10.0
+google-api-python-client>=2.10.0
+google-cloud-speech>=1.34.1
 gpiozero==1.6.2
 mpu9250-jmdev>=1.0.12
 nltk>=3.6.6
