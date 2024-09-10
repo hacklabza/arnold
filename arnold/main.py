@@ -1,9 +1,14 @@
+import logging
 import random
 from typing import Optional
 
-from arnold import api
+from arnold import api, utils
 from arnold.motion import drivetrain
-from arnold.sensors import imu, lidar
+from arnold.output import speaker
+from arnold.sensors import imu, lidar, microphone
+
+
+_logger = logging.getLogger(__name__)
 
 
 class Arnold(object):
@@ -18,9 +23,15 @@ class Arnold(object):
     def __init__(self, mode: Optional[str] = None) -> None:
         self.mode = mode or 'manual'
 
+        # Setup required classes
         self.imu = imu.IMU()
         self.lidar = lidar.Lidar()
         self.drivetrain = drivetrain.DriveTrain()
+        self.microphone = microphone.Microphone()
+        self.speaker = speaker.Speaker()
+
+        # Setup logging
+        self._logger = _logger
 
     def _run_autonomous(self) -> None:
         """Run Arnold in autonomous mode.
@@ -53,7 +64,19 @@ class Arnold(object):
     def _run_voicecommand(self):
         """Run Arnold in voice command mode.
         """
-        pass
+
+        # Release the drivertrain
+        self.drivetrain.release()
+
+        # Capture the audio and parse the command
+        while True:
+            audio = self.microphone.listen()
+            command = self.microphone.recognise_command(audio)
+            log_message = f'Voice command recieved: "{command}"'
+            self._logger.info(log_message)
+            self.speaker.say(log_message)
+            command_parser = utils.CommandParser(command)
+            command_parser.parse()
 
     def run(self):
         """Run Arnold in a selected mode. Maps the mode to a 'private' method.

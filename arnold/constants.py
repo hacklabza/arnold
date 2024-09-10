@@ -1,17 +1,18 @@
 COMMAND_MAP = {
     'motion': {
-        'tokens': ['go', 'proceed', 'move', 'travel', 'walk', 'drive'],
+        'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
-            'class': 'motion.drive.Drive',
+            'class': 'motion.drivetrain.DriveTrain',
+            'post_hook': 'release',
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],
                     'method': 'forward',
                     'params': [
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 },
@@ -20,14 +21,19 @@ COMMAND_MAP = {
                     'method': 'back',
                     'params': [
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 },
                 {
-                    'tokens': ['turn', 'twist', 'swing'],
+                    'tokens': ['stop', 'halt', 'pause'],
+                    'method': 'stop',
+                    'params': []
+                },
+                {
+                    'tokens': ['move', 'turn', 'go'],
                     'method': 'turn',
                     'params': [
                         {
@@ -41,9 +47,9 @@ COMMAND_MAP = {
                             'param_value': 'left'
                         },
                         {
-                            'tokens': ['seconds', 'steps'],
+                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
                             'param': 'duration',
-                            'param_value': 'suffix'
+                            'param_value': 'prefix'
                         }
                     ]
                 }
@@ -54,18 +60,33 @@ COMMAND_MAP = {
         'tokens': ['weather'],
         'map': {
             'class': 'lookup.weather.Weather',
+            'post_hook': None,
             'methods': [
                 {
                     'tokens': ['today', 'now'],
-                    'method': 'today',
-                    'params': []
+                    'method': 'current',
+                    'params': [],
+                    'formatter': 'The humidity is {humidity}% and the current temperature is {temperature} C'
                 },
                 {
                     'tokens': ['tomorrow'],
                     'method': 'tomorrow',
-                    'params': []
+                    'params': [],
+                    'formatter': 'The humidity is {humidity}% and the current temperature is {temperature}'
                 }
             ]
         }
     }
+}
+
+INT_MAP = {
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
 }
