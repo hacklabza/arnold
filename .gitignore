@@ -39,3 +39,6 @@ celerybeat-schedule
 .AppleDouble/
 .env
 .keys/
+
+# pyenv
+.python-version

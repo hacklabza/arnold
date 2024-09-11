@@ -12,7 +12,7 @@ RPi 4 Based Robotic Platform
 
  - Raspberry Pi OS Lite (Preferrable but not essential)
  - Git
- - Python 3.7+
+ - Python 3.10+
  - Python Virtualenv
 
 ## Build Requirements
@@ -24,6 +24,7 @@ RPi 4 Based Robotic Platform
  - espeak
  - ffmpeg
  - python3-opencv
+ - ninja-build
 
 Run the following command to install system dependancies
 
@@ -39,7 +40,7 @@ git clone git@github.com:hacklabza/arnold.git
 cd arnold/
 
 # Setup the virtualenv and install the python deps
-make venv
+make poetry
 make deps
 
 # Run unittest
