@@ -151,17 +151,16 @@ def microphone(card_number, device_index):
     help='The duration of the video to be captured.'
 )
 def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
-    capture_mode = 'image' if image else 'video'
-    click.echo(f'Testing Camera in `{capture_mode}` mode.')
     camera = sensors.camera.Camera(camera_number=camera_number)
-
     if image:
+        click.echo(f'Testing Camera in `image` mode.')
         camera.capture_image(
             file_path=file_path or config.SENSOR['camera']['image']['file_path'],
             width=width or config.SENSOR['camera']['image']['width'],
             height=height or config.SENSOR['camera']['image']['height'],
         )
     elif video:
+        click.echo(f'Testing Camera in `video` mode.')
         camera.capture_video(
             file_path=file_path or config.SENSOR['camera']['video']['file_path'],
             width=width or config.SENSOR['camera']['video']['width'],

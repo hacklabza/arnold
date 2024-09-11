@@ -52,10 +52,10 @@ class Camera(object):
         camera.set(4, height)
 
         _, image = camera.read()
-        flipped_image = cv2.flip(image, 0)
+        flipped_image = cv2.flip(image, 0) if image is not None else None
         camera.release()
 
-        if image is not None:
+        if flipped_image is not None:
             cv2.imwrite(file_path, flipped_image)
             self._logger.info(f'Image captured to {file_path}.')
         else:
