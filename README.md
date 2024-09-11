@@ -3,7 +3,7 @@ RPi 4 Based Robotic Platform
 
 ## Setup
 
- - Distro download: https://www.raspberrypi.org/software/operating-systems/#raspberry-pi-os-32-bit
+ - Distro download: https://www.raspberrypi.org/software/operating-systems/#raspberry-pi-os-64-bit
  - Remote Access: https://www.raspberrypi.org/documentation/remote-access/
  - Headless Wifi: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
  - Configure sound: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
@@ -25,6 +25,7 @@ RPi 4 Based Robotic Platform
  - ffmpeg
  - python3-opencv
  - ninja-build
+ - poetry (https://python-poetry.org/docs/#installing-with-the-official-installer)
 
 Run the following command to install system dependancies
 
@@ -54,12 +55,12 @@ make test
 ping raspberrypi.local
 
 # Access to the commandline over SSH
-ssh pi@192.168.1.115
+ssh pi@raspberrypi.local
 
 # Clone and install arnold
 git clone git@github.com:hacklabza/arnold.git
 cd arnold/
-sudo make install
+make install
 make poetry
 
 # Run the unittests to make sure arnold is installed correctly

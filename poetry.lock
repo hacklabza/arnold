@@ -439,6 +439,17 @@ files = [
 ]
 
 [[package]]
+name = "mpu9250-jmdev"
+version = "1.0.12"
+description = "MPU-9250 (MPU-6500 + AK8963) I2C Driver in Python for Raspbery PI"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "mpu9250_jmdev-1.0.12-py3-none-any.whl", hash = "sha256:2a34e9e68e4c2dff0367c73a61c12d5fcea4bb8f82d84c3ddacc881d97c8ae8d"},
+    {file = "mpu9250_jmdev-1.0.12.tar.gz", hash = "sha256:0f79c3efb6ad92a680490b4b493ffe74536aa048b8d714202b95a9cff56d581b"},
+]
+
+[[package]]
 name = "nltk"
 version = "3.9.1"
 description = "Natural Language Toolkit"
@@ -3741,4 +3752,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "198bf31f2a127643ed3079797d6618bdb2fc2c689c48aa195c61651a582dec0b"
+content-hash = "914ff0398b97d43c4190615a383ef6a45f2daa03464f34319ff1809820b15848"
