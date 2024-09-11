@@ -25,7 +25,7 @@ RPi 4 Based Robotic Platform
  - ffmpeg
  - python3-opencv
 
-Run the following command to install
+Run the following command to install system dependancies
 
 ```bash
 make install
@@ -59,6 +59,7 @@ ssh pi@192.168.1.115
 git clone git@github.com:hacklabza/arnold.git
 cd arnold/
 sudo make install
+make poetry
 
 # Run the unittests to make sure arnold is installed correctly
 make test

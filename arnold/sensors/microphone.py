@@ -85,12 +85,9 @@ class Microphone(object):
                 recognision engine.
         """
         if self.google_api_key_path:
-            google_cloud_credentials = ''
-            with open(os.path.join(config.ROOT_DIR, self.google_api_key_path), 'r') as file:
-                google_cloud_credentials = file.read()
             return self.speech_recogniser.recognize_google_cloud(
                 voice_command,
-                credentials_json=google_cloud_credentials,
+                credentials_json=os.path.join(config.ROOT_DIR, self.google_api_key_path),
                 language='en-ZA'
             )
         else:
