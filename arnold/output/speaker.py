@@ -27,7 +27,7 @@ class Speaker(object):
         rate: Optional[int] = None,
         volume: Optional[float] = None
     ) -> None:
-        self.config = config.INTEGRATION['speaker']
+        self.config = config.OUTPUT['speaker']
         self.speech_engine = pyttsx3.init()
 
         # Setup logging
