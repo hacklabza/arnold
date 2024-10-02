@@ -2,7 +2,7 @@
 
 Arnold is able to do lookups from external APIs as follows:
 
-## ChatGPT
+## OpenAI
 
 ### Config
 
@@ -10,10 +10,10 @@ Update in `arnold/config.py` or via env vars.
 
 ```python
 INTEGRATION = {
-    'chatgpt': {
-        'api_key': '<your-chatgpt-api-key>',
-        'organization_id': '<your-chatgpt-organizationid>',
-        'project_id': '<your-chatgpt-projectid>',
+    'openai': {
+        'api_key': '<your-openai-api-key>',
+        'organization_id': '<your-openai-organizationid>',
+        'project_id': '<your-openai-projectid>',
         'model': 'gpt-4o-mini',
         'temperature': 0.2,
         'max_tokens': 100,
@@ -25,11 +25,11 @@ INTEGRATION = {
 ### Usage
 
 ```python
-from arnold.lookup import chatgpt
+from arnold.lookup import openai
 
 message = 'Hi Arnold, how you doing today?'
-chatgpt = chatgpt.ChaptGPT()
-response = chatgpt.prompt(message=message)
+openai = openai.OpenAI()
+response = openai.prompt(message=message)
 
 # Get the response
 response.message

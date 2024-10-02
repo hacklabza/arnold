@@ -21,13 +21,13 @@ INTEGRATION = {
         'url': 'https://api.openweathermap.org/data/3.0/onecall',
         'api_key': os.environ.get('ARNOLD_OPENWEATHER_APIKEY', 'openweather-key'),
     },
-    'chatgpt': {
-        'api_key': os.environ.get('ARNOLD_CHATGPT_APIKEY', 'chatgpt-key'),
+    'openai': {
+        'api_key': os.environ.get('ARNOLD_OPENAI_APIKEY', 'openai-key'),
         'organization_id': os.environ.get(
-            'ARNOLD_CHATGPT_ORGANIZATIONID', 'chatgpt-organizationid'
+            'ARNOLD_OPENAI_ORGANIZATIONID', 'openai-organizationid'
         ),
-        'project_id': os.environ.get('ARNOLD_CHATGPT_PROJECTID', 'chatgpt-projectid'),
-        'model': os.environ.get('ARNOLD_CHATGPT_MODEL', 'gpt-4o-mini'),
+        'project_id': os.environ.get('ARNOLD_OPENAI_PROJECTID', 'openai-projectid'),
+        'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-4o-mini'),
         'temperature': 0.2,
         'max_tokens': 100,
     }
