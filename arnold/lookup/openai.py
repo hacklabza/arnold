@@ -50,7 +50,6 @@ class OpenAI(object):
         # Setup logging
         self._logger = _logger
 
-    @property
     def prompt(
         self,
         message: str,
