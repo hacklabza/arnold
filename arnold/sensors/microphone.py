@@ -53,7 +53,7 @@ class Microphone(object):
         # Google Cloud API integration
         try:
             self.google_api_key_path = (
-                google_api_key_path or config.INTEGRATION['google_cloud']['key_path']
+                google_api_key_path or config.INTEGRATION['googlecloud']['key_path']
             )
         except KeyError:
             self.google_api_key = None
