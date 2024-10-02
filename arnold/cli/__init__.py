@@ -53,9 +53,17 @@ def imu(address):
 @click.option(
     '--phrase', '-p', required=True, help='The phrase that should be spoken.'
 )
-def speaker(phrase):
+@click.option(
+    '--rate', '-r', default=config.OUTPUT['speaker']['rate'],
+    help='The rate at which to speak the phrase in words per minute.'
+)
+@click.option(
+    '--volume', '-v', default=config.OUTPUT['speaker']['volume'],
+    help='The volume at which to speak the phrase.'
+)
+def speaker(phrase, rate, volume):
     click.echo(f'Testing Speaker with "{phrase}"')
-    speaker = output.speaker.Speaker()
+    speaker = output.speaker.Speaker(rate=rate, volume=volume)
     speaker.say(phrase)
 
 

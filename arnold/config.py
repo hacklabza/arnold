@@ -55,6 +55,13 @@ MOTION = {
     }
 }
 
+OUTPUT = {
+    'speaker': {
+        'rate': 150,
+        'volume': 1.0
+    }
+}
+
 SENSOR = {
     'camera': {
         'camera_number': 0,
