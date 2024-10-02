@@ -26,7 +26,9 @@ install:
 	@echo "$(CYAN)Installing Arnold...$(CLEAR)"
 	@sudo apt update -y
 	@sudo apt upgrade -y
-	@sudo apt install -y portaudio19-dev python3-dev flac libespeak1 espeak ffmpeg python3-opencv
+	@sudo apt install -y portaudio19-dev python3-dev flac libespeak1 espeak ffmpeg python3-opencv \
+		python3-picamera2 libatlas-base-dev libatlas3-base libcap-dev libcamera-dev libkms++-dev \
+		libfmt-dev libdrm-dev
 
 # Run unittest suite.
 test: poetry
