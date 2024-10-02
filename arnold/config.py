@@ -14,12 +14,22 @@ ROOT_DIR = os.environ.get(
 
 # Integration config
 INTEGRATION = {
-    'google_cloud': {
-        'key_path': os.environ.get('ARNOLD_GOOGLE_CLOUD_KEY_PATH')
+    'googlecloud': {
+        'key_path': os.environ.get('ARNOLD_GOOGLECLOUD_KEY_PATH'),
     },
-    'weather': {
-        'url': 'https://api.openweathermap.org/data/2.5/onecall',
+    'openweather': {
+        'url': 'https://api.openweathermap.org/data/3.0/onecall',
         'api_key': os.environ.get('ARNOLD_OPENWEATHER_APIKEY', 'openweather-key'),
+    },
+    'chatgpt': {
+        'api_key': os.environ.get('ARNOLD_CHATGPT_APIKEY', 'chatgpt-key'),
+        'organization_id': os.environ.get(
+            'ARNOLD_CHATGPT_ORGANIZATIONID', 'chatgpt-organizationid'
+        ),
+        'project_id': os.environ.get('ARNOLD_CHATGPT_PROJECTID', 'chatgpt-projectid'),
+        'model': os.environ.get('ARNOLD_CHATGPT_MODEL', 'gpt-4o-mini'),
+        'temperature': 0.2,
+        'max_tokens': 100,
     }
 }
 
