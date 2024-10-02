@@ -40,7 +40,7 @@ class OpenAI(object):
     """
 
     def __init__(self) -> None:
-        self.config = config.INTEGRATION['OpenAI']
+        self.config = config.INTEGRATION['openai']
         self.client = openai.OpenAI(
             api_key=self.config['api_key'],
             organization=self.config['organization_id'],
