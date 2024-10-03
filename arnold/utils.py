@@ -1,10 +1,13 @@
 import importlib
+import logging
 import string
 import threading
 import time
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 from arnold.constants import COMMAND_MAP, INT_MAP
+
+_logger = logging.getLogger(__name__)
 
 
 class InterruptibleDelay(object):
@@ -67,6 +70,9 @@ class CommandParser(object):
         self.command = command
         self.command_parts = self._split_command()
         self.command_map = command_map or COMMAND_MAP
+
+        # Setup logging
+        self._logger = _logger
 
     def _split_command(self) -> List:
         """
@@ -197,6 +203,7 @@ class CommandParser(object):
         """
         class_map = self._parse_command_map()
         if class_map is not None:
+            class_name = class_map['class']
             method_map = self._parse_class_map(class_map)
             if method_map is not None:
                 instance, method = self._get_method(
@@ -217,6 +224,8 @@ class CommandParser(object):
                 if class_map.get('post_hook') is not None:
                     post_hook_method = getattr(instance, class_map['post_hook'])
                     post_hook_method()
+
+                self._logger.info(f'Command result for {class_name}.{method.__name__}: {method_result}')
 
                 # Format the result if a formatter is defined as return value
                 formatter = method_map.get('formatter')

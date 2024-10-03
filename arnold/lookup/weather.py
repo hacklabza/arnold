@@ -7,6 +7,7 @@ import requests
 
 from arnold import config
 
+
 _logger = logging.getLogger(__name__)
 
 
