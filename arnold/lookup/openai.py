@@ -5,7 +5,7 @@ from typing import Optional
 from openai import OpenAI as OpenAIClient
 import requests
 
-from arnold import config
+from arnold import config, utils
 
 _logger = logging.getLogger(__name__)
 
@@ -98,6 +98,6 @@ class OpenAI(object):
 
         # Return the completion result
         return Completion(
-            message=completion.choices[0].message.content,
+            message=utils.sanitise_input(completion.choices[0].message.content),
             total_tokens=completion.usage.total_tokens
         )

@@ -10,6 +10,13 @@ from arnold.constants import COMMAND_MAP, INT_MAP
 _logger = logging.getLogger(__name__)
 
 
+def sanitise_input(input: str) -> str:
+    """
+    Sanitise the input string by removing punctuation and converting to lowercase.
+    """
+    return input.translate(str.maketrans('', '', string.punctuation)).lower()
+
+
 class InterruptibleDelay(object):
     """An interruptable delay used to ensure that `sleep` can be interrupted
     before the delay timeout is complete.
@@ -81,9 +88,7 @@ class CommandParser(object):
         Returns:
             list: command word list
         """
-        clean_command = self.command.translate(
-            str.maketrans('', '', string.punctuation)
-        )
+        clean_command = sanitise_input(self.command)
         return clean_command.split(' ')
 
     def _get_method(self, class_path: str, method_name: str) -> Tuple[object, Callable]:
