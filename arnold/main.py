@@ -59,6 +59,7 @@ class Arnold(object):
 
         except KeyboardInterrupt:
             self.drivetrain.stop()
+            self.drivetrain.release()
 
     def _run_manual(self):
         """Run Arnold in manual mode over the API.
