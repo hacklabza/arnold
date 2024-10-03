@@ -54,7 +54,7 @@ class Arnold(object):
                             self.drivetrain.stop()
                             break
 
-                if not drivetrain.is_active:
+                if not self.drivetrain.is_active:
                     self.drivetrain.forward(duration=60)
 
         except KeyboardInterrupt:
