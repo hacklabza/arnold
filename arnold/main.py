@@ -75,9 +75,12 @@ class Arnold(object):
         while True:
             audio = self.microphone.listen()
             command = self.microphone.recognise_command(audio)
-            log_message = f'Voice command recieved: "{command}"'
-            self._logger.info(log_message)
-            self.speaker.say(log_message)
+            self._logger.info(f'Voice command recieved: "{command}"')
+
+            # Break if the command contains the word 'exit'
+            if 'exit' in command:
+                break
+
             command_parser = utils.CommandParser(command)
             try:
                 command_result = command_parser.parse()
