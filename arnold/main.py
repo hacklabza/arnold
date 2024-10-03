@@ -27,6 +27,7 @@ class Arnold(object):
         self.mode = mode or 'manual'
 
         # Setup required classes
+        self.drivetrain = drivetrain.DriveTrain()
         self.imu = imu.IMU()
         self.lidar = lidar.Lidar()
         self.microphone = microphone.Microphone()
@@ -39,23 +40,23 @@ class Arnold(object):
     def _run_autonomous(self) -> None:
         """Run Arnold in autonomous mode.
         """
-        drivetrain = drivetrain.DriveTrain()
+        self.drivetrain.release()
         try:
             while True:
                 distance = self.lidar.get_mean_distance(10)
                 if distance < 40:
-                    drivetrain.turn(
+                    self.drivetrain.turn(
                         random.choice(['right', 'left']),
                         duration=10
                     )
                     while True:
                         distance = self.lidar.get_mean_distance(10)
                         if distance > 80:
-                            drivetrain.stop()
+                            self.drivetrain.stop()
                             break
 
                 if not drivetrain.is_active:
-                    drivetrain.forward(duration=60)
+                    self.drivetrain.forward(duration=60)
 
         except KeyboardInterrupt:
             self.drivetrain.stop()
@@ -63,11 +64,14 @@ class Arnold(object):
     def _run_manual(self):
         """Run Arnold in manual mode over the API.
         """
+        self.drivetrain.release()
         api.runserver()
 
     def _run_voicecommand(self):
         """Run Arnold in voice command mode.
         """
+        self.drivetrain.release()
+
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
         while True:
