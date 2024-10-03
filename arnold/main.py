@@ -40,7 +40,6 @@ class Arnold(object):
     def _run_autonomous(self) -> None:
         """Run Arnold in autonomous mode.
         """
-        self.drivetrain.release()
         try:
             while True:
                 distance = self.lidar.get_mean_distance(10)
@@ -64,13 +63,11 @@ class Arnold(object):
     def _run_manual(self):
         """Run Arnold in manual mode over the API.
         """
-        self.drivetrain.release()
         api.runserver()
 
     def _run_voicecommand(self):
         """Run Arnold in voice command mode.
         """
-        self.drivetrain.release()
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
