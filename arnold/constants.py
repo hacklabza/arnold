@@ -71,7 +71,7 @@ COMMAND_MAP = {
                     'tokens': ['tomorrow'],
                     'method': 'tomorrow',
                     'params': [],
-                    'formatter': 'The humidity is {humidity}% and the current temperature is {temperature}'
+                    'formatter': 'The humidity will be {humidity}% and the temperature {temperature}'
                 }
             ]
         }

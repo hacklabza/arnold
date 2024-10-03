@@ -91,7 +91,7 @@ class Weather(object):
                 return {
                     'humidity': current_weather_data['humidity'],
                     'rain': current_weather_data['weather'][0]['main'] == 'Rain',
-                    'temperature': current_weather_data['temp'],
+                    'temperature': int(current_weather_data['temp']),
                 }
             except (KeyError, IndexError):
                 self._logger.warning(f'No weather data returned for {self.location}')
@@ -123,8 +123,8 @@ class Weather(object):
                             'humidity': forecast.get('humidity', None),
                             'rain': forecast.get('rain', 0) > 0.2,
                             'temperature': {
-                                'maximum': forecast['temp']['max'],
-                                'minimum': forecast['temp']['min'],
+                                'maximum': int(forecast['temp']['max']),
+                                'minimum': int(forecast['temp']['min']),
                             },
                             'summary': forecast.get('summary', None)
                         }
