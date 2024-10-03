@@ -2,7 +2,7 @@ import logging
 from time import sleep
 from typing import Optional
 
-from gpiozero import Motor
+from gpiozero import Motor, GPIOPinInUse
 
 from arnold import config
 from arnold.utils import InterruptibleDelay
@@ -40,12 +40,26 @@ class DriveTrain(object):
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
         # Motor setup
-        self.left_motor = Motor(
-            *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
-        )
-        self.right_motor = Motor(
-            *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
-        )
+        try:
+            self.left_motor = Motor(
+                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+            )
+            self.right_motor = Motor(
+                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+            )
+        except GPIOPinInUse:
+            Motor(
+                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+            ).close()
+            Motor(
+                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+            ).close()
+            self.left_motor = Motor(
+                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+            )
+            self.right_motor = Motor(
+                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+            )
 
         # Setup logging
         self._logger = _logger
