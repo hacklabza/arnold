@@ -100,7 +100,8 @@ class Weather(object):
     @property
     def forecast(self) -> Optional[list]:
         """
-        Retrieves the weather forecast for the specified location.
+        Retrieves the weather forecast for the specified location over the next 7 days
+        including the current day.
 
         Returns:
             Optional[list]: A list of dictionaries containing the weather forecast for
@@ -132,3 +133,15 @@ class Weather(object):
                     self._logger.warning(f'No weather data returned for {self.location}')
                     return None
             return parsed_forecast_weather_data
+
+    @property
+    def tomorrow(self) -> Optional[dict]:
+        """
+        Returns the weather forecast for the next day.
+
+        Returns:
+            Optional[dict]: A dictionary containing the weather forecast for the next day,
+            including the date, humidity, rain forecast, temperature (maximum and minimum),
+            and a summary. If no weather data is available, returns `None`.
+        """
+        return self.forecast[1] if self.forecast else None
