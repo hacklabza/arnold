@@ -230,8 +230,8 @@ class CommandParser(object):
 
                 # Format the result if a formatter is defined as return value
                 formatter = method_map.get('formatter')
-                if formatter is not None:
-                    return formatter.format(method_result)
+                if formatter is not None and isinstance(method_result, dict):
+                    return formatter.format(**method_result)
                 return method_result
 
 
