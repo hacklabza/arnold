@@ -2,6 +2,8 @@ import logging
 import random
 from typing import Optional
 
+from speech_recognition import UnknownValueError
+
 from arnold import api, utils
 from arnold.lookup import openai
 from arnold.motion import drivetrain
@@ -74,6 +76,11 @@ class Arnold(object):
         # response
         while True:
             audio = self.microphone.listen()
+            try:
+                command = self.microphone.recognise_command(audio)
+            except UnknownValueError:
+                continue
+
             command = self.microphone.recognise_command(audio)
             self._logger.info(f'Voice command recieved: "{command}"')
 
