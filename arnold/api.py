@@ -13,7 +13,6 @@ API_CONFIG = config.API
 
 # Module class instances, rather than init everytime
 camera = Camera()
-drivetrain = DriveTrain()
 speaker = Speaker()
 
 
@@ -27,6 +26,7 @@ def health():
 
 @route('/motion/drivetrain/go', method='POST')
 def drivetrain_go():
+    drivetrain = DriveTrain()
     direction = request.json.get('direction', 'forward')
     duration = request.json.get('duration')
     drivetrain.go(direction=direction, duration=duration)
