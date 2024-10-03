@@ -20,6 +20,8 @@ INTEGRATION = {
     'openweather': {
         'url': 'https://api.openweathermap.org/data/3.0/onecall',
         'api_key': os.environ.get('ARNOLD_OPENWEATHER_APIKEY', 'openweather-key'),
+        'latitude': os.environ.get('ARNOLD_OPENWEATHER_LATITUDE', -26.15),
+        'longitude': os.environ.get('ARNOLD_OPENWEATHER_LONGITUDE', 28.30),
     },
     'openai': {
         'api_key': os.environ.get('ARNOLD_OPENAI_APIKEY', 'openai-key'),

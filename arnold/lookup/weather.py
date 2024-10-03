@@ -40,9 +40,12 @@ class Weather(object):
         object (Location): The location (latitude & longitude) to get weather data for
     """
 
-    def __init__(self, location: Location) -> None:
-        self.location = location
+    def __init__(self, location: Optional[Location] = None) -> None:
         self.config = config.INTEGRATION['openweather']
+        self.location = location or Location(
+            latitude=self.config['latitude'],
+            longitude=self.config['longitude']
+        )
 
         # Setup logging
         self._logger = _logger
