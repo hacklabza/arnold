@@ -59,6 +59,7 @@ class DriveTrain(object):
         """
         self.right_motor.close()
         self.left_motor.close()
+        self._logger.info(f'GPIO pins released')
 
     @property
     def _direction_map(self) -> dict:
@@ -182,6 +183,6 @@ class DriveTrain(object):
         self.go(direction, duration)
 
     def stop(self) -> None:
-        self._logger.info(f'Stopped')
         self.delay.terminate()
         self._pause()
+        self._logger.info(f'Stopped')
