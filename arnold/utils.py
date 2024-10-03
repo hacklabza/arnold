@@ -203,13 +203,18 @@ class CommandParser(object):
                     class_path=class_map['class'],
                     method_name=method_map['method']
                 )
+
                 method_params = self._get_method_params(method_map)
 
-                # Executed the method
-                method_result = method(**method_params)
+                # Executed the method if it's callable else assume it is a property or
+                # attr and return the value
+                if isinstance(method, Callable):
+                    method_result = method(**method_params)
+                else:
+                    method_result = method
 
                 # If a post hook is defined, get the method and execute it
-                if class_map['post_hook'] is not None:
+                if class_map.get('post_hook') is not None:
                     post_hook_method = getattr(instance, class_map['post_hook'])
                     post_hook_method()
 

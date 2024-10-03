@@ -60,7 +60,6 @@ COMMAND_MAP = {
         'tokens': ['weather'],
         'map': {
             'class': 'lookup.weather.Weather',
-            'post_hook': None,
             'methods': [
                 {
                     'tokens': ['today', 'now'],
