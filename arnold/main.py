@@ -76,7 +76,9 @@ class Arnold(object):
             self._logger.info(log_message)
             self.speaker.say(log_message)
             command_parser = utils.CommandParser(command)
-            command_parser.parse()
+            command_result = command_parser.parse()
+            if command_result is not None:
+                self.speaker.say(command_result)
 
     def run(self):
         """Run Arnold in a selected mode. Maps the mode to a 'private' method.
