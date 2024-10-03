@@ -218,6 +218,10 @@ class CommandParser(object):
                     post_hook_method = getattr(instance, class_map['post_hook'])
                     post_hook_method()
 
+                # Format the result if a formatter is defined as return value
+                formatter = method_map.get('formatter')
+                if formatter is not None:
+                    return formatter.format(method_result)
                 return method_result
 
 
