@@ -88,7 +88,7 @@ class OpenAI(object):
                     },
                     {
                         'role': 'system',
-                        'content': 'You are a humorous robot assistant called Arnold.'
+                        'content': 'You are a humorous robot assistant called Arnold. Created by me, Jonathan a South African software engineer.'
                     }
                 ]
             )
