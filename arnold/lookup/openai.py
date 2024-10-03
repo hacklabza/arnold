@@ -1,9 +1,8 @@
 import logging
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Optional
 
-import openai
+from openai import OpenAI as OpenAIClient
 import requests
 
 from arnold import config
@@ -41,7 +40,7 @@ class OpenAI(object):
 
     def __init__(self) -> None:
         self.config = config.INTEGRATION['openai']
-        self.client = openai.OpenAI(
+        self.client = OpenAIClient(
             api_key=self.config['api_key'],
             organization=self.config['organization_id'],
             project=self.config['project_id'],

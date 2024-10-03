@@ -3,6 +3,7 @@ import random
 from typing import Optional
 
 from arnold import api, utils
+from arnold.lookup import openai
 from arnold.motion import drivetrain
 from arnold.output import speaker
 from arnold.sensors import imu, lidar, microphone
@@ -24,10 +25,11 @@ class Arnold(object):
         self.mode = mode or 'manual'
 
         # Setup required classes
+        self.drivetrain = drivetrain.DriveTrain()
         self.imu = imu.IMU()
         self.lidar = lidar.Lidar()
-        self.drivetrain = drivetrain.DriveTrain()
         self.microphone = microphone.Microphone()
+        self.openai = openai.OpenAI()
         self.speaker = speaker.Speaker()
 
         # Setup logging
@@ -68,7 +70,8 @@ class Arnold(object):
         # Release the drivertrain
         self.drivetrain.release()
 
-        # Capture the audio and parse the command
+        # Capture the audio and parse the command or fall back to an OpenAI
+        # response
         while True:
             audio = self.microphone.listen()
             command = self.microphone.recognise_command(audio)
@@ -79,6 +82,9 @@ class Arnold(object):
             command_result = command_parser.parse()
             if command_result is not None:
                 self.speaker.say(command_result)
+            else:
+                response = self.openai.prompt(command)
+                self.speaker.say(response.message)
 
     def run(self):
         """Run Arnold in a selected mode. Maps the mode to a 'private' method.
