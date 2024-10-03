@@ -57,7 +57,7 @@ class DriveTrain(object):
     def release(self):
         """Release the device pins for both motors.
         """
-        while self.is_active():
+        while self.is_active:
             sleep(0.1)
 
         self.right_motor.close()
