@@ -203,12 +203,13 @@ class CommandParser(object):
         """
         class_map = self._parse_command_map()
         if class_map is not None:
-            class_name = class_map['class']
             method_map = self._parse_class_map(class_map)
             if method_map is not None:
+                class_path = class_map['class']
+                method_name = method_map['method']
                 instance, method = self._get_method(
-                    class_path=class_map['class'],
-                    method_name=method_map['method']
+                    class_path=class_path,
+                    method_name=method_name
                 )
 
                 method_params = self._get_method_params(method_map)
@@ -225,7 +226,7 @@ class CommandParser(object):
                     post_hook_method = getattr(instance, class_map['post_hook'])
                     post_hook_method()
 
-                self._logger.info(f'Command result for {class_name}.{method.__name__}: {method_result}')
+                self._logger.info(f'Command result for {class_path}.{method_name}: {method_result}')
 
                 # Format the result if a formatter is defined as return value
                 formatter = method_map.get('formatter')
