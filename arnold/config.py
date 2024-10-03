@@ -30,7 +30,7 @@ INTEGRATION = {
         ),
         'project_id': os.environ.get('ARNOLD_OPENAI_PROJECTID', 'openai-projectid'),
         'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-4o-mini'),
-        'temperature': 0.8,
+        'temperature': 0.5,
         'max_tokens': 1500,
     }
 }
