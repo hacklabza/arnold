@@ -2,7 +2,7 @@ import logging
 from time import sleep
 from typing import Optional
 
-from gpiozero import Motor, GPIOPinInUse
+from gpiozero import Motor
 
 from arnold import config
 from arnold.utils import InterruptibleDelay
@@ -40,26 +40,12 @@ class DriveTrain(object):
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
         # Motor setup
-        try:
-            self.left_motor = Motor(
-                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
-            )
-            self.right_motor = Motor(
-                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
-            )
-        except GPIOPinInUse:
-            Motor(
-                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
-            ).close()
-            Motor(
-                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
-            ).close()
-            self.left_motor = Motor(
-                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
-            )
-            self.right_motor = Motor(
-                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
-            )
+        self.left_motor = Motor(
+            *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+        )
+        self.right_motor = Motor(
+            *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+        )
 
         # Setup logging
         self._logger = _logger
@@ -71,9 +57,6 @@ class DriveTrain(object):
     def release(self):
         """Release the device pins for both motors.
         """
-        while self.is_active:
-            sleep(0.1)
-
         self.right_motor.close()
         self.left_motor.close()
 
