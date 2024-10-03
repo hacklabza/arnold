@@ -79,10 +79,11 @@ class Arnold(object):
             self._logger.info(log_message)
             self.speaker.say(log_message)
             command_parser = utils.CommandParser(command)
-            command_result = command_parser.parse()
-            if command_result is not None:
-                self.speaker.say(command_result)
-            else:
+            try:
+                command_result = command_parser.parse()
+                if command_result is not None:
+                    self.speaker.say(command_result)
+            except NotImplementedError:
                 response = self.openai.prompt(command)
                 self.speaker.say(response.message)
 

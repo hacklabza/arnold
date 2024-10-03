@@ -4,7 +4,7 @@ import os
 import click
 import logging
 
-from arnold import main, config, output, sensors
+from arnold import main, config, motion, output, sensors
 
 
 logging.basicConfig(level=logging.INFO)
@@ -46,6 +46,23 @@ def imu(address):
         'gyroscope': imu.sensor.gbias,
         'magnetometer': imu.sensor.mbias
     })
+
+
+# Motion tests
+@test.command()
+@click.option(
+    '--direction', '-d', required=True, help='The direction to move in.'
+)
+@click.option(
+    '--duration', '-r', help='the durance of the motion in secs.'
+)
+@click.option(
+    '--speed', '-s', default=1.0, help='The speed to move at.'
+)
+def drivetrain(direction, duration, speed):
+    click.echo(f'Testing Drivetrain going {direction} for {duration}s at {speed}')
+    drivetrain = motion.drivetrain.DriveTrain()
+    drivetrain.go(direction=direction, duration=duration, speed=speed)
 
 
 # Output device tests

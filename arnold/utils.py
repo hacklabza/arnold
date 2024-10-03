@@ -233,6 +233,10 @@ class CommandParser(object):
                 if formatter is not None and isinstance(method_result, dict):
                     return formatter.format(**method_result)
                 return method_result
+        else:
+            logger_message = f'Unable to find method for {self.command}'
+            self._logger.warning(logger_message)
+            raise NotImplementedError(logger_message)
 
 
 
