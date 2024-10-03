@@ -44,7 +44,7 @@ API = {
 # Component config
 MOTION = {
     'drivetrain': {
-        'enable_pwm': False,
+        'enable_pwm': True,
         'gpio': {
             'left': {
                 'pins': [24, 23]
