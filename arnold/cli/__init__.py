@@ -51,13 +51,13 @@ def imu(address):
 # Motion tests
 @test.command()
 @click.option(
-    '--direction', '-d', required=True, help='The direction to move in.'
+    '--direction', '-d', required=True, type=str, help='The direction to move in.'
 )
 @click.option(
-    '--duration', '-r', help='the durance of the motion in secs.'
+    '--duration', '-r', required=True, type=int, help='the durance of the motion in secs.'
 )
 @click.option(
-    '--speed', '-s', default=1.0, help='The speed to move at.'
+    '--speed', '-s', default=1.0, type=float, help='The speed to move at.'
 )
 def drivetrain(direction, duration, speed):
     click.echo(f'Testing Drivetrain going {direction} for {duration}s at {speed}')

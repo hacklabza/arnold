@@ -57,6 +57,9 @@ class DriveTrain(object):
     def release(self):
         """Release the device pins for both motors.
         """
+        while self.is_active():
+            sleep(0.1)
+
         self.right_motor.close()
         self.left_motor.close()
 
@@ -138,7 +141,7 @@ class DriveTrain(object):
         self,
         direction: str,
         duration: Optional[int] = 30,
-        speed: Optional[float] = 1
+        speed: Optional[float] = 1.0
     ) -> None:
         """Move Arnold in a specific direction for a specified duration.
 
@@ -147,7 +150,7 @@ class DriveTrain(object):
             duration (int, optional): the durance to run the motors in secs.
                 Defaults to 30 secs.
             speed (int, optional): The speed of the motors 0.0-1.0. Defaults to
-                0.5.
+                1.0.
 
         Raises:
             KeyError: Raised if the direction map has been configured
