@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Optional
+from typing import Generator, Optional
 
 import cv2
 
@@ -24,7 +24,9 @@ class Camera(object):
         self.video_config = self.config['video']
 
         # RPi camera config
-        self.camera_number = self.config['camera_number'] if camera_number is None else camera_number
+        self.camera_number = (
+            self.config['camera_number'] if camera_number is None else camera_number
+        )
 
         # Setup logging
         self._logger = _logger
@@ -114,7 +116,7 @@ class Camera(object):
             width: Optional[int] = None,
             height: Optional[int] = None,
             frame_rate: Optional[int] = None,
-        ) -> None:
+        ) -> Generator:
         """
         Stream video from the camera with optional width, height and frame rate.
 
