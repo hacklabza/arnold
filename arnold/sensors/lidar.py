@@ -10,12 +10,13 @@ _logger = logging.getLogger(__name__)
 
 
 class Lidar(object):
-    """A sensor class which gets the distance from the lidar module to the closest
+    """
+    A sensor class which gets the distance from the lidar module to the closest
     object in range.
 
     Args:
         serial_port (str, optional): The serial port which the lidar sensor is
-            connect to (UART)
+        connect to (UART)
         baud_rate (int, optional): The communication baud rate
     """
 
@@ -39,7 +40,8 @@ class Lidar(object):
         )
 
     def get_distance(self) -> int:
-        """The calculated distance to the nearest object in range.
+        """
+        The calculated distance to the nearest object in range.
 
         Returns:
             int: Distance in cm to the closest object
@@ -63,11 +65,12 @@ class Lidar(object):
         return distance
 
     def get_mean_distance(self, sample_size: int) -> int:
-        """The calculated the mean distance to the nearest object in range for a
+        """
+        The calculated the mean distance to the nearest object in range for a
         selected sample size.
 
         Args:
-        sample_size (int): Sample size to take measurement of
+            sample_size (int): Sample size to take measurement of
 
         Returns:
             int: The mean distance in cm to the closest object

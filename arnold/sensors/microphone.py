@@ -11,7 +11,8 @@ _logger = logging.getLogger(__name__)
 
 
 class Microphone(object):
-    """A sensor class which initialises the microphone component and add speech
+    """
+    A sensor class which initialises the microphone component and add speech
     recognition and command parsing to Arnold.
 
     Args:
@@ -59,7 +60,8 @@ class Microphone(object):
             self.google_api_key = None
 
     def listen(self) -> speech_recognition.AudioData:
-        """Records the voice command from the microphone and returns the audio
+        """
+        Records the voice command from the microphone and returns the audio
         bite.
 
         Returns:
@@ -74,7 +76,8 @@ class Microphone(object):
             return voice_command
 
     def recognise_command(self, voice_command: speech_recognition.AudioData) -> Optional[str]:
-        """Takes a voice command audio bite as input and calls the google voice
+        """
+        Takes a voice command audio bite as input and calls the google voice
         to text service to determine the text command which can be parsed.
 
         Args:
@@ -82,7 +85,7 @@ class Microphone(object):
 
         Returns:
             Optional[str]: the text command as processed by google speech
-                recognision engine.
+            recognision engine.
         """
         if self.google_api_key_path:
             return self.speech_recogniser.recognize_google_cloud(

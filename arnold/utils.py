@@ -19,12 +19,13 @@ def sanitise_input(input: str, punctuation: Optional[str] = None) -> str:
 
 
 class InterruptibleDelay(object):
-    """An interruptable delay used to ensure that `sleep` can be interrupted
+    """
+    An interruptable delay used to ensure that `sleep` can be interrupted
     before the delay timeout is complete.
 
     Args:
         halt_callback (callable, optional): The function to call when the delay
-            is interrupted or complete.
+        is interrupted or complete.
 
     """
     def __init__(self, halt_callback: Optional[Callable] = None) -> None:
@@ -33,7 +34,8 @@ class InterruptibleDelay(object):
         self.halt_callback = halt_callback
 
     def delay(self, duration: int) -> None:
-        """Sleep until the duration is up or interrupt if needed. Keeps active
+        """
+        Sleep until the duration is up or interrupt if needed. Keeps active
         state and calls halt_callback prior to returning.
 
         Args:
@@ -51,7 +53,8 @@ class InterruptibleDelay(object):
         self.active = False
 
     def async_delay(self, duration: int) -> None:
-        """Calls delay in a thread and starts.
+        """
+        Calls delay in a thread and starts.
 
         Args:
             duration (int): The duration to sleep for
@@ -60,7 +63,8 @@ class InterruptibleDelay(object):
         thread.start()
 
     def is_active(self) -> bool:
-        """Helper to return if the delay is active or not.
+        """
+        Helper to return if the delay is active or not.
 
         Returns:
             bool: delay is active
@@ -68,12 +72,23 @@ class InterruptibleDelay(object):
         return self.active
 
     def terminate(self) -> None:
-        """Sets interrupt in order to terminate the delay.
+        """
+        Sets interrupt in order to terminate the delay.
         """
         self.interrupt = True
 
 
 class CommandParser(object):
+    """
+    The `CommandParser` class is responsible for parsing a command string and executing
+    the corresponding method based on a command mapping.
+
+    Args:
+        command (str): The command string to be parsed.
+        command_map (dict, optional): The command mapping to be used for parsing the
+        command. Defaults to None.
+    """
+
     def __init__(self, command: str, command_map: Optional[Dict] = None) -> None:
         self.command = command
         self.command_parts = self._split_command()
@@ -101,7 +116,7 @@ class CommandParser(object):
 
         Returns:
             tuple (object, callable): the class instance and method the command
-                is calling
+            is calling
         """
         class_path_list = class_path.split('.')
         class_name = class_path_list[-1]

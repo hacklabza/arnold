@@ -74,21 +74,22 @@ class OpenAI(object):
         model = model or self.config['model']
         temperature = temperature or self.config['temperature']
         max_tokens = max_tokens or self.config['max_tokens']
+        instructions = """
+        You are a humorous robot assistant called Arnold. Created by me, Jonathan a
+        South African software engineer.
+        """
 
         # Send the request to the OpenAI API
         try:
             completion = self.client.chat.completions.create(
                 model=model,
+                instructions=instructions,
                 temperature=temperature,
                 max_tokens=max_tokens,
                 messages=[
                     {
                         'role': 'user',
                         'content': message
-                    },
-                    {
-                        'role': 'system',
-                        'content': 'You are a humorous robot assistant called Arnold. Created by me, Jonathan a South African software engineer.'
                     }
                 ]
             )

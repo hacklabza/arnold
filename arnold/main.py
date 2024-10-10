@@ -15,12 +15,13 @@ _logger = logging.getLogger(__name__)
 
 
 class Arnold(object):
-    """The main class which runs Arnold in different modes. By default manual
+    """
+    The main class which runs Arnold in different modes. By default manual
     mode is selected, which is controlled via the app and api.
 
     Args:
         mode (str, optional): The mode to run Arnold in. Options are `autonomous`,
-            `voicecommand`, and `manual`
+        `voicecommand`, and `manual`
     """
 
     def __init__(self, mode: Optional[str] = None) -> None:
@@ -38,7 +39,8 @@ class Arnold(object):
         self._logger = _logger
 
     def _run_autonomous(self) -> None:
-        """Run Arnold in autonomous mode.
+        """
+        Run Arnold in autonomous mode.
         """
         try:
             while True:
@@ -62,13 +64,15 @@ class Arnold(object):
             self.drivetrain.release()
 
     def _run_manual(self):
-        """Run Arnold in manual mode over the API.
+        """
+        Run Arnold in manual mode over the API.
         """
         self.drivetrain.release()
         api.runserver()
 
     def _run_voicecommand(self):
-        """Run Arnold in voice command mode.
+        """
+        Run Arnold in voice command mode.
         """
         self.drivetrain.release()
 
@@ -98,7 +102,8 @@ class Arnold(object):
                 self.speaker.say(response.message)
 
     def run(self):
-        """Run Arnold in a selected mode. Maps the mode to a 'private' method.
+        """
+        Run Arnold in a selected mode. Maps the mode to a 'private' method.
         """
         mode_map = {
             'autonomous': self._run_autonomous,

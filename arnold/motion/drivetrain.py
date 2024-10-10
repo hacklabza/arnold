@@ -18,13 +18,14 @@ class PauseDurationError(Exception):
 
 
 class DriveTrain(object):
-    """A controller class which initialises the motor gpio instances for the
+    """
+    A controller class which initialises the motor gpio instances for the
     left and right hand side of Arnold.
 
     Args:
         config (dict, optional): A dict containing left and right pin configs
         pause_duration (float, optional): The duration to pause between direction
-            changes
+        changes
         enable_pwm (bool, optional): Set the Driver to use pwm or not
     """
 
@@ -55,7 +56,8 @@ class DriveTrain(object):
         self.delay = InterruptibleDelay(halt_callback=self._pause)
 
     def release(self):
-        """Release the device pins for both motors.
+        """
+        Release the device pins for both motors.
         """
         self.right_motor.close()
         self.left_motor.close()
@@ -63,7 +65,8 @@ class DriveTrain(object):
 
     @property
     def _direction_map(self) -> dict:
-        """Maps directions to motor instances.
+        """
+        Maps directions to motor instances.
 
         Returns:
             dict: motor direction mapping with in order value [left, right]
@@ -78,7 +81,8 @@ class DriveTrain(object):
 
     @property
     def status(self) -> dict:
-        """The current status of the motors.
+        """
+        The current status of the motors.
 
         Returns:
             dict: left and right motor activity a boolean
@@ -96,7 +100,8 @@ class DriveTrain(object):
 
     @property
     def is_active(self) -> bool:
-        """Shortcut to assert if drivetrain is active.
+        """
+        Shortcut to assert if drivetrain is active.
 
         Returns:
             bool: either left or right motor is active
@@ -106,7 +111,8 @@ class DriveTrain(object):
         return is_active
 
     def _get_motor_direction(self, motor: Motor) -> str:
-        """Get the current direction for a motor instance.
+        """
+        Get the current direction for a motor instance.
 
         Args:
             motor (Motor): A motor instance
@@ -122,11 +128,12 @@ class DriveTrain(object):
 
 
     def _pause(self) -> None:
-        """Pauses motion between commands preventing weird seg faults.
+        """
+        Pauses motion between commands preventing weird seg faults.
 
         Raises:
-            PauseDurationError: Raised if the pause duration is too
-                low to prevent seg fault
+            PauseDurationError: Raised if the pause duration is too low to prevent
+            seg fault
         """
         if self.pause_duration < 0.1:
             raise PauseDurationError()
@@ -141,18 +148,17 @@ class DriveTrain(object):
         duration: Optional[int] = 30,
         speed: Optional[float] = 1.0
     ) -> None:
-        """Move Arnold in a specific direction for a specified duration.
+        """
+        Move Arnold in a specific direction for a specified duration.
 
         Args:
             direction (str): stop, forward, backward, right or left.
-            duration (int, optional): the durance to run the motors in secs.
-                Defaults to 30 secs.
-            speed (int, optional): The speed of the motors 0.0-1.0. Defaults to
-                1.0.
+            duration (int, optional): the durance to run the motors in secs. Defaults to
+            30 secs.
+            speed (int, optional): The speed of the motors 0.0-1.0. Defaults to 1.0.
 
         Raises:
-            KeyError: Raised if the direction map has been configured
-                incorrectly.
+            KeyError: Raised if the direction map has been configured incorrectly.
         """
         if self.delay.is_active():
             self.stop()
@@ -171,18 +177,43 @@ class DriveTrain(object):
         self.delay.async_delay(duration)
 
     def forward(self, duration: Optional[int]) -> None:
+        """
+        Move Arnold forward for the specified duration.
+
+        Args:
+            duration (int, optional): The duration to run the motors in seconds.
+            Defaults to 30 seconds.
+        """
         self._logger.info(f'Go Forward: {duration} sec')
         self.go('forward', duration)
 
     def back(self, duration: Optional[int]) -> None:
+        """
+        Move Arnold back for the specified duration.
+
+        Args:
+            duration (int, optional): The duration to run the motors in seconds.
+            Defaults to 30 seconds.
+        """
         self._logger.info(f'Go Back: {duration} sec')
         self.go('back', duration)
 
     def turn(self, direction: str, duration: Optional[int]) -> None:
+        """
+        Turn Arnold in a specific direction for the specified duration.
+
+        Args:
+            direction (str): right or left.
+            duration (int, optional): The duration to run the motors in seconds.
+            Defaults to 30 seconds.
+        """
         self._logger.info(f'Go {direction.capitalize()}: {duration} sec')
         self.go(direction, duration)
 
     def stop(self) -> None:
+        """
+        Stops Arnold's motion by terminating the delay and pausing the motors.
+        """
         self.delay.terminate()
         self._pause()
         self._logger.info(f'Stopped')

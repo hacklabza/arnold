@@ -11,7 +11,8 @@ _logger = logging.getLogger(__name__)
 
 
 class Camera(object):
-    """A sensor class which initialises the camera component and adds image capture,
+    """
+    A sensor class which initialises the camera component and adds image capture,
     video streaming and object recognition to Arnold.
 
     Args:
@@ -34,7 +35,8 @@ class Camera(object):
             width: Optional[int] = None,
             height: Optional[int] = None,
         ) -> None:
-        """Capture an image to file from the camera with optional width and height.
+        """
+        Capture an image to file from the camera with optional width and height.
 
         Args:
             file_path (str): The file path to save the image to.
@@ -113,7 +115,8 @@ class Camera(object):
             height: Optional[int] = None,
             frame_rate: Optional[int] = None,
         ) -> None:
-        """Stream video from the camera with optional width, height and frame rate.
+        """
+        Stream video from the camera with optional width, height and frame rate.
 
         Args:
             width (str, optional): The wigth of the captured video.

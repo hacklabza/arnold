@@ -30,7 +30,6 @@ def drivetrain_go():
     direction = request.json.get('direction', 'forward')
     duration = request.json.get('duration')
     drivetrain.go(direction=direction, duration=duration)
-    drivetrain.release()
     return {'success': True}
 
 
