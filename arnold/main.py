@@ -46,7 +46,7 @@ class Arnold(object):
         for required_class in classes:
             if required_class not in class_map:
                 raise ValueError(f'{required_class} is not a valid class.')
-            setattr(self, required_class, class_map[required_class])
+            setattr(self, required_class, class_map[required_class]())
 
     def _run_autonomous(self) -> None:
         """
@@ -84,7 +84,7 @@ class Arnold(object):
         """
         Run Arnold in voice command mode.
         """
-        self._setup_classes(['drivetrain', 'microphone', 'openai'])
+        self._setup_classes(['microphone', 'openai'])
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
