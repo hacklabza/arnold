@@ -11,10 +11,6 @@ from arnold.sensors.camera import Camera
 
 API_CONFIG = config.API
 
-# Module class instances, rather than init everytime
-camera = Camera()
-speaker = Speaker()
-
 
 # TODO (qoda): Make this super generic
 
@@ -35,6 +31,7 @@ def drivetrain_go():
 
 @route('/output/speaker/say', method='POST')
 def speaker_say():
+    speaker = Speaker()
     phrase = request.json.get('phrase', 'No input')
     speaker.say(phrase)
     return {'success': True}
@@ -42,6 +39,7 @@ def speaker_say():
 
 @route('/sensor/camera/stream', method='GET')
 def camera_stream():
+    camera = Camera()
     stream = camera.stream_video()
     return Response(stream, mimetype='multipart/x-mixed-replace; boundary=frame')
 

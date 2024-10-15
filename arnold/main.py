@@ -27,21 +27,32 @@ class Arnold(object):
     def __init__(self, mode: Optional[str] = None) -> None:
         self.mode = mode or 'manual'
 
-        # Setup required classes
-        self.drivetrain = drivetrain.DriveTrain()
-        self.imu = imu.IMU()
-        self.lidar = lidar.Lidar()
-        self.microphone = microphone.Microphone()
-        self.openai = openai.OpenAI()
-        self.speaker = speaker.Speaker()
-
         # Setup logging
         self._logger = _logger
+
+    def _setup_classes(self, classes: list = None) -> None:
+        """
+        Setup the required classes.
+        """
+        class_map = {
+            'drivetrain': drivetrain.DriveTrain,
+            'imu': imu.IMU,
+            'lidar': lidar.Lidar,
+            'microphone': microphone.Microphone,
+            'openai': openai.OpenAI,
+            'speaker': speaker.Speaker
+        }
+        classes = classes or []
+        for required_class in classes:
+            if required_class not in class_map:
+                raise ValueError(f'{required_class} is not a valid class.')
+            setattr(self, required_class, class_map[required_class])
 
     def _run_autonomous(self) -> None:
         """
         Run Arnold in autonomous mode.
         """
+        self._setup_classes(['drivetrain', 'lidar'])
         try:
             while True:
                 distance = self.lidar.get_mean_distance(10)
@@ -67,14 +78,13 @@ class Arnold(object):
         """
         Run Arnold in manual mode over the API.
         """
-        self.drivetrain.release()
         api.runserver()
 
     def _run_voicecommand(self):
         """
         Run Arnold in voice command mode.
         """
-        self.drivetrain.release()
+        self._setup_classes(['drivetrain', 'microphone', 'openai'])
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response

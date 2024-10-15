@@ -59,8 +59,8 @@ ssh pi@raspberrypi.local
 sudo raspi-config
 ```
 
-Select option 9: Advanced Options then;
-A7: Serial and enable it.
+Select option 3: Interface Options then;
+I6: Serial Port and enable it.
 Finally reboot for the changes to take effect.
 
 ### Config
@@ -105,17 +105,17 @@ sudo raspi-config
 ```
 
 Select option 3: Interface Options then;
-P5: I2C
+I5: I2C and enable it.
 Finally reboot for the changes to take effect.
 
 ### Config
 
-Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the coorect address.
+Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the coorect address. You may need to install first with `sudo apt install i2c-tools`
 
 ```python
 SENSOR = {
     'accelerometer': {
-        'address': '53',
+        'address': '68',
         'orientation': {
             'x': 'x',
             'y': 'z',
