@@ -83,10 +83,14 @@ class OpenAI(object):
         try:
             completion = self.client.chat.completions.create(
                 model=model,
-                instructions=instructions,
+                frequency_penalty=1.0,
                 temperature=temperature,
                 max_tokens=max_tokens,
                 messages=[
+                    {
+                        'role': 'system',
+                        'content': instructions
+                    },
                     {
                         'role': 'user',
                         'content': message
