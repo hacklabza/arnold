@@ -84,7 +84,7 @@ class Arnold(object):
         """
         Run Arnold in voice command mode.
         """
-        self._setup_classes(['microphone', 'openai'])
+        self._setup_classes(['microphone', 'openai', 'speaker'])
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
