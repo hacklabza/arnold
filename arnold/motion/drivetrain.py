@@ -43,12 +43,12 @@ class DriveTrain(object):
         # Setup logging
         self._logger = _logger
 
+        # Motor setup
+        self.left_motor, self.right_motor = self.init_motors()
+
         # Pause duration and delay class setup
         self.pause_duration = pause_duration or self.config['pause_duration']
         self.delay = InterruptibleDelay(halt_callback=self._pause)
-
-        # Motor setup
-        self.left_motor, self.right_motor = self.init_motors()
 
     def init_motors(self) -> None:
         """
