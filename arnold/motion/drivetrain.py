@@ -2,7 +2,7 @@ import logging
 from time import sleep
 from typing import Optional
 
-from gpiozero import Motor
+from gpiozero import GPIODeviceError, Motor
 
 from arnold import config
 from arnold.utils import InterruptibleDelay
@@ -41,12 +41,7 @@ class DriveTrain(object):
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
         # Motor setup
-        self.left_motor = Motor(
-            *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
-        )
-        self.right_motor = Motor(
-            *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
-        )
+        self.left_motor, self.right_motor = self.init_motors()
 
         # Setup logging
         self._logger = _logger
@@ -54,6 +49,30 @@ class DriveTrain(object):
         # Pause duration and delay class setup
         self.pause_duration = pause_duration or self.config['pause_duration']
         self.delay = InterruptibleDelay(halt_callback=self._pause)
+
+    def init_motors(self) -> None:
+        """
+        Initialise the motors.
+        """
+        try:
+            left_motor = Motor(
+                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+            )
+            right_motor = Motor(
+                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+            )
+        except GPIODeviceError as exc:
+            self._logger.warning(exc)
+            self.delay.terminate()
+            self.release()
+            left_motor = Motor(
+                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+            )
+            right_motor = Motor(
+                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+            )
+
+        return left_motor, right_motor
 
     def release(self):
         """
