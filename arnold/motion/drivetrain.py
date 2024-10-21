@@ -40,15 +40,15 @@ class DriveTrain(object):
         self.gpio_config = self.config['gpio']
         self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
 
-        # Motor setup
-        self.left_motor, self.right_motor = self.init_motors()
-
         # Setup logging
         self._logger = _logger
 
         # Pause duration and delay class setup
         self.pause_duration = pause_duration or self.config['pause_duration']
         self.delay = InterruptibleDelay(halt_callback=self._pause)
+
+        # Motor setup
+        self.left_motor, self.right_motor = self.init_motors()
 
     def init_motors(self) -> None:
         """
