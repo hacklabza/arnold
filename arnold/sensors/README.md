@@ -110,16 +110,21 @@ Finally reboot for the changes to take effect.
 
 ### Config
 
-Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the coorect address. You may need to install first with `sudo apt install i2c-tools`
+Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the correct address. You may need to install the i2c-tools first with `sudo apt install i2c-tools`
 
 ```python
 SENSOR = {
-    'accelerometer': {
+    'imu': {
         'address': '68',
         'orientation': {
             'x': 'x',
             'y': 'z',
             'z': 'y'
+        },
+        'bias': {
+            'accelerometer': [0, 0, 0],
+            'gyroscope': [0, 0, 0],
+            'magnetometer': [0, 0, 0]
         }
     },
     ...
@@ -129,17 +134,27 @@ SENSOR = {
 ### Testing
 
 ```bash
-arnold test accelerometer -a 53
+arnold test imu -a 68
 ```
 
 ### Usage
 
 ```python
-from arnold.sensors.accelerometer import Accelerometer
+from arnold.sensors.imu import IMU
 
-accelerometer = Accelerometer()
-axes = accelerometer.get_axes()
-print(axes)
+imu = IMU()
+
+accelerometer_data = imu.get_accelerometer_data()
+gyroscope_data = imu.get_gyroscope_data()
+magnetometer_data = imu.get_magnetometer_data()
+temperature = imu.get_temperature()
+attitude = imu.get_attitude()
+
+print('Accelerometer:', accelerometer_data)
+print('Gyroscope:', gyroscope_data)
+print('Magnetometer:', magnetometer_data)
+print('Temperature:', temperature)
+print('Attitude:', attitude)
 ```
 
 ## Camera
