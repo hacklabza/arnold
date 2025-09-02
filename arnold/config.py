@@ -32,6 +32,10 @@ INTEGRATION = {
         'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-4o-mini'),
         'temperature': 0.5,
         'max_tokens': 1500,
+        'instructions': os.environ.get(
+            'ARNOLD_OPENAI_INSTRUCTIONS',
+            'You are a humorous robot assistant called Arnold.'
+        )
     }
 }
 

@@ -54,7 +54,8 @@ class OpenAI(object):
         message: str,
         model: Optional[str] = None,
         temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None
+        max_tokens: Optional[int] = None,
+        instructions: Optional[str] = None
     ) -> Completion:
         """
         Generates a text completion using the OpenAI language model.
@@ -74,10 +75,7 @@ class OpenAI(object):
         model = model or self.config['model']
         temperature = temperature or self.config['temperature']
         max_tokens = max_tokens or self.config['max_tokens']
-        instructions = """
-        You are a humorous robot assistant called Arnold. Created by me, Jonathan a
-        South African software engineer.
-        """
+        instructions = instructions or self.config['instructions']
 
         # Send the request to the OpenAI API
         try:
