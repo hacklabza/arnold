@@ -108,4 +108,3 @@ class TestDrivetrain:
         assert self.drive.status['left']['direction'] == 'stopped'
         assert not self.drive.status['left']['is_active']
         assert not self.drive.delay.is_active()
-

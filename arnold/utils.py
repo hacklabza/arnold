@@ -258,15 +258,3 @@ class CommandParser(object):
             logger_message = f'Unable to find method for {self.command}'
             self._logger.warning(logger_message)
             raise NotImplementedError(logger_message)
-
-
-
-
-
-
-
-
-
-
-
-

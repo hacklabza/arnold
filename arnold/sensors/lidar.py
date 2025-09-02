@@ -78,4 +78,3 @@ class Lidar(object):
         return int(
             statistics.mean([self.get_distance() for _ in range(sample_size)])
         )
-

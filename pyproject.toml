@@ -42,3 +42,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 arnold = "arnold.cli:cli"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py310"
