@@ -1,4 +1,3 @@
-from arnold import config
 
 
 class TestSpeaker:

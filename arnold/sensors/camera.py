@@ -63,7 +63,7 @@ class Camera(object):
             cv2.imwrite(file_path, flipped_image)
             self._logger.info(f'Image captured to {file_path}.')
         else:
-            self._logger.error(f'Failed to capture image.')
+            self._logger.error('Failed to capture image.')
 
     def capture_video(
         self,
@@ -129,7 +129,7 @@ class Camera(object):
         height = height or self.video_config['height']
         frame_rate = frame_rate or self.video_config['frame_rate']
 
-        self._logger.info(f'Streaming video from camera.')
+        self._logger.info('Streaming video from camera.')
 
         # Stream video from the camera
         camera = cv2.VideoCapture(self.camera_number)

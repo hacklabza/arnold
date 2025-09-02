@@ -1,7 +1,6 @@
 from typing import Optional
 
 from bottle import request, route, run, Response
-import uvicorn
 
 from arnold import config
 from arnold.motion.drivetrain import DriveTrain

@@ -50,7 +50,7 @@ class Speaker(object):
         Args:
             name (str): The name of the speech output.
         """
-        _logger.info(f'Starting speech output')
+        _logger.info('Starting speech output')
 
     def _on_finish(self, name: str, completed: bool) -> None:
         """
@@ -61,9 +61,9 @@ class Speaker(object):
             completed (bool): Whether the speech output was completed successfully.
         """
         if completed:
-            _logger.info(f'Completed speech output')
+            _logger.info('Completed speech output')
         else:
-            _logger.info(f'Phase not completed')
+            _logger.info('Phase not completed')
 
     def say(self, text: str) -> None:
         """

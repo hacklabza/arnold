@@ -33,6 +33,8 @@ pytest = "^8.3.3"
 pytest-mock = "^3.14.0"
 requests-mock = "^1.12.1"
 py3-tts = "^3.5"
+pre-commit = "^4.3.0"
+ruff = "^0.12.11"
 
 [build-system]
 requires = ["poetry-core"]

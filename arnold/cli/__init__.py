@@ -36,7 +36,7 @@ def imu(address):
     imu = sensors.imu.IMU(address=address)
     imu.calibrate()
 
-    click.echo(f'Save the following values to environmental vars.')
+    click.echo('Save the following values to environmental vars.')
     click.echo(f'Accelerometer Bias: {imu.sensor.abias}')
     click.echo(f'Gyroscope Bias: {imu.sensor.gbias}')
     click.echo(f'Magnetometer Bias: {imu.sensor.mbias}')
@@ -91,7 +91,7 @@ def speaker(phrase, rate, volume):
     help='I2C address of the device.'
 )
 @click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
-def imu(address, count):
+def imu(address, count):  # noqa: F811
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
 
@@ -178,14 +178,14 @@ def microphone(card_number, device_index):
 def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
     camera = sensors.camera.Camera(camera_number=camera_number)
     if image:
-        click.echo(f'Testing Camera in `image` mode.')
+        click.echo('Testing Camera in `image` mode.')
         camera.capture_image(
             file_path=file_path or config.SENSOR['camera']['image']['file_path'],
             width=width or config.SENSOR['camera']['image']['width'],
             height=height or config.SENSOR['camera']['image']['height'],
         )
     elif video:
-        click.echo(f'Testing Camera in `video` mode.')
+        click.echo('Testing Camera in `video` mode.')
         camera.capture_video(
             file_path=file_path or config.SENSOR['camera']['video']['file_path'],
             width=width or config.SENSOR['camera']['video']['width'],
