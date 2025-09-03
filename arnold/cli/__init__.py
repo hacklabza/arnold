@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import click
 import logging
@@ -103,6 +104,8 @@ def imu(address, count):  # noqa: F811
         click.echo(f'Accelerometer: {accelerometer_data}', nl=False)
         click.echo(f'Gyroscope: {gyroscope_data}', nl=False)
         click.echo(f'Magnetometer: {magnetometer_data}', nl=False)
+
+        time.sleep(1)
 
 
 @test.command()
