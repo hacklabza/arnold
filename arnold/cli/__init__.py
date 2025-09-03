@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Optional
 
 import click
 
@@ -113,9 +114,10 @@ def imu(address, count):  # noqa: F811
         time.sleep(1)
 
     # Collect and output the collected IMU data variances
-    def _get_variance(data: list) -> dict:
+    def _get_variance(data: list, keys: Optional[list] = None) -> dict:
+        keys = keys or ['x', 'y', 'z']
         variance = {}
-        for key in ['x', 'y', 'z']:
+        for key in keys:
             extract = list(map(lambda x: x[key], data))
             variance[key] = max(extract) - min(extract)
         return variance
@@ -123,7 +125,10 @@ def imu(address, count):  # noqa: F811
     accelerometer_variance = _get_variance(imu_data['accelerometer'])
     gyroscope_variance = _get_variance(imu_data['gyroscope'])
     magnetometer_variance = _get_variance(imu_data['magnetometer'])
-    attitude_variance = _get_variance(imu_data['attitude'])
+    attitude_variance = _get_variance(
+        imu_data['attitude'],
+        keys=['roll', 'pitch', 'yaw']
+    )
 
     click.echo('-' * 80)
     click.echo(f'Accelerometer variance: {accelerometer_variance}')
