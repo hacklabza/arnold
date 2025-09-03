@@ -56,7 +56,8 @@ class IMU(object):
         Returns:
             dict: Mapped axes dict
         """
-        return {'x': data[0], 'y': data[1], 'z': data[2]}
+        x, y, z = [round(i, 3) for i in data]
+        return {'x': x, 'y': y, 'z': z}
 
     def _map_orientation(self, data: dict) -> dict:
         """
