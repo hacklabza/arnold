@@ -36,16 +36,17 @@ class IMU(object):
         # Setup logging
         self._logger = _logger
 
+        # Setup sensor and configure
         self.sensor = MPU9250(
             address_mpu_master=self.address,
         )
+        self.sensor.configure()
 
-        # Set the bias from a previous calibration using the saved config
+        # Set the bias from the saved bias config from initial calibration
         self.sensor.abias = self.config['bias']['accelerometer']
         self.sensor.gbias = self.config['bias']['gyroscope']
-        self.sensor.mbias = self.config['bias']['magnetometer']
-
-        self.sensor.configure()
+        self.sensor.mbias = self.config['bias']['magnetometer']['hard_iron']
+        self.sensor.magScale = self.config['bias']['magnetometer']['soft_iron']
 
     def _get_data(self, data: list) -> dict:
         """

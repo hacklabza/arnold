@@ -98,7 +98,10 @@ SENSOR = {
                 json.dumps({
                     'accelerometer': [0, 0, 0],
                     'gyroscope': [0, 0, 0],
-                    'magnetometer': [0, 0, 0]
+                    'magnetometer': {
+                        'hard_iron': [0, 0, 0],
+                        'soft_iron': [0, 0, 0]
+                    }
                 })
             )
         )

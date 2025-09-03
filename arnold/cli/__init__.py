@@ -41,7 +41,8 @@ def imu(address):
     click.echo('Save the following values to environmental vars.')
     click.echo(f'Accelerometer Bias: {imu.sensor.abias}')
     click.echo(f'Gyroscope Bias: {imu.sensor.gbias}')
-    click.echo(f'Magnetometer Bias: {imu.sensor.mbias}')
+    click.echo(f'Magnetometer Bias (hard iron): {imu.sensor.mbias}')
+    click.echo(f'Magnetometer Scale (soft iron): {imu.sensor.magScale}')
 
     os.environ['ARNOLD_SENSOR_IMU_BIAS'] = json.dumps({
         'accelerometer': imu.sensor.abias,
