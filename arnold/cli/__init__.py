@@ -131,7 +131,7 @@ def imu(address, count):  # noqa: F811
         'z': float(np.std([i['z'] for i in imu_data['magnetometer']], axis=0))
     }
 
-    click.echo('=' * 80)
+    click.echo('-' * 80)
     click.echo(f'Accelerometer Deviation: {accelerometer_deviation}')
     click.echo(f'Gyroscope Deviation: {gyroscope_deviation}')
     click.echo(f'Magnetometer Deviation: {magnetometer_deviation}')
