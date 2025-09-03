@@ -88,8 +88,8 @@ SENSOR = {
         'address': '68',
         'orientation': {
             'x': 'z',
-            'y': 'y',
-            'z': 'x'
+            'y': 'x',
+            'z': 'y'
         },
         'bias': json.loads(
             os.environ.get(
