@@ -81,7 +81,7 @@ class IMU(object):
         """
         self.sensor.calibrate()
 
-    def get_accelerometer_data(self, sample_size: int | None = None) -> dict:
+    def get_accelerometer_data(self, sample_size: Optional[int] = None) -> dict:
         """
         Get the current accelerometer data from the module.
 
@@ -109,7 +109,7 @@ class IMU(object):
         self._logger.info(f'Accelerometer: {data}')
         return self._map_orientation(data)
 
-    def get_gyroscope_data(self, sample_size: int | None = None) -> dict:
+    def get_gyroscope_data(self, sample_size: Optional[int] = None) -> dict:
         """
         Get the current gyroscope data from the module.
 
@@ -137,7 +137,7 @@ class IMU(object):
         self._logger.info(f'Gyroscope: {data}')
         return self._map_orientation(data)
 
-    def get_magnetometer_data(self, sample_size: int | None = None) -> dict:
+    def get_magnetometer_data(self, sample_size: Optional[int] = None) -> dict:
         """
         Get the current magnetometer data from the module.
 
