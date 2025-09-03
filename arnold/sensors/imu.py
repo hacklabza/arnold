@@ -1,5 +1,6 @@
 import logging
 import math
+import statistics
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
@@ -56,7 +57,7 @@ class IMU(object):
         Returns:
             dict: Mapped axes dict
         """
-        x, y, z = [round(i, 3) for i in data]
+        x, y, z = data
         return {'x': x, 'y': y, 'z': z}
 
     def _map_orientation(self, data: dict) -> dict:
@@ -80,42 +81,86 @@ class IMU(object):
         """
         self.sensor.calibrate()
 
-    def get_accelerometer_data(self) -> dict:
+    def get_accelerometer_data(self, sample_size: int | None) -> dict:
         """
         Get the current accelerometer data from the module.
 
+        Args:
+            sample_size (int | None): The number of samples to take. If None,
+            uses the default from config.
+
         Returns:
             dict: X, Y & Z
         """
-        data = self._get_data(
-            self.sensor.readAccelerometerMaster()
-        )
+        accelerometer_samples = []
+        sample_size = sample_size or self.config['sample_size']
+        for _ in range(sample_size):
+            accelerometer_samples.append(
+                self._get_data(self.sensor.readAccelerometerMaster())
+            )
+
+        # Get the mean of all samples taken by the sensor
+        data = {
+            'x': statistics.mean([sample['x'] for sample in accelerometer_samples]),
+            'y': statistics.mean([sample['y'] for sample in accelerometer_samples]),
+            'z': statistics.mean([sample['z'] for sample in accelerometer_samples]),
+        }
+
         self._logger.info(f'Accelerometer: {data}')
         return self._map_orientation(data)
 
-    def get_gyroscope_data(self) -> dict:
+    def get_gyroscope_data(self, sample_size: int | None) -> dict:
         """
         Get the current gyroscope data from the module.
 
+        Args:
+            sample_size (int | None): The number of samples to take. If None,
+            uses the default from config.
+
         Returns:
             dict: X, Y & Z
         """
-        data = self._get_data(
-            self.sensor.readGyroscopeMaster()
-        )
+        gyroscope_samples = []
+        sample_size = sample_size or self.config['sample_size']
+        for _ in range(sample_size):
+            gyroscope_samples.append(
+                self._get_data(self.sensor.readGyroscopeMaster())
+            )
+
+        # Get the mean of all samples taken by the sensor
+        data = {
+            'x': statistics.mean([sample['x'] for sample in gyroscope_samples]),
+            'y': statistics.mean([sample['y'] for sample in gyroscope_samples]),
+            'z': statistics.mean([sample['z'] for sample in gyroscope_samples]),
+        }
+
         self._logger.info(f'Gyroscope: {data}')
         return self._map_orientation(data)
 
-    def get_magnetometer_data(self) -> dict:
+    def get_magnetometer_data(self, sample_size: int | None) -> dict:
         """
         Get the current magnetometer data from the module.
+
+        Args:
+            sample_size (int | None): The number of samples to take. If None,
+            uses the default from config.
 
         Returns:
             dict: X, Y & Z
         """
-        data = self._get_data(
-            self.sensor.readMagnetometerMaster()
-        )
+        magnetometer_samples = []
+        sample_size = sample_size or self.config['sample_size']
+        for _ in range(sample_size):
+            magnetometer_samples.append(
+                self._get_data(self.sensor.readMagnetometerMaster())
+            )
+
+        # Get the mean of all samples taken by the sensor
+        data = {
+            'x': statistics.mean([sample['x'] for sample in magnetometer_samples]),
+            'y': statistics.mean([sample['y'] for sample in magnetometer_samples]),
+            'z': statistics.mean([sample['z'] for sample in magnetometer_samples]),
+        }
         self._logger.info(f'Magnetometer: {data}')
         return self._map_orientation(data)
 

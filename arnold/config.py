@@ -86,6 +86,7 @@ SENSOR = {
     },
     'imu': {
         'address': '68',
+        'sample_size': 5,
         'orientation': {
             'x': 'y',
             'y': 'z',
