@@ -40,9 +40,9 @@ class IMU(object):
         )
 
         # Set the bias from a previous calibration using the saved config
-        self.abias = self.config['bias']['accelerometer']
-        self.gbias = self.config['bias']['gyroscope']
-        self.mbias = self.config['bias']['magnetometer']
+        self.sensor.abias = self.config['bias']['accelerometer']
+        self.sensor.gbias = self.config['bias']['gyroscope']
+        self.sensor.mbias = self.config['bias']['magnetometer']
 
         self.sensor.configure()
 
