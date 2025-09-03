@@ -91,24 +91,19 @@ def speaker(phrase, rate, volume):
     '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
     help='I2C address of the device.'
 )
-@click.option('--count', '-c', default=5, help='Number of distance tests to perform. ')
+@click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
 def imu(address, count):  # noqa: F811
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
-
-    logging.basicConfig(level=logging.WARNING)
 
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
         magnetometer_data = imu.get_magnetometer_data()
 
-        click.echo(
-            f'Accelerometer: {accelerometer_data} | '
-            f'Gyroscope: {gyroscope_data} | '
-            f'Magnetometer: {magnetometer_data}',
-            nl=False
-        )
+        click.echo(f'Accelerometer: {accelerometer_data}')
+        click.echo(f'Gyroscope: {gyroscope_data}')
+        click.echo(f'Magnetometer: {magnetometer_data}')
 
         time.sleep(1)
 

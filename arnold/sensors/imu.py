@@ -3,7 +3,6 @@ import math
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
-from mpu9250_jmdev.registers import AK8963_MODE_C100HZ
 
 from arnold import config
 
@@ -38,7 +37,6 @@ class IMU(object):
 
         self.sensor = MPU9250(
             address_mpu_master=self.address,
-            mode=AK8963_MODE_C100HZ,
         )
 
         # Set the bias from a previous calibration using the saved config
