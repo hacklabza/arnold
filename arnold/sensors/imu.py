@@ -145,41 +145,36 @@ class IMU(object):
             the data from the sensor
 
         Returns:
-            dict: Roll, pitch and yaw estimates
+            dict: Roll, pitch and yaw degree estimates
         """
         accelerometer_data = accelerometer_data or self.get_accelerometer_data()
         magnetometer_data = magnetometer_data or self.get_magnetometer_data()
 
-        roll = 180 * math.atan2(
+        roll = math.atan2(
             accelerometer_data['x'],
-            math.sqrt(
-                (accelerometer_data['y'] * accelerometer_data['y']) +
-                (accelerometer_data['z'] * accelerometer_data['z'])
-            ) / math.pi
+            math.sqrt(accelerometer_data['y'] ** 2 + accelerometer_data['z'] ** 2)
         )
-        pitch = 180 * math.atan2(
+        pitch = math.atan2(
             accelerometer_data['y'],
-            math.sqrt(
-                (
-                    (accelerometer_data['x'] * accelerometer_data['x']) +
-                    (accelerometer_data['z'] * accelerometer_data['z'])
-                ) / math.pi
-            )
-        )
-        yaw = 180 * math.atan2(
-            -(
-                (magnetometer_data['y'] * math.cos(roll)) -
-                (magnetometer_data['z'] * math.sin(roll))
-            ),
-            (
-                (magnetometer_data['x'] * math.cos(pitch)) +
-                (magnetometer_data['y'] * math.sin(roll) * math.sin(pitch)) +
-                (magnetometer_data['z'] * math.cos(roll) * math.sin(pitch))
-            ) / math.pi
+            math.sqrt(accelerometer_data['x'] ** 2 + accelerometer_data['z'] ** 2)
         )
 
+        # Tilt-compensated magnetometer
+        magnetometer_x = magnetometer_data['x']
+        magnetometer_y = magnetometer_data['y']
+        magnetometer_z = magnetometer_data['z']
+
+        # Apply tilt compensation
+        magnetometer_x_tilt = magnetometer_x * math.cos(pitch) + magnetometer_z * math.sin(pitch)
+        magnetometer_y_tilt = (
+            magnetometer_x * math.sin(roll) * math.sin(pitch) + magnetometer_y *
+            math.cos(roll) - magnetometer_z * math.sin(roll) * math.cos(pitch)
+        )
+
+        yaw = math.atan2(-magnetometer_y_tilt, magnetometer_x_tilt)
+
         return {
-            'roll': roll,
-            'pitch': pitch,
-            'yaw': yaw
+            'roll': math.degrees(roll),
+            'pitch': math.degrees(pitch),
+            'yaw': math.degrees(yaw)
         }
