@@ -74,13 +74,13 @@ class Arnold(object):
             self.drivetrain.stop()
             self.drivetrain.release()
 
-    def _run_manual(self):
+    def _run_manual(self) -> None:
         """
         Run Arnold in manual mode over the API.
         """
         api.runserver()
 
-    def _run_voicecommand(self):
+    def _run_voicecommand(self) -> None:
         """
         Run Arnold in voice command mode.
         """
@@ -111,7 +111,7 @@ class Arnold(object):
                 response = self.openai.prompt(command)
                 self.speaker.say(response.message)
 
-    def run(self):
+    def run(self) -> None:
         """
         Run Arnold in a selected mode. Maps the mode to a 'private' method.
         """

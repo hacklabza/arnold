@@ -90,8 +90,8 @@ class Microphone(object):
         if self.google_api_key_path:
             return self.speech_recogniser.recognize_google_cloud(
                 voice_command,
-                credentials_json=os.path.join(config.ROOT_DIR, self.google_api_key_path),
-                language='en-ZA'
+                credentials_json_path=os.path.join(config.ROOT_DIR, self.google_api_key_path),
+                language_code='en-ZA'
             )
         else:
             self._logger.error(

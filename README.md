@@ -21,7 +21,7 @@ RPi 4 Based Robotic Platform
  - python3-dev
  - flac
  - libespeak1
- - espeak
+ - espeak-ng
  - ffmpeg
  - python3-opencv
  - ninja-build
