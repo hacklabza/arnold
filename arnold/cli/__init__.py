@@ -116,19 +116,19 @@ def imu(address, count):  # noqa: F811
 
     # Output the collected IMU data deviations
     accelerometer_deviation = {
-        'x': np.std([i['x'] for i in imu_data['accelerometer']], axis=0),
-        'y': np.std([i['y'] for i in imu_data['accelerometer']], axis=0),
-        'z': np.std([i['z'] for i in imu_data['accelerometer']], axis=0)
+        'x': float(np.std([i['x'] for i in imu_data['accelerometer']], axis=0)),
+        'y': float(np.std([i['y'] for i in imu_data['accelerometer']], axis=0)),
+        'z': float(np.std([i['z'] for i in imu_data['accelerometer']], axis=0))
     }
     gyroscope_deviation = {
-        'x': np.std([i['x'] for i in imu_data['gyroscope']], axis=0),
-        'y': np.std([i['y'] for i in imu_data['gyroscope']], axis=0),
-        'z': np.std([i['z'] for i in imu_data['gyroscope']], axis=0)
+        'x': float(np.std([i['x'] for i in imu_data['gyroscope']], axis=0)),
+        'y': float(np.std([i['y'] for i in imu_data['gyroscope']], axis=0)),
+        'z': float(np.std([i['z'] for i in imu_data['gyroscope']], axis=0))
     }
     magnetometer_deviation = {
-        'x': np.std([i['x'] for i in imu_data['magnetometer']], axis=0),
-        'y': np.std([i['y'] for i in imu_data['magnetometer']], axis=0),
-        'z': np.std([i['z'] for i in imu_data['magnetometer']], axis=0)
+        'x': float(np.std([i['x'] for i in imu_data['magnetometer']], axis=0)),
+        'y': float(np.std([i['y'] for i in imu_data['magnetometer']], axis=0)),
+        'z': float(np.std([i['z'] for i in imu_data['magnetometer']], axis=0))
     }
 
     click.echo('=' * 80)
