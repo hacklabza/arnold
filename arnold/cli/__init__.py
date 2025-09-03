@@ -1,9 +1,10 @@
 import json
+import logging
 import os
 import time
 
 import click
-import logging
+from numpy import np
 
 from arnold import main, config, motion, output, sensors
 
@@ -96,6 +97,7 @@ def imu(address, count):  # noqa: F811
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
 
+    imu_data = {'accelerometer': [], 'gyroscope': [], 'magnetometer': []}
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
@@ -104,8 +106,23 @@ def imu(address, count):  # noqa: F811
         click.echo(f'Accelerometer: {accelerometer_data}')
         click.echo(f'Gyroscope: {gyroscope_data}')
         click.echo(f'Magnetometer: {magnetometer_data}')
+        click.echo('-' * 30)
+
+        imu_data['accelerometer'].append(accelerometer_data)
+        imu_data['gyroscope'].append(gyroscope_data)
+        imu_data['magnetometer'].append(magnetometer_data)
 
         time.sleep(1)
+
+    # Output the collected IMU data deviations
+    accelerometer_deviation = np.std(imu_data['accelerometer'], axis=0)
+    gyroscope_deviation = np.std(imu_data['gyroscope'], axis=0)
+    magnetometer_deviation = np.std(imu_data['magnetometer'], axis=0)
+
+    click.echo('=' * 30)
+    click.echo(f'Accelerometer Deviation: {accelerometer_deviation}')
+    click.echo(f'Gyroscope Deviation: {gyroscope_deviation}')
+    click.echo(f'Magnetometer Deviation: {magnetometer_deviation}')
 
 
 @test.command()
