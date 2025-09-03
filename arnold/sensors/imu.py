@@ -1,5 +1,6 @@
 import logging
 import math
+import time
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
@@ -95,6 +96,7 @@ class IMU(object):
             samples.append(
                 self._get_data(func())
             )
+            time.sleep(0.01)
 
         # Get the mean of all samples taken by the sensor
         return {
