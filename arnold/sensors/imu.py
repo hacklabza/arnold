@@ -4,6 +4,7 @@ import time
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
+from mpu9250_jmdev import registers
 
 from arnold import config
 
@@ -38,7 +39,11 @@ class IMU(object):
 
         # Setup sensor and configure
         self.sensor = MPU9250(
-            address_mpu_master=self.address,
+            address_mpu_master=registers.self.address,
+            address_mpu_slave=None,
+            gfs=registers.GFS_1000,
+            afs=registers.AFS_8G,
+            mfs=registers.AK8963_BIT_16,
         )
         self.sensor.configure()
 
