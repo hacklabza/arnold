@@ -1,10 +1,7 @@
-import json
 import logging
-import os
 import time
 
 import click
-import numpy as np
 
 from arnold import main, config, motion, output, sensors
 
@@ -43,12 +40,6 @@ def imu(address):
     click.echo(f'Gyroscope Bias: {imu.sensor.gbias}')
     click.echo(f'Magnetometer Bias (hard iron): {imu.sensor.mbias}')
     click.echo(f'Magnetometer Scale (soft iron): {imu.sensor.magScale}')
-
-    os.environ['ARNOLD_SENSOR_IMU_BIAS'] = json.dumps({
-        'accelerometer': imu.sensor.abias,
-        'gyroscope': imu.sensor.gbias,
-        'magnetometer': imu.sensor.mbias
-    })
 
 
 # Motion tests
@@ -121,33 +112,33 @@ def imu(address, count):  # noqa: F811
 
         time.sleep(1)
 
-    # Output the collected IMU data deviations
-    accelerometer_deviation = {
-        'x': float(np.std([i['x'] for i in imu_data['accelerometer']], axis=0)),
-        'y': float(np.std([i['y'] for i in imu_data['accelerometer']], axis=0)),
-        'z': float(np.std([i['z'] for i in imu_data['accelerometer']], axis=0))
+    # Output the collected IMU data variances
+    accelerometer_variance = {
+        'x': max(imu_data['accelerometer']) - min(imu_data['accelerometer']),
+        'y': max(imu_data['accelerometer']) - min(imu_data['accelerometer']),
+        'z': max(imu_data['accelerometer']) - min(imu_data['accelerometer'])
     }
-    gyroscope_deviation = {
-        'x': float(np.std([i['x'] for i in imu_data['gyroscope']], axis=0)),
-        'y': float(np.std([i['y'] for i in imu_data['gyroscope']], axis=0)),
-        'z': float(np.std([i['z'] for i in imu_data['gyroscope']], axis=0))
+    gyroscope_variance = {
+        'x': max(imu_data['gyroscope']) - min(imu_data['gyroscope']),
+        'y': max(imu_data['gyroscope']) - min(imu_data['gyroscope']),
+        'z': max(imu_data['gyroscope']) - min(imu_data['gyroscope'])
     }
-    magnetometer_deviation = {
-        'x': float(np.std([i['x'] for i in imu_data['magnetometer']], axis=0)),
-        'y': float(np.std([i['y'] for i in imu_data['magnetometer']], axis=0)),
-        'z': float(np.std([i['z'] for i in imu_data['magnetometer']], axis=0))
+    magnetometer_variance = {
+        'x': max(imu_data['magnetometer']) - min(imu_data['magnetometer']),
+        'y': max(imu_data['magnetometer']) - min(imu_data['magnetometer']),
+        'z': max(imu_data['magnetometer']) - min(imu_data['magnetometer'])
     }
-    attitude_deviation = {
-        'roll': float(np.std([i['roll'] for i in imu_data['attitude']], axis=0)),
-        'pitch': float(np.std([i['pitch'] for i in imu_data['attitude']], axis=0)),
-        'yaw': float(np.std([i['yaw'] for i in imu_data['attitude']], axis=0))
+    attitude_variance = {
+        'roll': max(imu_data['attitude']) - min(imu_data['attitude']),
+        'pitch': max(imu_data['attitude']) - min(imu_data['attitude']),
+        'yaw': max(imu_data['attitude']) - min(imu_data['attitude'])
     }
 
     click.echo('-' * 80)
-    click.echo(f'Accelerometer Deviation: {accelerometer_deviation}')
-    click.echo(f'Gyroscope Deviation: {gyroscope_deviation}')
-    click.echo(f'Magnetometer Deviation: {magnetometer_deviation}')
-    click.echo(f'Attitude Deviation: {attitude_deviation}')
+    click.echo(f'Accelerometer variance: {accelerometer_variance}')
+    click.echo(f'Gyroscope variance: {gyroscope_variance}')
+    click.echo(f'Magnetometer variance: {magnetometer_variance}')
+    click.echo(f'Attitude variance: {attitude_variance}')
 
 
 @test.command()

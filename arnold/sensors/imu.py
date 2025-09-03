@@ -76,6 +76,25 @@ class IMU(object):
             for new_key, old_key in self.orientation.items()
         }
 
+    def _merge_samples(
+        self,
+        func: callable,
+        sample_size: Optional[int] = None
+    ) -> dict:
+        samples = []
+        sample_size = sample_size or self.config['sample_size']
+        for _ in range(sample_size):
+            samples.append(
+                self._get_data(func())
+            )
+
+        # Get the mean of all samples taken by the sensor
+        return {
+            'x': statistics.mean([sample['x'] for sample in samples]),
+            'y': statistics.mean([sample['y'] for sample in samples]),
+            'z': statistics.mean([sample['z'] for sample in samples]),
+        }
+
     def calibrate(self) -> None:
         """
         Calibrate all 3 MPU-9250 sensors.
@@ -93,20 +112,7 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        accelerometer_samples = []
-        sample_size = sample_size or self.config['sample_size']
-        for _ in range(sample_size):
-            accelerometer_samples.append(
-                self._get_data(self.sensor.readAccelerometerMaster())
-            )
-
-        # Get the mean of all samples taken by the sensor
-        data = {
-            'x': statistics.mean([sample['x'] for sample in accelerometer_samples]),
-            'y': statistics.mean([sample['y'] for sample in accelerometer_samples]),
-            'z': statistics.mean([sample['z'] for sample in accelerometer_samples]),
-        }
-
+        data = self._merge_samples(self.sensor.readAccelerometerMaster, sample_size)
         self._logger.info(f'Accelerometer: {data}')
         return self._map_orientation(data)
 
@@ -121,20 +127,7 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        gyroscope_samples = []
-        sample_size = sample_size or self.config['sample_size']
-        for _ in range(sample_size):
-            gyroscope_samples.append(
-                self._get_data(self.sensor.readGyroscopeMaster())
-            )
-
-        # Get the mean of all samples taken by the sensor
-        data = {
-            'x': statistics.mean([sample['x'] for sample in gyroscope_samples]),
-            'y': statistics.mean([sample['y'] for sample in gyroscope_samples]),
-            'z': statistics.mean([sample['z'] for sample in gyroscope_samples]),
-        }
-
+        data = self._merge_samples(self.sensor.readGyroscopeMaster, sample_size)
         self._logger.info(f'Gyroscope: {data}')
         return self._map_orientation(data)
 
@@ -149,19 +142,7 @@ class IMU(object):
         Returns:
             dict: X, Y & Z
         """
-        magnetometer_samples = []
-        sample_size = sample_size or self.config['sample_size']
-        for _ in range(sample_size):
-            magnetometer_samples.append(
-                self._get_data(self.sensor.readMagnetometerMaster())
-            )
-
-        # Get the mean of all samples taken by the sensor
-        data = {
-            'x': statistics.mean([sample['x'] for sample in magnetometer_samples]),
-            'y': statistics.mean([sample['y'] for sample in magnetometer_samples]),
-            'z': statistics.mean([sample['z'] for sample in magnetometer_samples]),
-        }
+        data = self._merge_samples(self.sensor.readMagnetometerMaster, sample_size)
         self._logger.info(f'Magnetometer: {data}')
         return self._map_orientation(data)
 
