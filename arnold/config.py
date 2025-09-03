@@ -87,9 +87,9 @@ SENSOR = {
     'imu': {
         'address': '68',
         'orientation': {
-            'x': 'x',
+            'x': 'z',
             'y': 'y',
-            'z': 'z'
+            'z': 'x'
         },
         'bias': json.loads(
             os.environ.get(

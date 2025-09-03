@@ -97,20 +97,26 @@ def imu(address, count):  # noqa: F811
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
 
-    imu_data = {'accelerometer': [], 'gyroscope': [], 'magnetometer': []}
+    imu_data = {'accelerometer': [], 'gyroscope': [], 'magnetometer': [], 'attitude': []}
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
         magnetometer_data = imu.get_magnetometer_data()
+        attitude_data = imu.get_attitude(
+            accelerometer_data=accelerometer_data,
+            magnetometer_data=magnetometer_data
+        )
 
         click.echo(f'Accelerometer: {accelerometer_data}')
         click.echo(f'Gyroscope: {gyroscope_data}')
         click.echo(f'Magnetometer: {magnetometer_data}')
+        click.echo(f'Attitude: {attitude_data}')
         click.echo('-' * 80)
 
         imu_data['accelerometer'].append(accelerometer_data)
         imu_data['gyroscope'].append(gyroscope_data)
         imu_data['magnetometer'].append(magnetometer_data)
+        imu_data['attitude'].append(attitude_data)
 
         time.sleep(1)
 
@@ -130,11 +136,17 @@ def imu(address, count):  # noqa: F811
         'y': float(np.std([i['y'] for i in imu_data['magnetometer']], axis=0)),
         'z': float(np.std([i['z'] for i in imu_data['magnetometer']], axis=0))
     }
+    attitude_deviation = {
+        'roll': float(np.std([i['roll'] for i in imu_data['attitude']], axis=0)),
+        'pitch': float(np.std([i['pitch'] for i in imu_data['attitude']], axis=0)),
+        'yaw': float(np.std([i['yaw'] for i in imu_data['attitude']], axis=0))
+    }
 
     click.echo('-' * 80)
     click.echo(f'Accelerometer Deviation: {accelerometer_deviation}')
     click.echo(f'Gyroscope Deviation: {gyroscope_deviation}')
     click.echo(f'Magnetometer Deviation: {magnetometer_deviation}')
+    click.echo(f'Attitude Deviation: {attitude_deviation}')
 
 
 @test.command()
