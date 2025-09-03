@@ -177,13 +177,14 @@ class IMU(object):
         accelerometer_data = accelerometer_data or self.get_accelerometer_data()
         magnetometer_data = magnetometer_data or self.get_magnetometer_data()
 
+        # Standard roll and pitch calculation (in radians)
         roll = math.atan2(
-            accelerometer_data['x'],
-            math.sqrt(accelerometer_data['y'] ** 2 + accelerometer_data['z'] ** 2)
+            accelerometer_data['y'],
+            accelerometer_data['z']
         )
         pitch = math.atan2(
-            accelerometer_data['y'],
-            math.sqrt(accelerometer_data['x'] ** 2 + accelerometer_data['z'] ** 2)
+            -accelerometer_data['x'],
+            math.sqrt(accelerometer_data['y'] ** 2 + accelerometer_data['z'] ** 2)
         )
 
         # Tilt-compensated magnetometer
@@ -191,14 +192,16 @@ class IMU(object):
         magnetometer_y = magnetometer_data['y']
         magnetometer_z = magnetometer_data['z']
 
-        # Apply tilt compensation
-        magnetometer_x_tilt = magnetometer_x * math.cos(pitch) + magnetometer_z * math.sin(pitch)
-        magnetometer_y_tilt = (
-            magnetometer_x * math.sin(roll) * math.sin(pitch) + magnetometer_y *
-            math.cos(roll) - magnetometer_z * math.sin(roll) * math.cos(pitch)
+        magnetometer_x_axis =(
+            magnetometer_x * math.cos(pitch) + magnetometer_z * math.sin(pitch)
+        )
+        magnetometer_y_axis = (
+            magnetometer_x * math.sin(roll) * math.sin(pitch) +
+            magnetometer_y * math.cos(roll) - magnetometer_z * math.sin(roll) *
+            math.cos(pitch)
         )
 
-        yaw = math.atan2(-magnetometer_y_tilt, magnetometer_x_tilt)
+        yaw = math.atan2(-magnetometer_y_axis, magnetometer_x_axis)
 
         return {
             'roll': math.degrees(roll),
