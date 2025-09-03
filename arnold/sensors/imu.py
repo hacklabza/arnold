@@ -1,6 +1,5 @@
 import logging
 import math
-import statistics
 from typing import Optional
 
 from mpu9250_jmdev.mpu_9250 import MPU9250
@@ -76,6 +75,15 @@ class IMU(object):
             for new_key, old_key in self.orientation.items()
         }
 
+    def _smooth_samples(self, values: list):
+        alpha = 0.3
+        if not values:
+            return 0
+        smoothed = values[0]
+        for v in values[1:]:
+            smoothed = alpha * v + (1 - alpha) * smoothed
+        return smoothed
+
     def _merge_samples(
         self,
         func: callable,
@@ -90,9 +98,9 @@ class IMU(object):
 
         # Get the mean of all samples taken by the sensor
         return {
-            'x': statistics.mean([sample['x'] for sample in samples]),
-            'y': statistics.mean([sample['y'] for sample in samples]),
-            'z': statistics.mean([sample['z'] for sample in samples]),
+            'x': self._smooth_samples([sample['x'] for sample in samples]),
+            'y': self._smooth_samples([sample['y'] for sample in samples]),
+            'z': self._smooth_samples([sample['z'] for sample in samples]),
         }
 
     def calibrate(self) -> None:
