@@ -96,14 +96,19 @@ def imu(address, count):  # noqa: F811
     click.echo(f'Testing IMU at {address}')
     imu = sensors.imu.IMU(address=address)
 
+    logging.basicConfig(level=logging.WARNING)
+
     for _ in range(count):
         accelerometer_data = imu.get_accelerometer_data()
         gyroscope_data = imu.get_gyroscope_data()
         magnetometer_data = imu.get_magnetometer_data()
 
-        click.echo(f'Accelerometer: {accelerometer_data}', nl=False)
-        click.echo(f'Gyroscope: {gyroscope_data}', nl=False)
-        click.echo(f'Magnetometer: {magnetometer_data}', nl=False)
+        click.echo(
+            f'Accelerometer: {accelerometer_data} | '
+            f'Gyroscope: {gyroscope_data} | '
+            f'Magnetometer: {magnetometer_data}',
+            nl=False
+        )
 
         time.sleep(1)
 
