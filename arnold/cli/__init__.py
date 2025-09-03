@@ -4,7 +4,7 @@ import os
 import time
 
 import click
-from numpy import np
+import numpy as np
 
 from arnold import main, config, motion, output, sensors
 
