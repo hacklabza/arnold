@@ -39,8 +39,7 @@ class IMU(object):
 
         # Setup sensor and configure
         self.sensor = MPU9250(
-            address_mpu_master=registers.self.address,
-            address_mpu_slave=None,
+            address_mpu_master=self.address,
             gfs=registers.GFS_1000,
             afs=registers.AFS_8G,
             mfs=registers.AK8963_BIT_16,
