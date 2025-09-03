@@ -112,27 +112,18 @@ def imu(address, count):  # noqa: F811
 
         time.sleep(1)
 
-    # Output the collected IMU data variances
-    accelerometer_variance = {
-        'x': max(imu_data['accelerometer']) - min(imu_data['accelerometer']),
-        'y': max(imu_data['accelerometer']) - min(imu_data['accelerometer']),
-        'z': max(imu_data['accelerometer']) - min(imu_data['accelerometer'])
-    }
-    gyroscope_variance = {
-        'x': max(imu_data['gyroscope']) - min(imu_data['gyroscope']),
-        'y': max(imu_data['gyroscope']) - min(imu_data['gyroscope']),
-        'z': max(imu_data['gyroscope']) - min(imu_data['gyroscope'])
-    }
-    magnetometer_variance = {
-        'x': max(imu_data['magnetometer']) - min(imu_data['magnetometer']),
-        'y': max(imu_data['magnetometer']) - min(imu_data['magnetometer']),
-        'z': max(imu_data['magnetometer']) - min(imu_data['magnetometer'])
-    }
-    attitude_variance = {
-        'roll': max(imu_data['attitude']) - min(imu_data['attitude']),
-        'pitch': max(imu_data['attitude']) - min(imu_data['attitude']),
-        'yaw': max(imu_data['attitude']) - min(imu_data['attitude'])
-    }
+    # Collect and output the collected IMU data variances
+    def _get_variance(data: list) -> dict:
+        variance = {}
+        for key in ['x', 'y', 'z']:
+            extract = list(map(lambda x: x[key], data))
+            variance[key] = max(extract) - min(extract)
+        return variance
+
+    accelerometer_variance = _get_variance(imu_data['accelerometer'])
+    gyroscope_variance = _get_variance(imu_data['gyroscope'])
+    magnetometer_variance = _get_variance(imu_data['magnetometer'])
+    attitude_variance = _get_variance(imu_data['attitude'])
 
     click.echo('-' * 80)
     click.echo(f'Accelerometer variance: {accelerometer_variance}')
