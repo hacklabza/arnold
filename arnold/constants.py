@@ -3,7 +3,7 @@ COMMAND_MAP = {
         'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
             'class': 'motion.drivetrain.DriveTrain',
-            'post_hook': 'release',
+            'post_hooks': ['stop', 'release'],
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],

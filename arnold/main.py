@@ -53,6 +53,8 @@ class Arnold(object):
         Run Arnold in autonomous mode.
         """
         self._setup_classes(['drivetrain', 'lidar'])
+
+        # Use the lidar distance to avoid obstacles
         try:
             while True:
                 distance = self.lidar.get_mean_distance(10)
@@ -84,36 +86,32 @@ class Arnold(object):
         """
         Run Arnold in voice command mode.
         """
-        self._setup_classes(['microphone', 'openai', 'speaker', 'drivetrain'])
+        self._setup_classes(['microphone', 'openai', 'speaker'])
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
-        try:
-            while True:
-                audio = self.microphone.listen()
-                try:
-                    command = self.microphone.recognise_command(audio)
-                except UnknownValueError:
-                    continue
-
+        while True:
+            audio = self.microphone.listen()
+            try:
                 command = self.microphone.recognise_command(audio)
-                self._logger.info(f'Voice command recieved: "{command}"')
+            except UnknownValueError:
+                continue
 
-                # Break if the command contains the word 'exit'
-                if 'exit' in command:
-                    break
+            command = self.microphone.recognise_command(audio)
+            self._logger.info(f'Voice command recieved: "{command}"')
 
-                command_parser = utils.CommandParser(command)
-                try:
-                    command_result = command_parser.parse()
-                    if command_result is not None:
-                        self.speaker.say(command_result)
-                except NotImplementedError:
-                    response = self.openai.prompt(command)
-                    self.speaker.say(response.message)
-        except KeyboardInterrupt:
-            self.drivetrain.stop()
-            self.drivetrain.release()
+            # Break if the command contains the word 'exit'
+            if 'exit' in command:
+                break
+
+            command_parser = utils.CommandParser(command)
+            try:
+                command_result = command_parser.parse()
+                if command_result is not None:
+                    self.speaker.say(command_result)
+            except NotImplementedError:
+                response = self.openai.prompt(command)
+                self.speaker.say(response.message)
 
     def run(self) -> None:
         """

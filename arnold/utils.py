@@ -243,9 +243,10 @@ class CommandParser(object):
                     method_result = method
 
                 # If a post hook is defined, get the method and execute it
-                if class_map.get('post_hook') is not None:
-                    post_hook_method = getattr(instance, class_map['post_hook'])
-                    post_hook_method()
+                if class_map.get('post_hooks') is not None:
+                    for post_hook in class_map['post_hooks']:
+                        post_hook_method = getattr(instance, post_hook)
+                        post_hook_method()
 
                 self._logger.info(f'Command result for {class_path}.{method_name}: {method_result}')
 
