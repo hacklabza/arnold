@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Optional
 
+import sounddevice  # noqa: F401
 import speech_recognition
 
 from arnold import config
