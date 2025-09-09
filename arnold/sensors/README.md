@@ -44,7 +44,7 @@ from arnold.sensors.microphone import Microphone
 
 microphone = Microphone()
 audio = microphone.listen()
-text = microphone.microphone.recognise_command(audio)
+text = microphone.recognise_command(audio)
 print(text)
 ```
 
