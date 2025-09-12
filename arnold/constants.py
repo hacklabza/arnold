@@ -1,3 +1,9 @@
+DURATION_COMMAND_MAP = {
+    'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
+    'param': 'duration',
+    'param_value': 'prefix'
+}
+
 COMMAND_MAP = {
     'motion': {
         'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
@@ -8,24 +14,12 @@ COMMAND_MAP = {
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],
                     'method': 'forward',
-                    'params': [
-                        {
-                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
-                            'param': 'duration',
-                            'param_value': 'prefix'
-                        }
-                    ]
+                    'params': [DURATION_COMMAND_MAP]
                 },
                 {
                     'tokens': ['back', 'rear', 'backward', 'backwards', 'reverse'],
                     'method': 'back',
-                    'params': [
-                        {
-                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
-                            'param': 'duration',
-                            'param_value': 'prefix'
-                        }
-                    ]
+                    'params': [DURATION_COMMAND_MAP]
                 },
                 {
                     'tokens': ['stop', 'halt', 'pause'],
@@ -46,11 +40,7 @@ COMMAND_MAP = {
                             'param': 'direction',
                             'param_value': 'left'
                         },
-                        {
-                            'tokens': ['seconds', 'steps', 'paces', 'second', 'step', 'pace'],
-                            'param': 'duration',
-                            'param_value': 'prefix'
-                        }
+                        DURATION_COMMAND_MAP
                     ]
                 }
             ]

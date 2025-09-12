@@ -181,7 +181,6 @@ class DriveTrain(object):
         """
         if self.delay.is_active():
             self.stop()
-            sleep(self.pause_duration)
 
         try:
             left, right = self._direction_map[direction]
