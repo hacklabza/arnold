@@ -44,6 +44,9 @@ class Microphone(object):
         # Setup logging
         self._logger = _logger
 
+        # Suppress ALSA warnings from the speech_recognition library
+        self._silence_alsa_warnings()
+
         # Speech recognition
         self.phrase_time_limit = phrase_time_limit or self.config['phrase_time_limit']
         self.speech_recogniser = speech_recognition.Recognizer()
@@ -59,24 +62,22 @@ class Microphone(object):
         except KeyError:
             self.google_api_key = None
 
-        # Suppress ALSA warnings from the speech_recognition library
-        self._silence_alsa_warnings()
-
     def _silence_alsa_warnings(self) -> None:
         """
         A function to suppress ALSA warnings from the speech_recognition library.
         """
-        def py_error_handler(filename, line, function, err, fmt):
-            pass
-
+        old_stderr = None
         try:
-            import ctypes
-            import ctypes.util
-
-            asound = ctypes.cdll.LoadLibrary(ctypes.util.find_library('asound'))
-            asound.snd_lib_error_set_handler(py_error_handler)
-        except Exception as exc:
-            self._logger.warning(f'Failed to suppress ALSA warnings: {exc}')
+            old_stderr = os.dup(2)
+            devnull = os.open(os.devnull, os.O_WRONLY)
+            os.dup2(devnull, 2)
+            os.close(devnull)
+        except OSError:
+            pass
+        finally:
+            if old_stderr is not None:
+                os.dup2(old_stderr, 2)
+                os.close(old_stderr)
 
     def listen(self) -> speech_recognition.AudioData:
         """
