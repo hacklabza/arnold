@@ -179,7 +179,7 @@ class DriveTrain(object):
         Raises:
             KeyError: Raised if the direction map has been configured incorrectly.
         """
-        if self.delay.is_active():
+        if self.is_active():
             self.stop()
 
         try:
