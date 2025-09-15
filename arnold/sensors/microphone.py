@@ -4,7 +4,7 @@ from typing import Optional
 
 import speech_recognition
 
-from arnold import config
+from arnold import config, utils
 
 
 _logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class Microphone(object):
         self._logger = _logger
 
         # Suppress ALSA warnings from the speech_recognition library
-        self._silence_alsa_warnings()
+        utils.silence_alsa_warnings()
 
         # Speech recognition
         self.phrase_time_limit = phrase_time_limit or self.config['phrase_time_limit']
@@ -61,19 +61,6 @@ class Microphone(object):
             )
         except KeyError:
             self.google_api_key = None
-
-    def _silence_alsa_warnings(self) -> None:
-        """
-        A function to suppress ALSA warnings from the speech_recognition library.
-        """
-        try:
-            import ctypes
-            from ctypes import util
-
-            asound = ctypes.cdll.LoadLibrary(util.find_library('asound'))
-            asound.snd_lib_error_set_handler(None)
-        except Exception as exc:
-            self._logger.warning(f'Failed to suppress ALSA warnings: {exc}')
 
     def listen(self) -> speech_recognition.AudioData:
         """
