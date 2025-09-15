@@ -66,18 +66,14 @@ class Microphone(object):
         """
         A function to suppress ALSA warnings from the speech_recognition library.
         """
-        old_stderr = None
         try:
-            old_stderr = os.dup(2)
-            devnull = os.open(os.devnull, os.O_WRONLY)
-            os.dup2(devnull, 2)
-            os.close(devnull)
-        except OSError:
-            pass
-        finally:
-            if old_stderr is not None:
-                os.dup2(old_stderr, 2)
-                os.close(old_stderr)
+            import ctypes
+            from ctypes import util
+
+            asound = ctypes.cdll.LoadLibrary(util.find_library('asound'))
+            asound.snd_lib_error_set_handler(None)
+        except Exception as exc:
+            self._logger.warning(f'Failed to suppress ALSA warnings: {exc}')
 
     def listen(self) -> speech_recognition.AudioData:
         """
