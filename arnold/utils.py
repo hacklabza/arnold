@@ -32,7 +32,7 @@ def suppress_stderr():
             sys.stderr = old_stderr
 
 
-def silence_alsa_warnings(self) -> None:
+def silence_alsa_warnings() -> None:
     """
     Suppress ALSA warnings from the speech_recognition library.
     """
@@ -43,7 +43,7 @@ def silence_alsa_warnings(self) -> None:
             asound = ctypes.cdll.LoadLibrary(util.find_library('asound'))
             asound.snd_lib_error_set_handler(None)
     except Exception as exc:
-        self._logger.warning(f'Failed to suppress ALSA warnings: {exc}')
+        _logger.warning(f'Failed to suppress ALSA warnings: {exc}')
 
 
 class InterruptibleDelay(object):
