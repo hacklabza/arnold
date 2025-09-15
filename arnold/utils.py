@@ -1,8 +1,5 @@
-import contextlib
 import importlib
 import logging
-import os
-import sys
 import string
 import threading
 import time
@@ -19,34 +16,6 @@ def sanitise_input(input: str, punctuation: Optional[str] = None) -> str:
     """
     punctuation = punctuation or string.punctuation
     return input.translate(str.maketrans('', '', punctuation)).lower()
-
-
-@contextlib.contextmanager
-def suppress_alsa_stderr():
-    # Save the original stderr file descriptor
-    original_stderr_fd = sys.stderr.fileno()
-    saved_stderr_fd = os.dup(original_stderr_fd)
-    try:
-        with open(os.devnull, 'w') as devnull:
-            os.dup2(devnull.fileno(), original_stderr_fd)
-        yield
-    finally:
-        os.dup2(saved_stderr_fd, original_stderr_fd)
-        os.close(saved_stderr_fd)
-
-
-def silence_alsa_warnings() -> None:
-    """
-    Suppress ALSA warnings from the speech_recognition library.
-    """
-    try:
-        import ctypes
-        from ctypes import util
-        with suppress_alsa_stderr():
-            asound = ctypes.cdll.LoadLibrary(util.find_library('asound'))
-            asound.snd_lib_error_set_handler(None)
-    except Exception as exc:
-        _logger.warning(f'Failed to suppress ALSA warnings: {exc}')
 
 
 class InterruptibleDelay(object):
