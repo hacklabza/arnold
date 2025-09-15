@@ -2,7 +2,6 @@ import logging
 import os
 from typing import Optional
 
-import sounddevice  # noqa: F401
 import speech_recognition
 
 from arnold import config
@@ -59,6 +58,25 @@ class Microphone(object):
             )
         except KeyError:
             self.google_api_key = None
+
+        # Suppress ALSA warnings from the speech_recognition library
+        self._silence_alsa_warnings()
+
+    def _silence_alsa_warnings(self) -> None:
+        """
+        A function to suppress ALSA warnings from the speech_recognition library.
+        """
+        def py_error_handler(filename, line, function, err, fmt):
+            pass
+
+        try:
+            import ctypes
+            import ctypes.util
+
+            asound = ctypes.cdll.LoadLibrary(ctypes.util.find_library('asound'))
+            asound.snd_lib_error_set_handler(py_error_handler)
+        except Exception as exc:
+            self._logger.warning(f'Failed to suppress ALSA warnings: {exc}')
 
     def listen(self) -> speech_recognition.AudioData:
         """
