@@ -2,9 +2,10 @@ import logging
 import os
 from typing import Optional
 
+import sounddevice  # noqa: F401
 import speech_recognition
 
-from arnold import config, utils
+from arnold import config
 
 
 _logger = logging.getLogger(__name__)
@@ -43,9 +44,6 @@ class Microphone(object):
 
         # Setup logging
         self._logger = _logger
-
-        # Suppress ALSA warnings from the speech_recognition library
-        utils.silence_alsa_warnings()
 
         # Speech recognition
         self.phrase_time_limit = phrase_time_limit or self.config['phrase_time_limit']
