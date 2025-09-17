@@ -1,4 +1,3 @@
-import importlib
 import logging
 import string
 import threading
@@ -90,7 +89,7 @@ class CommandParser(object):
         command. Defaults to None.
     """
 
-    def __init__(self, arnold: Any, command: str, command_map: Optional[Dict] = None) -> None:
+    def __init__(self, arnold: object, command: str, command_map: Optional[Dict] = None) -> None:
         self.arnold = arnold
         self.command = command
         self.command_parts = self._split_command()
@@ -109,24 +108,36 @@ class CommandParser(object):
         clean_command = sanitise_input(self.command)
         return clean_command.split(' ')
 
-    def _get_method(self, class_path: str, method_name: str) -> Tuple[object, Callable]:
-        """Import and initiate the class and return the method.
+    def _get_method(
+        self,
+        class_map: Dict,
+        method_map: Dict
+    ) -> Tuple[Optional[object], Optional[Callable]]:
+        """Get the class instance from the Arnold instance and the method to call.
 
         Args:
-            class_path (str): the path to the class
-            method_name (str): the method to return
+            class_map (dict): the class map
+            method_map (dict): the method map
 
         Returns:
             tuple (object, callable): the class instance and method the command
             is calling
         """
-        class_path_list = class_path.split('.')
-        class_name = class_path_list[-1]
-        module_path = '.'.join(class_path_list[:-1])
-        module = importlib.import_module(f'arnold.{module_path}')
-        cls = getattr(module, class_name)
-        instance = cls()
-        return instance, getattr(instance, method_name)
+        class_instance_name = class_map['class_instance']
+        class_instance = getattr(self.arnold, class_instance_name, None)
+        if class_instance is None:
+            self._logger.warning(
+                f'Class instance {class_instance_name} not found in Arnold instance.'
+            )
+            return None, None
+        method_name = method_map['method']
+        method = getattr(class_instance, method_name, None)
+        if method is None:
+            self._logger.warning(
+                f'Method {method_name} not found in class instance arnold.{class_instance_name}.'
+            )
+            return None, None
+        return class_instance, method
 
     def _get_recognised_tokens(self, tokens: List) -> Set:
         """
@@ -229,21 +240,12 @@ class CommandParser(object):
             method_map = self._parse_class_map(class_map)
             if method_map is not None:
                 # Get the class instance and method to call
-                class_instance_name = class_map['class_instance']
-                class_instance = getattr(self.arnold, class_instance_name, None)
-                if class_instance is None:
-                    self._logger.warning(
-                        f'Class instance {class_instance_name} not found in Arnold instance.'
-                    )
-                    return
-                method_name = method_map['method']
-                method = getattr(class_instance, method_name, None)
-                if method is None:
-                    self._logger.warning(
-                        f'Method {method_name} not found in class instance arnold.{class_instance_name}.'
-                    )
+                class_instance, method = self._get_method(class_map, method_map)
+
+                if class_instance is None or method is None:
                     return
 
+                # Get the method params to call the method with
                 method_params = self._get_method_params(method_map)
 
                 # Executed the method if it's callable else assume it is a property or
@@ -258,6 +260,9 @@ class CommandParser(object):
                     for post_hook in class_map['post_hooks']:
                         post_hook_method = getattr(class_instance, post_hook)
                         post_hook_method()
+
+                class_instance_name = class_instance.__class__.__name__
+                method_name = method.__name__
 
                 self._logger.info(f'Command result for {class_instance_name}.{method_name}: {method_result}')
 

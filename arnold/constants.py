@@ -8,8 +8,7 @@ COMMAND_MAP = {
     'motion': {
         'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
-            'class_instance': 'drivertrain',
-            'post_hooks': ['stop', 'release'],
+            'class_instance': 'drivetrain',
             'methods': [
                 {
                     'tokens': ['forward', 'forth', 'frontwards', 'front'],

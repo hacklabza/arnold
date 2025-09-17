@@ -165,7 +165,7 @@ class DriveTrain(object):
         self,
         direction: str,
         duration: Optional[int] = 30,
-        speed: Optional[float] = 1.0
+        speed: Optional[float] = 1.0,
     ) -> None:
         """
         Move Arnold in a specific direction for a specified duration.
