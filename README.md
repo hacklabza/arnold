@@ -69,9 +69,29 @@ make test
 
 ## Running arnold
 
+### Manual mode
+
 ```bash
 # Initialise and run the internal API server
 arnold run
 ```
 
 Open your browser to http://192.168.1.115:8000 to control arnold.
+
+### Autonomous mode
+
+```bash
+# Initialise and run arnold in autonomous mode
+arnold run -a
+```
+
+A rudimentary obstacle avoidance system is in place to stop arnold from running into things using lidar.
+
+### Voice command mode
+
+```bash
+# Initialise and run arnold in voice command mode
+arnold run -v
+```
+
+Arnold will listen for voice commands and execute them based on the command mapping in `arnold/constants.py`. It falls back to a conversation with ChatGPT if it doesn't understand the command.
