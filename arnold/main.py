@@ -5,7 +5,7 @@ from typing import Optional
 from speech_recognition import UnknownValueError
 
 from arnold import api, utils
-from arnold.lookup import openai
+from arnold.lookup import openai, weather
 from arnold.motion import drivetrain
 from arnold.output import speaker
 from arnold.sensors import imu, lidar, microphone
@@ -40,7 +40,8 @@ class Arnold(object):
             'lidar': lidar.Lidar,
             'microphone': microphone.Microphone,
             'openai': openai.OpenAI,
-            'speaker': speaker.Speaker
+            'speaker': speaker.Speaker,
+            'weather': weather.Weather,
         }
         classes = classes or []
         for required_class in classes:
@@ -86,7 +87,7 @@ class Arnold(object):
         """
         Run Arnold in voice command mode.
         """
-        self._setup_classes(['microphone', 'openai', 'speaker'])
+        self._setup_classes(['drivetrain', 'microphone', 'openai', 'speaker', 'weather'])
 
         # Capture the audio and parse the command or fall back to an OpenAI
         # response
@@ -104,7 +105,7 @@ class Arnold(object):
             if 'exit' in command:
                 break
 
-            command_parser = utils.CommandParser(command)
+            command_parser = utils.CommandParser(self, command)
             try:
                 command_result = command_parser.parse()
                 if command_result is not None:

@@ -12,7 +12,7 @@ RPi 4 Based Robotic Platform
 
  - Raspberry Pi OS Lite (Preferrable but not essential)
  - Git
- - Python 3.10+
+ - Python 3.11+
  - Python Virtualenv
 
 ## Build Requirements

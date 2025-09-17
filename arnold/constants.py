@@ -8,7 +8,7 @@ COMMAND_MAP = {
     'motion': {
         'tokens': ['move', 'go', 'proceed', 'move', 'travel', 'walk', 'drive', 'turn', 'stop', 'halt', 'pause'],
         'map': {
-            'class': 'motion.drivetrain.DriveTrain',
+            'class_instance': 'drivertrain',
             'post_hooks': ['stop', 'release'],
             'methods': [
                 {
@@ -49,7 +49,7 @@ COMMAND_MAP = {
     'lookup': {
         'tokens': ['weather'],
         'map': {
-            'class': 'lookup.weather.Weather',
+            'class_instance': 'weather',
             'methods': [
                 {
                     'tokens': ['today', 'now'],

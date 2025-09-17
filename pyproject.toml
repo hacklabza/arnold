@@ -10,7 +10,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 bottle = "^0.13.1"
 click = "^8.1.7"
 google-cloud-speech = "^2.27.0"
@@ -26,7 +26,7 @@ SpeechRecognition = "^3.10.4"
 uvicorn = "^0.30.6"
 opencv-python-headless = "^4.10.0.84"
 mpu9250-jmdev = "^1.0.12"
-openai = "^1.51.0"
+openai = "^1.107.3"
 sounddevice = "^0.5.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -35,7 +35,7 @@ pytest-mock = "^3.14.0"
 requests-mock = "^1.12.1"
 py3-tts = "^3.5"
 pre-commit = "^4.3.0"
-ruff = "^0.12.11"
+ruff = "^0.13.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -47,4 +47,4 @@ arnold = "arnold.cli:cli"
 [tool.ruff]
 line-length = 88
 indent-width = 4
-target-version = "py310"
+target-version = "py311"

@@ -84,12 +84,14 @@ class CommandParser(object):
     the corresponding method based on a command mapping.
 
     Args:
+        arnold (Arnold): The Arnold instance containing the components to be controlled.
         command (str): The command string to be parsed.
         command_map (dict, optional): The command mapping to be used for parsing the
         command. Defaults to None.
     """
 
-    def __init__(self, command: str, command_map: Optional[Dict] = None) -> None:
+    def __init__(self, arnold: Any, command: str, command_map: Optional[Dict] = None) -> None:
+        self.arnold = arnold
         self.command = command
         self.command_parts = self._split_command()
         self.command_map = command_map or COMMAND_MAP
@@ -226,12 +228,21 @@ class CommandParser(object):
         if class_map is not None:
             method_map = self._parse_class_map(class_map)
             if method_map is not None:
-                class_path = class_map['class']
+                # Get the class instance and method to call
+                class_instance_name = class_map['class_instance']
+                class_instance = getattr(self.arnold, class_instance_name, None)
+                if class_instance is None:
+                    self._logger.warning(
+                        f'Class instance {class_instance_name} not found in Arnold instance.'
+                    )
+                    return
                 method_name = method_map['method']
-                instance, method = self._get_method(
-                    class_path=class_path,
-                    method_name=method_name
-                )
+                method = getattr(class_instance, method_name, None)
+                if method is None:
+                    self._logger.warning(
+                        f'Method {method_name} not found in class instance arnold.{class_instance_name}.'
+                    )
+                    return
 
                 method_params = self._get_method_params(method_map)
 
@@ -245,10 +256,10 @@ class CommandParser(object):
                 # If a post hook is defined, get the method and execute it
                 if class_map.get('post_hooks') is not None:
                     for post_hook in class_map['post_hooks']:
-                        post_hook_method = getattr(instance, post_hook)
+                        post_hook_method = getattr(class_instance, post_hook)
                         post_hook_method()
 
-                self._logger.info(f'Command result for {class_path}.{method_name}: {method_result}')
+                self._logger.info(f'Command result for {class_instance_name}.{method_name}: {method_result}')
 
                 # Format the result if a formatter is defined as return value
                 formatter = method_map.get('formatter')
