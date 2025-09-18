@@ -111,7 +111,7 @@ SENSOR = {
         'card_number': 1,
         'device_index': 0,
         'sample_rate': 48000,
-        'phrase_time_limit': 30,
+        'phrase_time_limit': 15,
         'energy_threshold': 300
     }
 }
