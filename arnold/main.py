@@ -114,8 +114,9 @@ class Arnold(object):
                 if command_result is not None:
                     self.speaker.say(command_result)
             except NotImplementedError:
-                response = self.openai.prompt(command)
-                self.speaker.say(response.message)
+                if command:
+                    response = self.openai.prompt(command)
+                    self.speaker.say(response.message)
 
     def run(self) -> None:
         """
