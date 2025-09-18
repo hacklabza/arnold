@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Optional
 
 import pyttsx3
@@ -75,3 +76,6 @@ class Speaker(object):
         """
         self.speech_engine.say(text)
         self.speech_engine.runAndWait()
+        while self.speech_engine.isBusy():
+            time.sleep(0.1)
+        self.speech_engine.stop()
