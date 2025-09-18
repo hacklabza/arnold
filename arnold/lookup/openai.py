@@ -83,7 +83,7 @@ class OpenAI(object):
                 model=model,
                 frequency_penalty=1.0,
                 temperature=temperature,
-                max_tokens=max_tokens,
+                max_completion_tokens=max_tokens,
                 messages=[
                     {
                         'role': 'system',

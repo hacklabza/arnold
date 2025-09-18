@@ -28,7 +28,7 @@ INTEGRATION = {
         'project_id': os.environ.get('ARNOLD_OPENAI_PROJECTID', 'openai-projectid'),
         'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-5-nano'),
         'temperature': 0.5,
-        'max_completion_tokens': 1500,
+        'max_tokens': 1500,
         'instructions': os.environ.get(
             'ARNOLD_OPENAI_INSTRUCTIONS',
             'You are a humorous robot assistant by the name of Arnold that gives concise responses.'
