@@ -268,7 +268,7 @@ class CommandParser(object):
                         post_hook_method()
 
                 class_instance_name = class_instance.__class__.__name__
-                method_name = method.__name__
+                method_name = getattr(method, '__name__', method.__class__.__name__)
 
                 self._logger.info(f'Command result for {class_instance_name}.{method_name}: {method_result}')
 
