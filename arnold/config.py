@@ -112,6 +112,6 @@ SENSOR = {
         'device_index': 0,
         'sample_rate': 48000,
         'phrase_time_limit': 30,
-        'energy_threshold': 700
+        'energy_threshold': 300
     }
 }

@@ -104,7 +104,7 @@ class Arnold(object):
             self._logger.info(f'Voice command received: "{command}"')
 
             # Break if the command contains the exit or quit tokens
-            if set(['quit', 'exit']).intersection(set(command.split())):
+            if set(['quit', 'exit', 'goodbye']).intersection(set(command.split())):
                 break
 
             # Parse the command and call the relevant method
