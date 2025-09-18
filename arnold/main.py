@@ -98,7 +98,6 @@ class Arnold(object):
             except UnknownValueError:
                 continue
 
-            command = self.microphone.recognise_command(audio)
             self._logger.info(f'Voice command recieved: "{command}"')
 
             # Break if the command contains the word 'exit'

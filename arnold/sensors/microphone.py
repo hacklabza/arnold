@@ -1,11 +1,12 @@
 import logging
-import os
+import io
 from typing import Optional
 
 import sounddevice  # noqa: F401
 import speech_recognition
 
 from arnold import config
+from arnold.lookup import openai
 
 
 _logger = logging.getLogger(__name__)
@@ -32,7 +33,6 @@ class Microphone(object):
         sample_rate: Optional[int] = None,
         phrase_time_limit: Optional[int] = None,
         energy_threshold: Optional[int] = None,
-        google_api_key_path: Optional[int] = None
 
     ) -> None:
         self.config = config.SENSOR['microphone']
@@ -52,13 +52,9 @@ class Microphone(object):
             energy_threshold or self.config['energy_threshold']
         )
 
-        # Google Cloud API integration
-        try:
-            self.google_api_key_path = (
-                google_api_key_path or config.INTEGRATION['googlecloud']['key_path']
-            )
-        except KeyError:
-            self.google_api_key = None
+        # Setup OpenAI client for transcription
+        self.openai = openai.OpenAI()
+
 
     def listen(self) -> speech_recognition.AudioData:
         """
@@ -76,25 +72,19 @@ class Microphone(object):
             )
             return voice_command
 
-    def recognise_command(self, voice_command: speech_recognition.AudioData) -> Optional[str]:
+    def recognise_command(self, voice_command: speech_recognition.AudioData) -> str:
         """
-        Takes a voice command audio bite as input and calls the google voice
-        to text service to determine the text command which can be parsed.
+        Takes a voice command audio bite as input and calls the openai audio
+        transcribe service to determine the text command which can be parsed.
 
         Args:
             voice_command (speech_recognition.AudioData): Recorded voice command
 
         Returns:
-            Optional[str]: the text command as processed by google speech
-            recognision engine.
+            str: the text command as processed by openai transcribe service.
         """
-        if self.google_api_key_path:
-            return self.speech_recogniser.recognize_google_cloud(
-                voice_command,
-                credentials_json_path=os.path.join(config.ROOT_DIR, self.google_api_key_path),
-                language_code='en-ZA'
-            )
-        else:
-            self._logger.error(
-                'Can\'t proceed. Google Cloud API key not found.'
-            )
+        with io.BytesIO() as audio_file:
+            audio_file.write(voice_command.get_wav_data())
+            audio_file.seek(0)
+            audio_file.name = "audio.wav"
+            return self.openai.transcribe(audio_file)

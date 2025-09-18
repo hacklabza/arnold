@@ -14,9 +14,6 @@ ROOT_DIR = os.environ.get(
 
 # Integration config
 INTEGRATION = {
-    'googlecloud': {
-        'key_path': os.environ.get('ARNOLD_GOOGLECLOUD_KEY_PATH'),
-    },
     'openweather': {
         'url': 'https://api.openweathermap.org/data/3.0/onecall',
         'api_key': os.environ.get('ARNOLD_OPENWEATHER_APIKEY', 'openweather-key'),
@@ -29,12 +26,12 @@ INTEGRATION = {
             'ARNOLD_OPENAI_ORGANIZATIONID', 'openai-organizationid'
         ),
         'project_id': os.environ.get('ARNOLD_OPENAI_PROJECTID', 'openai-projectid'),
-        'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-4o-mini'),
+        'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-5-nano'),
         'temperature': 0.5,
         'max_tokens': 1500,
         'instructions': os.environ.get(
             'ARNOLD_OPENAI_INSTRUCTIONS',
-            'You are a humorous robot assistant called Arnold.'
+            'You are a humorous robot assistant by the name of Arnold that gives concise responses.'
         )
     }
 }

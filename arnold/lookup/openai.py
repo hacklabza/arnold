@@ -107,3 +107,10 @@ class OpenAI(object):
             ),
             total_tokens=completion.usage.total_tokens
         )
+
+    def transcribe(self, audio_file) -> str:
+        return self.client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file,
+            response_format="text"
+        )
