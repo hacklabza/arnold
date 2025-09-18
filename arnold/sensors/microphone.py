@@ -23,7 +23,6 @@ class Microphone(object):
         sample_rate (int, optional): The microphone sample rate.
         phrase_time_limit (int, optional): How long to listen for a phrase.
         energy_threshold (int, optional): The microphones energy threshold.
-        google_api_key_path (str, optional): The file path to the json api key.
 
     """
     def __init__(
