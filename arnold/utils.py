@@ -9,12 +9,18 @@ from arnold.constants import COMMAND_MAP, INT_MAP
 _logger = logging.getLogger(__name__)
 
 
-def sanitise_input(input: str, punctuation: Optional[str] = None) -> str:
+def sanitise_input(
+    input: str,
+    punctuation: Optional[str] = None,
+    whitespace: Optional[str] = None
+) -> str:
     """
-    Sanitise the input string by removing punctuation and converting to lowercase.
+    Sanitise the input string by removing punctuation / whitespace and converting
+    to lowercase.
     """
     punctuation = punctuation or string.punctuation
-    return input.translate(str.maketrans('', '', punctuation)).lower()
+    whitespace = whitespace or "\n\r\t"
+    return input.translate(str.maketrans('', '', punctuation + whitespace)).lower()
 
 
 class InterruptibleDelay(object):

@@ -81,7 +81,6 @@ class OpenAI(object):
         try:
             completion = self.client.chat.completions.create(
                 model=model,
-                frequency_penalty=1.0,
                 temperature=temperature,
                 max_completion_tokens=max_tokens,
                 messages=[

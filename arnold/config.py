@@ -27,7 +27,7 @@ INTEGRATION = {
         ),
         'project_id': os.environ.get('ARNOLD_OPENAI_PROJECTID', 'openai-projectid'),
         'model': os.environ.get('ARNOLD_OPENAI_MODEL', 'gpt-5-nano'),
-        'temperature': 0.5,
+        'temperature': 1.0,
         'max_tokens': 1500,
         'instructions': os.environ.get(
             'ARNOLD_OPENAI_INSTRUCTIONS',
