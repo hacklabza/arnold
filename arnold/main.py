@@ -98,12 +98,16 @@ class Arnold(object):
             except UnknownValueError:
                 continue
 
-            self._logger.info(f'Voice command recieved: "{command}"')
+            # Sanitise the command input
+            command = utils.sanitise_input(command)
 
-            # Break if the command contains the word 'exit'
-            if 'exit' in command:
+            self._logger.info(f'Voice command received: "{command}"')
+
+            # Break if the command contains the exit or quit tokens
+            if set(['quit', 'exit']).intersection(set(command.split())):
                 break
 
+            # Parse the command and call the relevant method
             command_parser = utils.CommandParser(self, command)
             try:
                 command_result = command_parser.parse()
