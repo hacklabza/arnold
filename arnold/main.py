@@ -89,8 +89,7 @@ class Arnold(object):
         """
         self._setup_classes(['drivetrain', 'microphone', 'openai', 'speaker', 'weather'])
 
-        # Capture the audio and parse the command or fall back to an OpenAI
-        # response
+        # Capture the audio and parse the command or fall back to an OpenAI response
         while True:
             audio = self.microphone.listen()
             try:
@@ -104,7 +103,9 @@ class Arnold(object):
             self._logger.info(f'Voice command received: "{command}"')
 
             # Break if the command contains the exit or quit tokens
-            if set(['quit', 'exit', 'goodbye']).intersection(set(command.split())):
+            termination_tokens = ['quit', 'exit', 'goodbye']
+            if set(termination_tokens).intersection(set(command.split())):
+                self.speaker.say("Goodbye!")
                 break
 
             # Parse the command and call the relevant method
