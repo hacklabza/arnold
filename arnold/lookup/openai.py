@@ -51,7 +51,7 @@ class OpenAI(object):
 
     def prompt(
         self,
-        message: str,
+        message: str | list,
         model: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
@@ -109,7 +109,24 @@ class OpenAI(object):
 
     def transcribe(self, audio_file) -> str:
         return self.client.audio.transcriptions.create(
-            model="whisper-1",
+            model='whisper-1',
             file=audio_file,
-            response_format="text"
+            response_format='text'
+        )
+
+    def vision(self, file_path: str) -> str:
+        base64_image = utils.encode_image_to_base64(file_path)
+        return self.prompt(
+            message=[
+                {
+                    'type': 'text',
+                    'text': 'Describe the image in detail.'
+                },
+                {
+                    'type': 'image_url',
+                    'image_url': {
+                        'url': base64_image
+                    }
+                }
+            ]
         )

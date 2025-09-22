@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from arnold import main, config, motion, output, sensors
+from arnold import main, config, lookup, motion, output, sensors
 
 
 logging.basicConfig(level=logging.INFO)
@@ -203,15 +203,24 @@ def microphone(card_number, device_index):
     '--duration', '-d', default=config.SENSOR['camera']['video']['duration'],
     help='The duration of the video to be captured.'
 )
-def camera(camera_number, video, image, file_path, width, height, frame_rate, duration):
+@click.option(
+    '--describe', is_flag=True, help='Describes the captured image using OpenAI.'
+)
+def camera(camera_number, video, image, file_path, width, height, frame_rate, duration, describe):
     camera = sensors.camera.Camera(camera_number=camera_number)
     if image:
         click.echo('Testing Camera in `image` mode.')
+        file_path = file_path or config.SENSOR['camera']['image']['file_path']
         camera.capture_image(
-            file_path=file_path or config.SENSOR['camera']['image']['file_path'],
+            file_path=file_path,
             width=width or config.SENSOR['camera']['image']['width'],
             height=height or config.SENSOR['camera']['image']['height'],
         )
+        if describe:
+            click.echo('Describing captured image using OpenAI...')
+            openai = lookup.openai.OpenAI()
+            description = openai.vision(file_path=file_path)
+            click.echo(f'Image description: {description}')
     elif video:
         click.echo('Testing Camera in `video` mode.')
         camera.capture_video(

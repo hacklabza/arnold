@@ -1,10 +1,12 @@
 import logging
 import time
+import tempfile
+from os import path
 from typing import Generator, Optional
 
 import cv2
 
-from arnold import config
+from arnold import config, lookup
 
 
 _logger = logging.getLogger(__name__)
@@ -32,17 +34,17 @@ class Camera(object):
         self._logger = _logger
 
     def capture_image(
-            self,
-            file_path: str,
-            width: Optional[int] = None,
-            height: Optional[int] = None,
-        ) -> None:
+        self,
+        file_path: str,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+    ) -> None:
         """
         Capture an image to file from the camera with optional width and height.
 
         Args:
             file_path (str): The file path to save the image to.
-            width (str, optional): The wigth of the captured image.
+            width (str, optional): The width of the captured image.
             height (str, optional): The height of the captured image.
         """
         width = width or self.image_config['width']
@@ -50,15 +52,18 @@ class Camera(object):
 
         self._logger.info(f'Capturing image to {file_path}.')
 
-        # Capture and save the image
+        # Initialise the camera and set width and height
         camera = cv2.VideoCapture(self.camera_number)
         camera.set(3, width)
         camera.set(4, height)
 
+        # Allow camera to warm up and then capture the image
+        time.sleep(0.5)
         _, image = camera.read()
         flipped_image = cv2.flip(image, 0) if image is not None else None
         camera.release()
 
+        # Save the image to the file path
         if flipped_image is not None:
             cv2.imwrite(file_path, flipped_image)
             self._logger.info(f'Image captured to {file_path}.')
@@ -112,11 +117,11 @@ class Camera(object):
         self._logger.info(f'Video captured to {file_path}.')
 
     def stream_video(
-            self,
-            width: Optional[int] = None,
-            height: Optional[int] = None,
-            frame_rate: Optional[int] = None,
-        ) -> Generator:
+        self,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        frame_rate: Optional[int] = None,
+    ) -> Generator:
         """
         Stream video from the camera with optional width, height and frame rate.
 
@@ -157,3 +162,13 @@ class Camera(object):
 
         cv2.destroyAllWindows()
         camera.release()
+
+    def recognise(self, file_path: Optional[str] = None) -> None:
+        """
+        Recognise objects in the captured image using OpenAI's vision model.
+        """
+        openai = lookup.openai.OpenAI()
+        file_path = file_path or path.join(tempfile.gettempdir() , 'recognised_image.jpg')
+        self.capture_image(file_path=file_path)
+        description = openai.vision(file_path=file_path)
+        return description.message

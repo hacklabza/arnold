@@ -1,3 +1,4 @@
+import base64
 import logging
 import string
 import threading
@@ -17,10 +18,33 @@ def sanitise_input(
     """
     Sanitise the input string by removing punctuation / whitespace and converting
     to lowercase.
+
+    Args:
+        input (str): The input string to sanitise.
+        punctuation (str, optional): The punctuation characters to remove.
+        whitespace (str, optional): The whitespace characters to remove.
+
+    Returns:
+        str: The sanitised input string.
     """
     punctuation = punctuation or string.punctuation
     whitespace = whitespace or "\n\r\t"
     return input.translate(str.maketrans('', '', punctuation + whitespace)).lower()
+
+
+def encode_image_to_base64(image_path: str) -> str:
+    """
+    Encode an image to a base64 string.
+
+    Args:
+        image_path (str): The path to the image file.
+
+    Returns:
+        str: The base64 encoded image string.
+    """
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    return f"data:image/jpeg;base64,{encoded_string}"
 
 
 class InterruptibleDelay(object):
