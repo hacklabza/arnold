@@ -35,7 +35,7 @@ class Camera(object):
 
     def capture_image(
         self,
-        file_path: str,
+        file_path: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
     ) -> None:
@@ -47,6 +47,7 @@ class Camera(object):
             width (str, optional): The width of the captured image.
             height (str, optional): The height of the captured image.
         """
+        file_path = file_path or self.image_config['file_path']
         width = width or self.image_config['width']
         height = height or self.image_config['height']
 
@@ -72,7 +73,7 @@ class Camera(object):
 
     def capture_video(
         self,
-        file_path: str,
+        file_path: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
         frame_rate: Optional[int] = None,
@@ -89,6 +90,7 @@ class Camera(object):
             frame_rate (str, optional): The frame rate of the captured video.
             duration (str, optional): The duration of the captured video.
         """
+        file_path = file_path or self.video_config['file_path']
         width = width or self.video_config['width']
         height = height or self.video_config['height']
         frame_rate = frame_rate or self.video_config['frame_rate']
@@ -163,7 +165,7 @@ class Camera(object):
         cv2.destroyAllWindows()
         camera.release()
 
-    def recognise(self, file_path: Optional[str] = None) -> None:
+    def recognise_image(self, file_path: Optional[str] = None) -> None:
         """
         Recognise objects in the captured image using OpenAI's vision model.
         """

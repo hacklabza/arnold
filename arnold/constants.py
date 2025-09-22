@@ -45,6 +45,33 @@ COMMAND_MAP = {
             ]
         }
     },
+    'camera': {
+        'tokens': ['take', 'capture', 'record', 'see'],
+        'map': {
+            'class_instance': 'camera',
+            'methods': [
+                {
+                    'tokens': ['photo', 'picture', 'image'],
+                    'method': 'capture_image',
+                },
+                {
+                    'tokens': ['record', 'video', 'film'],
+                    'method': 'capture_video',
+                    'params': [
+                        {
+                            'tokens': ['seconds', 'second'],
+                            'param': 'duration',
+                            'param_value': 'prefix'
+                        }
+                    ]
+                },
+                {
+                    'tokens': ['recognise', 'recognize', 'describe', 'what'],
+                    'method': 'recognise_image',
+                },
+            ]
+        }
+    },
     'lookup': {
         'tokens': ['weather'],
         'map': {
