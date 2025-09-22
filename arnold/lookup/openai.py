@@ -100,10 +100,7 @@ class OpenAI(object):
 
         # Return the completion result
         return Completion(
-            message=utils.sanitise_input(
-                input=completion.choices[0].message.content,
-                punctuation=r"""#$%&()*+-/<=>@[\]^_`{|}~"""
-            ),
+            message=completion.choices[0].message.content,
             total_tokens=completion.usage.total_tokens
         )
 
