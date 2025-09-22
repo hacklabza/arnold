@@ -8,7 +8,7 @@ from arnold import api, utils
 from arnold.lookup import openai, weather
 from arnold.motion import drivetrain
 from arnold.output import speaker
-from arnold.sensors import imu, lidar, microphone
+from arnold.sensors import camera, imu, lidar, microphone
 
 
 _logger = logging.getLogger(__name__)
@@ -35,6 +35,7 @@ class Arnold(object):
         Setup the required classes.
         """
         class_map = {
+            'camera': camera.Camera,
             'drivetrain': drivetrain.DriveTrain,
             'imu': imu.IMU,
             'lidar': lidar.Lidar,
