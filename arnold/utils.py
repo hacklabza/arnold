@@ -224,7 +224,7 @@ class CommandParser(object):
             dict: params to invoke the method with
         """
         method_params = {}
-        for param_map in method_map['params']:
+        for param_map in method_map.get('params', []):
             recognised_param_token = self._get_recognised_tokens(
                 tokens=param_map['tokens']
             )
