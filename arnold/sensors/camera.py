@@ -136,9 +136,20 @@ class Camera(object):
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """
         Recognise objects in the captured image using OpenAI's vision model.
+
+        Args:
+            file_path (str, optional): The file path to save the image to. If not
+            provided, a temporary file will be used.
+
+        Returns:
+            str: The description of the image.
         """
-        openai = lookup.openai.OpenAI()
+
+        # Use a temporary file if no file path is provided
         file_path = file_path or path.join(tempfile.gettempdir() , 'recognised_image.jpg')
+
+        # Capture the image and get the description from OpenAI
         self.capture_image(file_path=file_path)
+        openai = lookup.openai.OpenAI()
         description = openai.vision(file_path=file_path)
-        return description.message
+        return description.message.replace('Image description: ', '')
