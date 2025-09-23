@@ -4,7 +4,15 @@ import tempfile
 from os import path
 from typing import Generator, Optional
 
-import cv2
+try:
+    import libcamera
+except ImportError:
+    raise ImportError('libcamera is not installed. This module is only available on the rpi.')
+
+try:
+    from picamera2 import Picamera2
+except ImportError:
+    raise ImportError('picamera2 is not installed. This module is only available on the rpi.')
 
 from arnold import config, lookup
 
@@ -54,22 +62,19 @@ class Camera(object):
         self._logger.info(f'Capturing image to {file_path}.')
 
         # Initialise the camera and set width and height
-        camera = cv2.VideoCapture(self.camera_number)
-        camera.set(3, width)
-        camera.set(4, height)
+        camera = Picamera2(camera_num=self.camera_number)
+        camera.configure(camera.create_still_configuration(
+            main={
+                'size': (width, height),
+                'transform': libcamera.Transform(hflip=1, vflip=0)
+            }
+        ))
+        camera.start()
 
         # Allow camera to warm up and then capture the image
         time.sleep(0.5)
-        _, image = camera.read()
-        flipped_image = cv2.flip(image, 0) if image is not None else None
-        camera.release()
-
-        # Save the image to the file path
-        if flipped_image is not None:
-            cv2.imwrite(file_path, flipped_image)
-            self._logger.info(f'Image captured to {file_path}.')
-        else:
-            self._logger.error('Failed to capture image.')
+        camera.capture_file(file_path)
+        self._logger.info(f'Image captured to {file_path}.')
 
     def capture_video(
         self,
@@ -96,27 +101,8 @@ class Camera(object):
         frame_rate = frame_rate or self.video_config['frame_rate']
         duration = duration or self.video_config['duration']
 
-        self._logger.info(f'Capturing video to {file_path}.')
-
-        # Capture and save the video
-        camera = cv2.VideoCapture(self.camera_number)
-
-        video = cv2.VideoWriter(
-            filename=file_path,
-            fourcc=cv2.VideoWriter_fourcc(*'XVID'),
-            fps=frame_rate,
-            frameSize=(width, height)
-        )
-
-        start_time = time.time()
-        while (time.time() - start_time) < duration:
-            _, image = camera.read()
-            video.write(image)
-
-        camera.release()
-        video.release()
-
-        self._logger.info(f'Video captured to {file_path}.')
+        # TODO: Implement video capture
+        self._logger.warning('Video capture not yet implemented.')
 
     def stream_video(
         self,
@@ -136,34 +122,8 @@ class Camera(object):
         height = height or self.video_config['height']
         frame_rate = frame_rate or self.video_config['frame_rate']
 
-        self._logger.info('Streaming video from camera.')
-
-        # Stream video from the camera
-        camera = cv2.VideoCapture(self.camera_number)
-        camera.set(3, width)
-        camera.set(4, height)
-
-        while True:
-            _, frame = camera.read()
-            created, jpeg = cv2.imencode('.jpg', frame)
-            if not created:
-                continue
-
-            jpeg_frame = jpeg.tobytes()
-            content_length = len(jpeg_frame)
-
-            yield (
-                b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n'
-                b'Content-Length: ' + str(content_length).encode() + b'\r\n'
-                b'\r\n' + jpeg_frame + b'\r\n\r\n'
-            )
-
-            if cv2.waitKey(1) == 27:
-                break
-
-        cv2.destroyAllWindows()
-        camera.release()
+        # TODO: Implement video streaming
+        self._logger.warning('Video streaming not yet implemented.')
 
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """

@@ -68,6 +68,7 @@ OUTPUT = {
 SENSOR = {
     'camera': {
         'camera_number': 0,
+        'camera_handler': os.environ.get('ARNOLD_CAMERA_HANDLER', 'picamera2'),
         'image': {
             'file_path': os.path.join(ROOT_DIR, 'image.jpg'),
             'height': 480,
