@@ -40,9 +40,8 @@ make install
 git clone git@github.com:hacklabza/arnold.git
 cd arnold/
 
-# Setup the virtualenv and install the python deps
+# Install the python deps
 make poetry
-make deps
 
 # Run unittest
 make test
@@ -61,10 +60,6 @@ ssh pi@raspberrypi.local
 git clone git@github.com:hacklabza/arnold.git
 cd arnold/
 make install
-make poetry
-
-# Run the unittests to make sure arnold is installed correctly
-make test
 ```
 
 ## Running arnold

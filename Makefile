@@ -13,12 +13,10 @@ help:
 	@echo "    $(CYAN)install$(CLEAR): Installs arnold on the raspberrypi."
 	@echo "    $(CYAN)test$(CLEAR): Run unittest suite."
 
-# Initialises the virtualenv and activates it.
+# Installs the python dependancies.
 poetry:
-	@echo "$(CYAN)Activating virtualenv...$(CLEAR)"
-	poetry shell
 	@echo "$(CYAN)Installing python deps...$(CLEAR)"
-	poetry install
+	poetry install --without rpi
 	@echo "$(GREEN)DONE$(CLEAR)"
 
 # Installs arnold on the raspberrypi.
@@ -29,6 +27,7 @@ install:
 	@sudo apt install -y portaudio19-dev python3-dev flac libespeak1 espeak ffmpeg python3-opencv \
 		python3-picamera2 libatlas-base-dev libatlas3-base libcap-dev libcamera-dev libkms++-dev \
 		libfmt-dev libdrm-dev
+	poetry install --without dev
 
 # Run unittest suite.
 test: poetry

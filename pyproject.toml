@@ -23,10 +23,10 @@ pyttsx3 = "^2.91"
 smbus2 = "^0.4.3"
 SpeechRecognition = "^3.14.3"
 uvicorn = "^0.30.6"
-opencv-python-headless = "^4.10.0.84"
 mpu9250-jmdev = "^1.0.12"
 openai = "^1.107.3"
 sounddevice = "^0.5.2"
+opencv-python-headless = "^4.12.0.88"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
@@ -35,6 +35,9 @@ requests-mock = "^1.12.1"
 py3-tts = "^3.5"
 pre-commit = "^4.3.0"
 ruff = "^0.13.0"
+
+[tool.poetry.group.rpi.dependencies]
+picamera2 = "^0.3"
 
 [build-system]
 requires = ["poetry-core"]
