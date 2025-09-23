@@ -7,12 +7,12 @@ from typing import Generator, Optional
 try:
     import libcamera
 except ImportError:
-    raise ImportError('libcamera is not installed. This module is only available on the rpi.')
+    raise ImportError('`libcamera` is not installed. This module is only available on the rpi.')
 
 try:
     from picamera2 import Picamera2
 except ImportError:
-    raise ImportError('picamera2 is not installed. This module is only available on the rpi.')
+    raise ImportError('`picamera2` is not installed. This module is only available on the rpi.')
 
 from arnold import config, lookup
 
