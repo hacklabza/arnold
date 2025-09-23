@@ -43,7 +43,7 @@ class Camera(object):
         Capture an image to file from the camera with optional width and height.
 
         Args:
-            file_path (str): The file path to save the image to.
+            file_path (str, optional): The file path to save the image to.
             width (str, optional): The width of the captured image.
             height (str, optional): The height of the captured image.
         """
@@ -84,7 +84,7 @@ class Camera(object):
         duration.
 
         Args:
-            file_path (str): The file path to save the video to.
+            file_path (str, optional): The file path to save the video to.
             width (str, optional): The wigth of the captured video.
             height (str, optional): The height of the captured video.
             frame_rate (str, optional): The frame rate of the captured video.
