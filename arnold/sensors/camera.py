@@ -41,6 +41,10 @@ class Camera(object):
         # Setup logging
         self._logger = _logger
 
+        # Set picamera logging level to warning
+        picamera2_logger = logging.getLogger('picamera2')
+        picamera2_logger.setLevel(logging.WARNING)
+
     def capture_image(
         self,
         file_path: Optional[str] = None,
@@ -63,12 +67,14 @@ class Camera(object):
 
         # Initialise the camera and set width and height
         camera = Picamera2(camera_num=self.camera_number)
-        camera.configure(camera.create_still_configuration(
-            main={
-                'size': (width, height),
-                'transform': libcamera.Transform(hflip=1, vflip=0)
-            }
-        ))
+        camera.configure(
+            camera.create_still_configuration(
+                main={
+                    'size': (width, height),
+                },
+                transform=libcamera.Transform(hflip=1, vflip=0)
+            )
+        )
         camera.start()
 
         # Allow camera to warm up and then capture the image
