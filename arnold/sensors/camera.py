@@ -71,7 +71,7 @@ class Camera(object):
                 main={
                     'size': (width, height),
                 },
-                transform=libcamera.Transform(hflip=1, vflip=0)
+                transform=libcamera.Transform(hflip=0, vflip=1)
             )
         )
         camera.start()
@@ -80,6 +80,9 @@ class Camera(object):
         time.sleep(0.5)
         camera.capture_file(file_path)
         self._logger.info(f'Image captured to {file_path}.')
+
+        # Finally close the camera
+        camera.close()
 
     def capture_video(
         self,

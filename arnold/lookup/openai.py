@@ -117,7 +117,7 @@ class OpenAI(object):
             message=[
                 {
                     'type': 'text',
-                    'text': 'Describe the image in detail.'
+                    'text': 'Describe the image in an informal sentence'
                 },
                 {
                     'type': 'image_url',
