@@ -42,7 +42,7 @@ class Camera(object):
         self._logger = _logger
 
         # Set picamera logging level to warning
-        Picamera2.set_logging_level('WARNING')
+        Picamera2.set_logging()
 
     def capture_image(
         self,
