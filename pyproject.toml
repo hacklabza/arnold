@@ -26,7 +26,6 @@ uvicorn = "^0.30.6"
 mpu9250-jmdev = "^1.0.12"
 openai = "^1.107.3"
 sounddevice = "^0.5.2"
-opencv-python-headless = "^4.12.0.88"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
