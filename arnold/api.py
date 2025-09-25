@@ -46,4 +46,7 @@ def camera_stream():
 def runserver(host: Optional[str] = None, port: Optional[int] = None):
     host = host or API_CONFIG['host']
     port = port or API_CONFIG['port']
-    run(host=host, port=port)
+    debug = API_CONFIG['debug']
+    reload = API_CONFIG['reload']
+
+    run(host=host, port=port, debug=debug, reloader=reload)

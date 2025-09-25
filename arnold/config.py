@@ -39,7 +39,9 @@ INTEGRATION = {
 # API config
 API = {
     'host': '0.0.0.0',
-    'port': 8000
+    'port': 8000,
+    'debug': os.environ.get('ARNOLD_API_DEBUG', 'True').lower() in ('true', '1'),
+    'reload': os.environ.get('ARNOLD_API_RELOAD', 'True').lower() in ('true', '1')
 }
 
 # Component config
