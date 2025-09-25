@@ -13,6 +13,7 @@ except ImportError:
 
 try:
     from picamera2 import Picamera2
+    from picamera2.encoders import MJPEGEncoder
 except ImportError:
     raise ImportError('`picamera2` is not installed. This module is only available on the rpi.')
 
@@ -144,26 +145,26 @@ class Camera(object):
                 transform=libcamera.Transform(hflip=0, vflip=1)
             )
         )
-        camera.start()
 
-        # Allow camera to warm up and then capture the image
-        time.sleep(0.5)
 
         # Stream video frames
+        video_stream = io.BytesIO()
+        camera.start_recording(MJPEGEncoder(), video_stream)
+
+        # Allow camera to warm up and then capture the image
         try:
             while True:
-                video_stream = io.BytesIO()
-                camera.capture_file(video_stream, format='jpeg')
                 frame = video_stream.getvalue()
-                yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                yield (
+                    b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
+                )
                 video_stream.seek(0)
                 video_stream.truncate()
         except GeneratorExit:
             self._logger.info('Stopping video stream.')
 
-        # Finally close the camera
-        camera.close()
+        # Finally stop recording and close the camera
+        camera.stop_recording()
 
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """
