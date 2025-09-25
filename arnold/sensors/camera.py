@@ -176,8 +176,9 @@ class Camera(object):
         except GeneratorExit:
             self._logger.info('Stopping video stream.')
 
-        # Finally stop recording and close the camera
-        camera.stop_recording()
+            # Finally stop recording and close the camera
+            camera.stop_recording()
+            camera.close()
 
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """

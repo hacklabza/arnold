@@ -1,6 +1,6 @@
 from typing import Optional
 
-from bottle import request, route, run, Response
+from bottle import request, response, route, run
 
 from arnold import config
 from arnold.motion.drivetrain import DriveTrain
@@ -38,9 +38,9 @@ def speaker_say():
 
 @route('/sensor/camera/stream', method='GET')
 def camera_stream():
+    response.content_type = 'multipart/x-mixed-replace; boundary=--frame'
     camera = Camera()
-    stream = camera.stream_video()
-    return Response(stream, mimetype='multipart/x-mixed-replace; boundary=frame')
+    return camera.stream_video()
 
 
 def runserver(host: Optional[str] = None, port: Optional[int] = None):
