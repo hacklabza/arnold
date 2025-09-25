@@ -125,8 +125,30 @@ class Camera(object):
         frame_rate = frame_rate or self.video_config['frame_rate']
         duration = duration or self.video_config['duration']
 
-        # TODO: Implement video capture
-        self._logger.warning('Video capture not yet implemented.')
+        self._logger.info(f'Capturing video to {file_path}.')
+
+        # Initialise the camera and set width and height
+        camera = Picamera2(camera_num=self.camera_number)
+        camera.configure(
+            camera.create_video_configuration(
+                main={
+                    'size': (width, height),
+                },
+                transform=libcamera.Transform(hflip=0, vflip=1)
+            )
+        )
+
+        # Allow camera to warm up and then start capturing the video.
+        time.sleep(0.5)
+        camera.start_recording(MJPEGEncoder(framerate=frame_rate), file_path)
+
+        # Sleep for the duration and then stop recording
+        time.sleep(duration)
+        camera.stop_recording()
+        self._logger.info(f'Video captured to {file_path}.')
+
+        # Finally close the camera
+        camera.close()
 
     def stream_video(
         self,
@@ -158,7 +180,6 @@ class Camera(object):
                 transform=libcamera.Transform(hflip=0, vflip=1)
             )
         )
-
 
         # Stream video frames
         video_stream = StreamingOutput()
