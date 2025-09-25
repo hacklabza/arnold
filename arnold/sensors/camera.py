@@ -14,6 +14,7 @@ except ImportError:
 try:
     from picamera2 import Picamera2
     from picamera2.encoders import MJPEGEncoder
+    from picamera2.outputs import FileOutput
 except ImportError:
     raise ImportError('`picamera2` is not installed. This module is only available on the rpi.')
 
@@ -149,7 +150,7 @@ class Camera(object):
 
         # Stream video frames
         video_stream = io.BytesIO()
-        camera.start_recording(MJPEGEncoder(), video_stream)
+        camera.start_recording(MJPEGEncoder(), FileOutput(video_stream))
 
         # Allow camera to warm up and then capture the image
         try:
