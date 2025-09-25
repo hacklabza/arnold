@@ -225,11 +225,8 @@ class IMU(object):
 
         roll = math.atan2(accelerometer_y, accelerometer_z)
         pitch = math.atan2(
-            accelerometer_x,
-            math.sqrt(
-                (accelerometer_y * accelerometer_y) +
-                (accelerometer_z * accelerometer_z)
-            )
+            -accelerometer_x,
+            math.sqrt((accelerometer_y ** 2) + (accelerometer_z ** 2))
         )
 
         # Tilt-compensated magnetometer
