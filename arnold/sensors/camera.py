@@ -3,6 +3,7 @@ import io
 import time
 import tempfile
 from os import path
+from threading import Condition
 from typing import Generator, Optional
 
 
@@ -22,6 +23,17 @@ from arnold import config, lookup
 
 
 _logger = logging.getLogger(__name__)
+
+
+class StreamingOutput(io.BufferedIOBase):
+    def __init__(self):
+        self.frame = None
+        self.condition = Condition()
+
+    def write(self, buf):
+        with self.condition:
+            self.frame = buf
+            self.condition.notify_all()
 
 
 class Camera(object):
@@ -149,13 +161,15 @@ class Camera(object):
 
 
         # Stream video frames
-        video_stream = io.BytesIO()
+        video_stream = StreamingOutput()
         camera.start_recording(MJPEGEncoder(), FileOutput(video_stream))
 
         # Allow camera to warm up and then capture the image
         try:
             while True:
-                frame = video_stream.getvalue()
+                with video_stream.condition:
+                    video_stream.condition.wait()
+                    frame = video_stream.frame
                 yield (
                     b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
                 )
