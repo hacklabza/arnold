@@ -1,8 +1,10 @@
 import logging
+import io
 import time
 import tempfile
 from os import path
 from typing import Generator, Optional
+
 
 try:
     import libcamera
@@ -130,8 +132,38 @@ class Camera(object):
         height = height or self.video_config['height']
         frame_rate = frame_rate or self.video_config['frame_rate']
 
-        # TODO: Implement video streaming
-        self._logger.warning('Video streaming not yet implemented.')
+        self._logger.info('Streaming video from camera.')
+
+        # Stream video from the camera
+        camera = Picamera2(camera_num=self.camera_number)
+        camera.configure(
+            camera.create_video_configuration(
+                main={
+                    'size': (width, height),
+                },
+                transform=libcamera.Transform(hflip=0, vflip=1)
+            )
+        )
+        camera.start()
+
+        # Allow camera to warm up and then capture the image
+        time.sleep(0.5)
+
+        # Stream video frames
+        try:
+            while True:
+                video_stream = io.BytesIO()
+                camera.capture_file(video_stream, format='jpeg')
+                frame = video_stream.getvalue()
+                yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                video_stream.seek(0)
+                video_stream.truncate()
+        except GeneratorExit:
+            self._logger.info('Stopping video stream.')
+
+        # Finally close the camera
+        camera.close()
 
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """
