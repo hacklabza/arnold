@@ -196,17 +196,13 @@ def microphone(card_number, device_index):
     help='The height of the image to be captured.'
 )
 @click.option(
-    '--frame-rate', '-r', default=config.SENSOR['camera']['video']['frame_rate'],
-    help='The frame rate of the video to be captured.'
-)
-@click.option(
     '--duration', '-d', default=config.SENSOR['camera']['video']['duration'],
     help='The duration of the video to be captured.'
 )
 @click.option(
     '--describe', is_flag=True, help='Describes the captured image using OpenAI.'
 )
-def camera(camera_number, video, image, file_path, width, height, frame_rate, duration, describe):
+def camera(camera_number, video, image, file_path, width, height, duration, describe):
     camera = sensors.camera.Camera(camera_number=camera_number)
     if image:
         click.echo('Testing Camera in `image` mode.')
@@ -227,7 +223,6 @@ def camera(camera_number, video, image, file_path, width, height, frame_rate, du
             file_path=file_path or config.SENSOR['camera']['video']['file_path'],
             width=width or config.SENSOR['camera']['video']['width'],
             height=height or config.SENSOR['camera']['video']['height'],
-            frame_rate=frame_rate,
             duration=duration,
         )
     else:

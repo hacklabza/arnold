@@ -79,7 +79,6 @@ SENSOR = {
         'video': {
             'duration': 10,
             'file_path': os.path.join(ROOT_DIR, 'video.avi'),
-            'frame_rate': 15,
             'height': 480,
             'width': 640,
         }

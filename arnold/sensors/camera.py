@@ -105,7 +105,6 @@ class Camera(object):
         file_path: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
-        frame_rate: Optional[int] = None,
         duration: Optional[float] = None,
     ) -> None:
         """
@@ -116,13 +115,11 @@ class Camera(object):
             file_path (str, optional): The file path to save the video to.
             width (str, optional): The wigth of the captured video.
             height (str, optional): The height of the captured video.
-            frame_rate (str, optional): The frame rate of the captured video.
             duration (str, optional): The duration of the captured video.
         """
         file_path = file_path or self.video_config['file_path']
         width = width or self.video_config['width']
         height = height or self.video_config['height']
-        frame_rate = frame_rate or self.video_config['frame_rate']
         duration = duration or self.video_config['duration']
 
         self._logger.info(f'Capturing video to {file_path}.')
@@ -140,7 +137,7 @@ class Camera(object):
 
         # Allow camera to warm up and then start capturing the video.
         time.sleep(0.5)
-        camera.start_recording(MJPEGEncoder(framerate=frame_rate), file_path)
+        camera.start_recording(MJPEGEncoder(), file_path)
 
         # Sleep for the duration and then stop recording
         time.sleep(duration)
