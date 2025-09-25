@@ -173,8 +173,6 @@ class Camera(object):
                 yield (
                     b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
                 )
-                video_stream.seek(0)
-                video_stream.truncate()
         except GeneratorExit:
             self._logger.info('Stopping video stream.')
 
