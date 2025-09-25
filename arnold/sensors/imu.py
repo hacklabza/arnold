@@ -37,14 +37,13 @@ class IMU(object):
         # Setup logging
         self._logger = _logger
 
-        # Setup sensor and configure
+        # Setup sensor
         self.sensor = MPU9250(
             address_mpu_master=self.address,
             gfs=registers.GFS_1000,
             afs=registers.AFS_8G,
             mfs=registers.AK8963_BIT_16,
         )
-        self.sensor.configure()
 
         # Set the bias from the saved bias config from initial calibration
         self.sensor.abias = self.config['bias']['accelerometer']
@@ -52,9 +51,12 @@ class IMU(object):
         self.sensor.mbias = self.config['bias']['magnetometer']['hard_iron']
         self.sensor.magScale = self.config['bias']['magnetometer']['soft_iron']
 
+        # Finally configure the sensor
+        self.sensor.configure()
+
     def _get_data(self, data: list) -> dict:
         """
-        Map the x, y & z list to a dict and round the readings.
+        Map the x, y & z list to a dict.
 
         Args:
             data (dict): The original axes to be mapped
@@ -67,7 +69,8 @@ class IMU(object):
 
     def _map_orientation(self, data: dict) -> dict:
         """
-        Map x, y & z based on the physical orientation of the module.
+        Map x, y & z based on the physical orientation of the module if
+        orientation is set.
 
         Args:
             data (dict): The original axes to be mapped
@@ -75,12 +78,23 @@ class IMU(object):
         Returns:
             dict: Mapped axes dict
         """
-        return {
-            new_key: data[old_key]
-            for new_key, old_key in self.orientation.items()
-        }
+        if self.orientation:
+            return {
+                new_key: data[old_key]
+                for new_key, old_key in self.orientation.items()
+            }
+        return data
 
-    def _smooth_samples(self, values: list):
+    def _smooth_samples(self, values: list) -> float:
+        """
+        Smooth the samples using exponential smoothing.
+
+        Args:
+            values (list): The list of values to be smoothed
+
+        Returns:
+            float: The smoothed value
+        """
         alpha = 0.3
         if not values:
             return 0
@@ -94,6 +108,18 @@ class IMU(object):
         func: callable,
         sample_size: Optional[int] = None
     ) -> dict:
+        """
+        Merge multiple samples from a sensor function into a single smoothed
+        sample.
+
+        Args:
+            func (callable): The sensor function to call
+            sample_size (int | None): The number of samples to take. If None,
+            uses the default from config.
+
+        Returns:
+            dict: Merged x, y & z dict
+        """
         samples = []
         sample_size = sample_size or self.config['sample_size']
         for _ in range(sample_size):
@@ -114,6 +140,7 @@ class IMU(object):
         Calibrate all 3 MPU-9250 sensors.
         """
         self.sensor.calibrate()
+        self.sensor.configure()
 
     def get_accelerometer_data(self, sample_size: Optional[int] = None) -> dict:
         """
@@ -124,7 +151,7 @@ class IMU(object):
             uses the default from config.
 
         Returns:
-            dict: X, Y & Z
+            dict: x, y & z
         """
         data = self._merge_samples(self.sensor.readAccelerometerMaster, sample_size)
         self._logger.info(f'Accelerometer: {data}')
@@ -139,7 +166,7 @@ class IMU(object):
             uses the default from config.
 
         Returns:
-            dict: X, Y & Z
+            dict: x, y & z
         """
         data = self._merge_samples(self.sensor.readGyroscopeMaster, sample_size)
         self._logger.info(f'Gyroscope: {data}')
@@ -154,7 +181,7 @@ class IMU(object):
             uses the default from config.
 
         Returns:
-            dict: X, Y & Z
+            dict: x, y & z
         """
         data = self._merge_samples(self.sensor.readMagnetometerMaster, sample_size)
         self._logger.info(f'Magnetometer: {data}')
@@ -191,14 +218,18 @@ class IMU(object):
         accelerometer_data = accelerometer_data or self.get_accelerometer_data()
         magnetometer_data = magnetometer_data or self.get_magnetometer_data()
 
-        # Standard roll and pitch calculation (in radians)
-        roll = math.atan2(
-            accelerometer_data['y'],
-            accelerometer_data['z']
-        )
+        # Standard roll and pitch calculation
+        accelerometer_x = accelerometer_data['x']
+        accelerometer_y = accelerometer_data['y']
+        accelerometer_z = accelerometer_data['z']
+
+        roll = math.atan2(accelerometer_y, accelerometer_z)
         pitch = math.atan2(
-            -accelerometer_data['x'],
-            math.sqrt(accelerometer_data['y'] ** 2 + accelerometer_data['z'] ** 2)
+            accelerometer_x,
+            math.sqrt(
+                (accelerometer_y * accelerometer_y) +
+                (accelerometer_z * accelerometer_z)
+            )
         )
 
         # Tilt-compensated magnetometer
