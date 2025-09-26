@@ -1,6 +1,6 @@
 from typing import Optional
 
-from bottle import request, response, route, run
+from bottle import Bottle, request, response, run
 
 from arnold import config
 from arnold.motion.drivetrain import DriveTrain
@@ -11,15 +11,15 @@ from arnold.sensors.camera import Camera
 API_CONFIG = config.API
 
 
-# TODO (qoda): Make this super generic
+api = Bottle()
 
 
-@route('/health')
+@api.route('/health')
 def health():
     return {'success': True}
 
 
-@route('/motion/drivetrain/go', method='POST')
+@api.route('/motion/drivetrain/go', method='POST')
 def drivetrain_go():
     drivetrain = DriveTrain()
     direction = request.json.get('direction', 'forward')
@@ -28,7 +28,7 @@ def drivetrain_go():
     return {'success': True}
 
 
-@route('/output/speaker/say', method='POST')
+@api.route('/output/speaker/say', method='POST')
 def speaker_say():
     speaker = Speaker()
     phrase = request.json.get('phrase', 'No input')
@@ -36,17 +36,26 @@ def speaker_say():
     return {'success': True}
 
 
-@route('/sensor/camera/stream', method='GET')
+@api.route('/sensor/camera/stream', method='GET')
 def camera_stream():
     response.content_type = 'multipart/x-mixed-replace; boundary=--frame'
     camera = Camera()
     return camera.stream_video()
 
 
-def runserver(host: Optional[str] = None, port: Optional[int] = None):
+def runserver(
+    host: Optional[str] = None,
+    port: Optional[int] = None,
+    debug: Optional[bool] = None,
+    reload: Optional[bool] = None
+) -> None:
     host = host or API_CONFIG['host']
     port = port or API_CONFIG['port']
-    debug = API_CONFIG['debug']
-    reload = API_CONFIG['reload']
+    debug = debug or API_CONFIG['debug']
+    reload = reload or API_CONFIG['reload']
 
-    run(host=host, port=port, debug=debug, reloader=reload)
+    # Mount the API with prefix
+    api.mount('/api', api)
+
+    # Start the server
+    run(api, host=host, port=port, debug=debug, reloader=reload)

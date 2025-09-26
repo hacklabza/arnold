@@ -163,7 +163,6 @@ class Camera(object):
         """
         width = width or self.video_config['width']
         height = height or self.video_config['height']
-        frame_rate = frame_rate or self.video_config['frame_rate']
 
         self._logger.info('Streaming video from camera.')
 
