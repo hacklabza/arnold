@@ -115,7 +115,7 @@ class Arnold(object):
                 break
 
             # Parse the command and call the relevant method
-            command_parser = utils.CommandParser(self, command)
+            command_parser = utils.CommandParser(arnold=self, command=command)
             try:
                 command_result = command_parser.parse()
                 if command_result is not None:

@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PauseDurationError(Exception):
-    def __init__(self, message: Optional[str]):
+    def __init__(self, message: Optional[str] = None) -> None:
         self.message = message or 'The pause duration must be greater than 0.1.'
         super().__init__(message)
 
