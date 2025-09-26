@@ -48,7 +48,7 @@ API = {
 MOTION = {
     'drivetrain': {
         'pwm': {
-            'enable': False,
+            'enable': True,
             'gpio': {
                 'left': 12,
                 'right': 13
