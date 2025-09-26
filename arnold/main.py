@@ -82,7 +82,10 @@ class Arnold(object):
         """
         Run Arnold in manual mode over the API.
         """
-        api.runserver()
+        self._setup_classes(
+            ['camera', 'drivetrain', 'speaker']
+        )
+        api.runserver(arnold=self)
 
     def _run_voicecommand(self) -> None:
         """

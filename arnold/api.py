@@ -3,20 +3,12 @@ from typing import Optional
 from bottle import Bottle, request, response, run
 
 from arnold import config
-from arnold.motion.drivetrain import DriveTrain
-from arnold.output.speaker import Speaker
-from arnold.sensors.camera import Camera
 
 
 API_CONFIG = config.API
 
 
 api = Bottle()
-
-# Initialise the various components upfront
-drivetrain = DriveTrain()
-speaker = Speaker()
-camera = Camera()
 
 
 @api.route('/health')
@@ -29,24 +21,25 @@ def drivetrain_go():
     direction = request.json.get('direction', 'forward')
     duration = request.json.get('duration', 5)
     speed = request.json.get('speed', 1.0)
-    drivetrain.go(direction=direction, duration=duration, speed=speed)
+    api.arnold.drivetrain.go(direction=direction, duration=duration, speed=speed)
     return {'success': True}
 
 
 @api.route('/output/speaker/say', method='POST')
 def speaker_say():
     phrase = request.json.get('phrase', 'No input')
-    speaker.say(phrase)
+    api.arnold.speaker.say(phrase)
     return {'success': True}
 
 
 @api.route('/sensor/camera/stream', method='GET')
 def camera_stream():
     response.content_type = 'multipart/x-mixed-replace; boundary=--frame'
-    return camera.stream_video()
+    return api.arnold.camera.stream_video()
 
 
 def runserver(
+    arnold: object,
     host: Optional[str] = None,
     port: Optional[int] = None,
     debug: Optional[bool] = None,
@@ -56,6 +49,9 @@ def runserver(
     port = port or API_CONFIG['port']
     debug = debug or API_CONFIG['debug']
     reload = reload or API_CONFIG['reload']
+
+    # Attached the instance of Arnold to the API for access in routes
+    api.arnold = arnold
 
     # Mount the API with prefix
     api.mount('/api', api)
