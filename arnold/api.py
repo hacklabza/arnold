@@ -25,6 +25,12 @@ def drivetrain_go():
     return {'success': True}
 
 
+@api.route('/motion/drivetrain/stop', method='POST')
+def drivetrain_stop():
+    api.arnold.drivetrain.stop()
+    return {'success': True}
+
+
 @api.route('/output/speaker/say', method='POST')
 def speaker_say():
     phrase = request.json.get('phrase', 'No input')
