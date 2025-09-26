@@ -23,7 +23,7 @@ def health():
 def drivetrain_go():
     drivetrain = DriveTrain()
     direction = request.json.get('direction', 'forward')
-    duration = request.json.get('duration')
+    duration = request.json.get('duration', 5)
     drivetrain.go(direction=direction, duration=duration)
     return {'success': True}
 

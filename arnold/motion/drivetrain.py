@@ -38,7 +38,8 @@ class DriveTrain(object):
 
         # Pin configuration
         self.gpio_config = self.config['gpio']
-        self.enable_pwm = self.config['enable_pwm'] if enable_pwm is None else enable_pwm
+        self.pwm_config = self.config['pwm']
+        self.enable_pwm = self.pwm_config['enable'] if enable_pwm is None else enable_pwm
 
         # Setup logging
         self._logger = _logger
@@ -54,22 +55,31 @@ class DriveTrain(object):
         """
         Initialise the motors.
         """
+        pwm_gpio_config = self.pwm_config['gpio']
         try:
             left_motor = Motor(
-                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+                *self.gpio_config['left']['pins'],
+                enable=pwm_gpio_config['left'],
+                pwm=self.enable_pwm
             )
             right_motor = Motor(
-                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+                *self.gpio_config['right']['pins'],
+                enable=pwm_gpio_config['right'],
+                pwm=self.enable_pwm
             )
         except GPIODeviceError as exc:
             self._logger.warning(exc)
             self.delay.terminate()
             self.release()
             left_motor = Motor(
-                *self.config['gpio']['left']['pins'], pwm=self.enable_pwm
+                *self.gpio_config['left']['pins'],
+                enable=pwm_gpio_config['left'],
+                pwm=self.enable_pwm
             )
             right_motor = Motor(
-                *self.config['gpio']['right']['pins'], pwm=self.enable_pwm
+                *self.gpio_config['right']['pins'],
+                enable=pwm_gpio_config['right'],
+                pwm=self.enable_pwm
             )
 
         return left_motor, right_motor
