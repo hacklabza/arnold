@@ -13,6 +13,11 @@ API_CONFIG = config.API
 
 api = Bottle()
 
+# Initialise the various components upfront
+drivetrain = DriveTrain()
+speaker = Speaker()
+camera = Camera()
+
 
 @api.route('/health')
 def health():
@@ -21,16 +26,15 @@ def health():
 
 @api.route('/motion/drivetrain/go', method='POST')
 def drivetrain_go():
-    drivetrain = DriveTrain()
     direction = request.json.get('direction', 'forward')
     duration = request.json.get('duration', 5)
-    drivetrain.go(direction=direction, duration=duration)
+    speed = request.json.get('speed', 1.0)
+    drivetrain.go(direction=direction, duration=duration, speed=speed)
     return {'success': True}
 
 
 @api.route('/output/speaker/say', method='POST')
 def speaker_say():
-    speaker = Speaker()
     phrase = request.json.get('phrase', 'No input')
     speaker.say(phrase)
     return {'success': True}
@@ -39,7 +43,6 @@ def speaker_say():
 @api.route('/sensor/camera/stream', method='GET')
 def camera_stream():
     response.content_type = 'multipart/x-mixed-replace; boundary=--frame'
-    camera = Camera()
     return camera.stream_video()
 
 
