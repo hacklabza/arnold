@@ -11,7 +11,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-bottle = "^0.13.1"
+fastapi = "^0.115.4"
 click = "^8.1.7"
 gpiozero = "^2.0.1"
 nltk = "^3.9.1"

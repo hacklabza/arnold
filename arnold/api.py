@@ -1,47 +1,64 @@
 from typing import Optional
 
-from bottle import Bottle, request, response, run
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
+import uvicorn
 
-from arnold import config
+from arnold import config, models
 
 
 API_CONFIG = config.API
 
 
-api = Bottle()
+app = FastAPI(title='Arnold API', version='1.0.0')
 
 
-@api.route('/health')
+# Global arnold instance
+arnold_instance = None
+
+
+@app.get('/health')
 def health():
     return {'success': True}
 
 
-@api.route('/motion/drivetrain/go', method='POST')
-def drivetrain_go():
-    direction = request.json.get('direction', 'forward')
-    duration = request.json.get('duration', 5)
-    speed = request.json.get('speed', 1.0)
-    api.arnold.drivetrain.go(direction=direction, duration=duration, speed=speed)
+@app.post('/motion/drivetrain/go')
+def drivetrain_go(request: models.DrivetrainRequest):
+    try:
+        arnold_instance.drivetrain.go(
+            direction=request.direction,
+            duration=request.duration,
+            speed=request.speed
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     return {'success': True}
 
 
-@api.route('/motion/drivetrain/stop', method='POST')
+@app.post('/motion/drivetrain/stop')
 def drivetrain_stop():
-    api.arnold.drivetrain.stop()
+    try:
+        arnold_instance.drivetrain.stop()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     return {'success': True}
 
 
-@api.route('/output/speaker/say', method='POST')
-def speaker_say():
-    phrase = request.json.get('phrase', 'No input')
-    api.arnold.speaker.say(phrase)
+@app.post('/output/speaker/say')
+def speaker_say(request: models.SpeakerRequest):
+    try:
+        arnold_instance.speaker.say(request.phrase)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     return {'success': True}
 
 
-@api.route('/sensor/camera/stream', method='GET')
+@app.get('/sensor/camera/stream')
 def camera_stream():
-    response.content_type = 'multipart/x-mixed-replace; boundary=--frame'
-    return api.arnold.camera.stream_video()
+    return StreamingResponse(
+        arnold_instance.camera.stream_video(),
+        media_type='multipart/x-mixed-replace; boundary=frame'
+    )
 
 
 def runserver(
@@ -51,16 +68,15 @@ def runserver(
     debug: Optional[bool] = None,
     reload: Optional[bool] = None
 ) -> None:
+    global arnold_instance
+
     host = host or API_CONFIG['host']
     port = port or API_CONFIG['port']
     debug = debug or API_CONFIG['debug']
     reload = reload or API_CONFIG['reload']
 
-    # Attached the instance of Arnold to the API for access in routes
-    api.arnold = arnold
+    # Set the global arnold instance for access in routes
+    arnold_instance = arnold
 
-    # Mount the API with prefix
-    api.mount('/api', api)
-
-    # Start the server
-    run(api, host=host, port=port, debug=debug, reloader=reload)
+    # Start the FastAPI server with uvicorn
+    uvicorn.run(app, host=host, port=port, reload=reload)
