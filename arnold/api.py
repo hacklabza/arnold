@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
+from fastapi.responses import StreamingResponse
 import uvicorn
 
 from arnold import config, models
@@ -51,9 +51,9 @@ def speaker_say(request: models.SpeakerRequest):
 
 @api.get('/sensor/camera/stream')
 def camera_stream():
-    return Response(
+    return StreamingResponse(
         api.arnold.camera.stream_video(),
-        media_type='multipart/x-mixed-replace; boundary=--frame'
+        media_type='multipart/x-mixed-replace; boundary=frame'
     )
 
 
