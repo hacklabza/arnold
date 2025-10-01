@@ -6,6 +6,7 @@ from os import path
 from threading import Condition
 from typing import Generator, Optional
 
+from starlette.requests import ClientDisconnect
 
 try:
     import libcamera
@@ -60,6 +61,18 @@ class Camera(object):
         # Set picamera logging level to warning
         Picamera2.set_logging()
 
+    def initialise_camera(self) -> None:
+        """
+        Initialise the camera.
+        """
+        if not hasattr(self, 'camera'):
+            self.camera = Picamera2(camera_num=self.camera_number)
+        else:
+            self._logger.warning('Camera already initialised.')
+            if self.camera.is_open:
+                self.camera.close()
+            self.camera = Picamera2(camera_num=self.camera_number)
+
     def capture_image(
         self,
         file_path: Optional[str] = None,
@@ -81,24 +94,24 @@ class Camera(object):
         self._logger.info(f'Capturing image to {file_path}.')
 
         # Initialise the camera and set width and height
-        camera = Picamera2(camera_num=self.camera_number)
-        camera.configure(
-            camera.create_still_configuration(
+        self.initialise_camera()
+        self.camera.configure(
+            self.camera.create_still_configuration(
                 main={
                     'size': (width, height),
                 },
                 transform=libcamera.Transform(hflip=0, vflip=1)
             )
         )
-        camera.start()
+        self.camera.start()
 
         # Allow camera to warm up and then capture the image
         time.sleep(0.5)
-        camera.capture_file(file_path)
+        self.camera.capture_file(file_path)
         self._logger.info(f'Image captured to {file_path}.')
 
         # Finally close the camera
-        camera.close()
+        self.camera.close()
 
     def capture_video(
         self,
@@ -125,9 +138,9 @@ class Camera(object):
         self._logger.info(f'Capturing video to {file_path}.')
 
         # Initialise the camera and set width and height
-        camera = Picamera2(camera_num=self.camera_number)
-        camera.configure(
-            camera.create_video_configuration(
+        self.initialise_camera()
+        self.camera.configure(
+            self.camera.create_video_configuration(
                 main={
                     'size': (width, height),
                 },
@@ -137,15 +150,15 @@ class Camera(object):
 
         # Allow camera to warm up and then start capturing the video.
         time.sleep(0.5)
-        camera.start_recording(MJPEGEncoder(), file_path)
+        self.camera.start_recording(MJPEGEncoder(), file_path)
 
         # Sleep for the duration and then stop recording
         time.sleep(duration)
-        camera.stop_recording()
+        self.camera.stop_recording()
         self._logger.info(f'Video captured to {file_path}.')
 
         # Finally close the camera
-        camera.close()
+        self.camera.close()
 
     def stream_video(
         self,
@@ -167,9 +180,9 @@ class Camera(object):
         self._logger.info('Streaming video from camera.')
 
         # Stream video from the camera
-        camera = Picamera2(camera_num=self.camera_number)
-        camera.configure(
-            camera.create_video_configuration(
+        self.initialise_camera()
+        self.camera.configure(
+            self.camera.create_video_configuration(
                 main={
                     'size': (width, height),
                 },
@@ -179,7 +192,7 @@ class Camera(object):
 
         # Stream video frames
         video_stream = StreamingOutput()
-        camera.start_recording(MJPEGEncoder(), FileOutput(video_stream))
+        self.camera.start_recording(MJPEGEncoder(), FileOutput(video_stream))
 
         # Allow camera to warm up and then capture the image
         try:
@@ -190,12 +203,12 @@ class Camera(object):
                 yield (
                     b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
                 )
-        except GeneratorExit:
+        except (GeneratorExit, ClientDisconnect):
             self._logger.info('Stopping video stream.')
 
             # Finally stop recording and close the camera
-            camera.stop_recording()
-            camera.close()
+            self.camera.stop_recording()
+            self.camera.close()
 
     def recognise_image(self, file_path: Optional[str] = None) -> None:
         """
