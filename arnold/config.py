@@ -89,6 +89,7 @@ SENSOR = {
             'file_path': os.path.join(ROOT_DIR, 'video.avi'),
             'height': 600,
             'width': 800,
+            'frame_rate': 30,
         }
     },
     'imu': {
