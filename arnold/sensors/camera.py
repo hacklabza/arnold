@@ -71,6 +71,7 @@ class Camera(object):
             self._logger.warning('Camera already initialised.')
             if self.camera.is_open:
                 self.camera.close()
+                time.sleep(1)  # Match the encoders release delay
             self.camera = Picamera2(camera_num=self.camera_number)
 
     def capture_image(
@@ -119,6 +120,7 @@ class Camera(object):
         width: Optional[int] = None,
         height: Optional[int] = None,
         duration: Optional[float] = None,
+        frame_rate: Optional[int] = None,
     ) -> None:
         """
         Capture a video from the camera with option width, height, frame rate and
@@ -134,6 +136,7 @@ class Camera(object):
         width = width or self.video_config['width']
         height = height or self.video_config['height']
         duration = duration or self.video_config['duration']
+        frame_rate = frame_rate or self.video_config['frame_rate']
 
         self._logger.info(f'Capturing video to {file_path}.')
 
@@ -144,13 +147,16 @@ class Camera(object):
                 main={
                     'size': (width, height),
                 },
-                transform=libcamera.Transform(hflip=0, vflip=1)
+                transform=libcamera.Transform(hflip=0, vflip=1),
+                controls={
+                    'FrameRate': frame_rate
+                }
             )
         )
 
         # Allow camera to warm up and then start capturing the video.
         time.sleep(0.5)
-        self.camera.start_recording(MJPEGEncoder(), file_path)
+        self.camera.start_recording(MJPEGEncoder(framerate=frame_rate), file_path)
 
         # Sleep for the duration and then stop recording
         time.sleep(duration)
@@ -176,6 +182,7 @@ class Camera(object):
         """
         width = width or self.video_config['width']
         height = height or self.video_config['height']
+        frame_rate = frame_rate or self.video_config['frame_rate']
 
         self._logger.info('Streaming video from camera.')
 
@@ -186,7 +193,10 @@ class Camera(object):
                 main={
                     'size': (width, height),
                 },
-                transform=libcamera.Transform(hflip=0, vflip=1)
+                transform=libcamera.Transform(hflip=0, vflip=1),
+                controls={
+                    'FrameRate': frame_rate
+                }
             )
         )
 

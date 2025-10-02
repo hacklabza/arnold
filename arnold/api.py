@@ -50,9 +50,17 @@ def speaker_say(request: models.SpeakerRequest):
 
 
 @api.get('/sensor/camera/stream')
-def camera_stream():
+def camera_stream(
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    frame_rate: Optional[int] = None
+):
     return StreamingResponse(
-        api.arnold.camera.stream_video(),
+        api.arnold.camera.stream_video(
+            width=width,
+            height=height,
+            frame_rate=frame_rate
+        ),
         media_type='multipart/x-mixed-replace; boundary=frame'
     )
 
