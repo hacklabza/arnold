@@ -260,7 +260,7 @@ class DriveTrain(object):
             while True:
                 distance = arnold.lidar.get_mean_distance(10)
                 if distance < 40:
-                    self.drivetrain.turn(
+                    self.turn(
                         random.choice(['right', 'left']),
                         duration=10
                     )
