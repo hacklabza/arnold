@@ -25,7 +25,7 @@ class Arnold(object):
     """
 
     def __init__(self, mode: Optional[str] = None) -> None:
-        self.mode = mode or 'manual'
+        self.mode = self.set_mode(mode or 'manual')
 
         # Setup logging
         self._logger = _logger
@@ -49,6 +49,19 @@ class Arnold(object):
             if required_class not in class_map:
                 raise ValueError(f'{required_class} is not a valid class.')
             setattr(self, required_class, class_map[required_class]())
+
+    def set_mode(self, mode: str) -> None:
+        """
+        Set the mode to run Arnold in.
+
+        Args:
+            mode (str): The mode to run Arnold in. Options are `autonomous`,
+            `voicecommand`, and `manual`
+        """
+        valid_modes = ['autonomous', 'voicecommand', 'manual']
+        if mode not in valid_modes:
+            raise ValueError(f'{mode} is not a valid mode: {valid_modes}.')
+        self.mode = mode
 
     def _run_autonomous(self) -> None:
         """

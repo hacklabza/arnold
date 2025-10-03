@@ -65,6 +65,16 @@ def camera_stream(
     )
 
 
+@api.post('/main/mode')
+def set_mode(request: models.ModeRequest):
+    try:
+        api.arnold.set_mode(request.mode)
+        api.arnold.run()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'success': True}
+
+
 def runserver(
     arnold: object,
     host: Optional[str] = None,
