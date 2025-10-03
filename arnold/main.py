@@ -48,7 +48,8 @@ class Arnold(object):
         for required_class in classes:
             if required_class not in class_map:
                 raise ValueError(f'{required_class} is not a valid class.')
-            setattr(self, required_class, class_map[required_class]())
+            if not hasattr(self, required_class):
+                setattr(self, required_class, class_map[required_class]())
 
     def set_mode(self, mode: str) -> None:
         """
