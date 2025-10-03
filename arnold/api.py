@@ -89,5 +89,14 @@ def runserver(
     # Mount the routes
     api.mount("/api", api)
 
-    # Start the FastAPI server with uvicorn
-    uvicorn.run(api, host=host, port=port, reload=reload)
+    server_config = uvicorn.Config(
+        app=api,
+        host=host,
+        port=port,
+        reload=reload,
+        loop="asyncio",
+        timeout_keep_alive=5,
+        timeout_notify=5
+    )
+    server = uvicorn.Server(server_config)
+    server.run()
