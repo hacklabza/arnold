@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import logging
+import random
 from time import sleep
 from typing import Optional
 
@@ -245,3 +248,31 @@ class DriveTrain(object):
         self.delay.terminate()
         self._pause()
         self._logger.info('Stopped')
+
+    def autonomous(self, arnold: 'Arnold') -> None:
+        """
+        Run Arnold in autonomous drive mode.
+
+        Args:
+            arnold (Arnold): An Arnold instance
+        """
+        try:
+            while True:
+                distance = arnold.lidar.get_mean_distance(10)
+                if distance < 40:
+                    self.drivetrain.turn(
+                        random.choice(['right', 'left']),
+                        duration=10
+                    )
+                    while True:
+                        distance = arnold.lidar.get_mean_distance(10)
+                        if distance > 80:
+                            self.stop()
+                            break
+
+                if not self.is_active:
+                    self.forward(duration=60)
+
+        except KeyboardInterrupt:
+            self.stop()
+            self.release()

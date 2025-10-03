@@ -1,10 +1,7 @@
 import logging
-import random
 from typing import Optional
 
-from speech_recognition import UnknownValueError
-
-from arnold import api, utils
+from arnold import api
 from arnold.lookup import openai, weather
 from arnold.motion import drivetrain
 from arnold.output import speaker
@@ -69,28 +66,7 @@ class Arnold(object):
         Run Arnold in autonomous mode.
         """
         self._setup_classes(['drivetrain', 'lidar'])
-
-        # Use the lidar distance to avoid obstacles
-        try:
-            while True:
-                distance = self.lidar.get_mean_distance(10)
-                if distance < 40:
-                    self.drivetrain.turn(
-                        random.choice(['right', 'left']),
-                        duration=10
-                    )
-                    while True:
-                        distance = self.lidar.get_mean_distance(10)
-                        if distance > 80:
-                            self.drivetrain.stop()
-                            break
-
-                if not self.drivetrain.is_active:
-                    self.drivetrain.forward(duration=60)
-
-        except KeyboardInterrupt:
-            self.drivetrain.stop()
-            self.drivetrain.release()
+        self.drivetrain.autonomous(arnold=self)
 
     def _run_manual(self) -> None:
         """
@@ -108,36 +84,7 @@ class Arnold(object):
         self._setup_classes(
             ['camera', 'drivetrain', 'microphone', 'openai', 'speaker', 'weather']
         )
-
-        # Capture the audio and parse the command or fall back to an OpenAI response
-        while True:
-            audio = self.microphone.listen()
-            try:
-                command = self.microphone.recognise_command(audio)
-            except UnknownValueError:
-                continue
-
-            # Sanitise the command input
-            command = utils.sanitise_input(command)
-
-            self._logger.info(f'Voice command received: "{command}"')
-
-            # Break if the command contains the exit or quit tokens
-            termination_tokens = ['quit', 'exit', 'goodbye']
-            if set(termination_tokens).intersection(set(command.split())):
-                self.speaker.say("Goodbye!")
-                break
-
-            # Parse the command and call the relevant method
-            command_parser = utils.CommandParser(arnold=self, command=command)
-            try:
-                command_result = command_parser.parse()
-                if command_result is not None:
-                    self.speaker.say(command_result)
-            except NotImplementedError:
-                if command:
-                    response = self.openai.prompt(command)
-                    self.speaker.say(response.message)
+        self.microphone.voice_command(arnold=self)
 
     def run(self) -> None:
         """

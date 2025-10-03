@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import io
 from typing import Optional
@@ -5,8 +7,9 @@ from typing import Optional
 import sounddevice  # noqa: F401
 import speech_recognition
 
-from arnold import config
+from arnold import config, utils
 from arnold.lookup import openai
+from arnold.main import Arnold
 
 
 _logger = logging.getLogger(__name__)
@@ -87,3 +90,43 @@ class Microphone(object):
             audio_file.seek(0)
             audio_file.name = "audio.wav"
             return self.openai.transcribe(audio_file)
+
+    def voice_command(self, arnold: 'Arnold') -> None:
+        """
+        Listens for a voice command and returns the text command.
+
+        Args:
+            arnold (Arnold): An Arnold instance
+
+        Raises:
+            UnknownValueError: Raised if the speech recognition could not
+            understand the audio.
+        """
+        while True:
+            audio = self.listen()
+            try:
+                command = self.recognise_command(audio)
+            except speech_recognition.UnknownValueError:
+                continue
+
+            # Sanitise the command input
+            command = utils.sanitise_input(command)
+
+            self._logger.info(f'Voice command received: "{command}"')
+
+            # Break if the command contains the exit or quit tokens
+            termination_tokens = ['quit', 'exit', 'goodbye']
+            if set(termination_tokens).intersection(set(command.split())):
+                arnold.speaker.say("Goodbye!")
+                break
+
+            # Parse the command and call the relevant method
+            command_parser = utils.CommandParser(arnold=arnold, command=command)
+            try:
+                command_result = command_parser.parse()
+                if command_result is not None:
+                    arnold.speaker.say(command_result)
+            except NotImplementedError:
+                if command:
+                    response = arnold.openai.prompt(command)
+                    arnold.speaker.say(response.message)

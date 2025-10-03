@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import logging
 import string
@@ -119,7 +121,7 @@ class CommandParser(object):
         command. Defaults to None.
     """
 
-    def __init__(self, arnold: object, command: str, command_map: Optional[Dict] = None) -> None:
+    def __init__(self, arnold: 'Arnold', command: str, command_map: Optional[Dict] = None) -> None:
         self.arnold = arnold
         self.command = command
         self.command_parts = self._split_command()
