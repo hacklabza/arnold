@@ -9,7 +9,6 @@ import speech_recognition
 
 from arnold import config, utils
 from arnold.lookup import openai
-from arnold.main import Arnold
 
 
 _logger = logging.getLogger(__name__)

@@ -8,22 +8,23 @@ from typing import Generator, Optional
 
 from starlette.requests import ClientDisconnect
 
+from arnold import config, lookup
+
+
+_logger = logging.getLogger(__name__)
+
+
 try:
     import libcamera
 except ImportError:
-    raise ImportError('`libcamera` is not installed. This module is only available on the rpi.')
+    _logger.warning('`libcamera` is not installed. This module is only available on the rpi.')
 
 try:
     from picamera2 import Picamera2
     from picamera2.encoders import MJPEGEncoder
     from picamera2.outputs import FileOutput
 except ImportError:
-    raise ImportError('`picamera2` is not installed. This module is only available on the rpi.')
-
-from arnold import config, lookup
-
-
-_logger = logging.getLogger(__name__)
+    _logger.warning('`picamera2` is not installed. This module is only available on the rpi.')
 
 
 class StreamingOutput(io.BufferedIOBase):
@@ -59,7 +60,10 @@ class Camera(object):
         self._logger = _logger
 
         # Set picamera logging level to warning
-        Picamera2.set_logging()
+        try:
+            Picamera2.set_logging()
+        except NameError:
+            pass
 
     def initialise_camera(self) -> None:
         """
