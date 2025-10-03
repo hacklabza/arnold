@@ -25,7 +25,7 @@ class Arnold(object):
     """
 
     def __init__(self, mode: Optional[str] = None) -> None:
-        self.mode = self.set_mode(mode or 'manual')
+        self.set_mode(mode or 'manual')
 
         # Setup logging
         self._logger = _logger
