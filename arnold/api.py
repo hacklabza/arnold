@@ -20,6 +20,11 @@ def health():
 
 @api.post('/mode')
 def set_mode(request: models.ModeRequest):
+    if request.mode not in ['autonomous', 'voicecommand']:
+        raise HTTPException(
+            status_code=400,
+            detail='Invalid mode. Options are `autonomous` and `voicecommand`.'
+        )
     try:
         api.arnold.set_mode(request.mode)
         api.arnold.run()
