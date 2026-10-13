@@ -84,11 +84,12 @@ class Microphone(object):
         Returns:
             str: the text command as processed by openai transcribe service.
         """
-        with io.BytesIO() as audio_file:
-            audio_file.write(voice_command.get_wav_data())
-            audio_file.seek(0)
-            audio_file.name = "audio.wav"
-            return self.openai.transcribe(audio_file)
+        return self.speech_recogniser.recognize_whisper(voice_command, language="english")
+        # with io.BytesIO() as audio_file:
+        #     audio_file.write(voice_command.get_wav_data())
+        #     audio_file.seek(0)
+        #     audio_file.name = "audio.wav"
+        #     return self.openai.transcribe(audio_file)
 
     def voice_command(self, arnold: 'Arnold') -> None:
         """
