@@ -1,4 +1,4 @@
-PYTEST=pytest
+PYTEST=poetry run pytest
 
 # Colours.
 CLEAR=\033[0m
