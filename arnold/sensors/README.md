@@ -93,7 +93,9 @@ distance = lidar.get_distance()
 print(distance)
 ```
 
-## Accelerometer
+## IMU
+
+DFRobot Fermion 10 DOF IMU V2 (SEN0140): ADXL345 accelerometer, ITG3205 gyroscope and a HMC5883L/QMC5883/VCM5883L compass. The drivers are a Python port of DFRobot's [FreeSixIMU](https://github.com/DFRobot/FreeSixIMU) and [DFRobot_QMC5883](https://github.com/DFRobot/DFRobot_QMC5883) libraries and only need `smbus2`.
 
 ### Setup
 
@@ -108,36 +110,63 @@ Select option 3: Interface Options then;
 I5: I2C and enable it.
 Finally reboot for the changes to take effect.
 
+Check the module is found with `i2cdetect -y 1` (install with `sudo apt install i2c-tools`). You should see `53` (accelerometer), `68` (gyroscope), one of `1e`, `0d` or `0c` (compass) and `77` (barometer, unused).
+
 ### Config
 
-Update in `arnold/config.py`. Use comand `i2cdetect -y 1` to get the correct address. You may need to install the i2c-tools first with `sudo apt install i2c-tools`
+Update in `arnold/config.py`.
 
 ```python
 SENSOR = {
     'imu': {
-        'address': '68',
-        'orientation': {
-            'x': 'x',
-            'y': 'z',
-            'z': 'y'
+        'bus': 1,
+        'address': {
+            'accelerometer': '53',
+            'gyroscope': '68',
+            'magnetometer': None  # auto-detect
         },
-        'bias': {
-            'accelerometer': [0, 0, 0],
-            'gyroscope': [0, 0, 0],
-            'magnetometer': {
-                'hard_iron': [0, 0, 0],
-                'soft_iron': [0, 0, 0]
-            }
-        }
+        'declination': 0.0,
+        'orientation': {
+            'accelerometer': {'x': 'x', 'y': 'y', 'z': 'z'},
+            'gyroscope': {'x': 'x', 'y': 'y', 'z': 'z'},
+            'magnetometer': {'x': 'x', 'y': 'y', 'z': 'z'}
+        },
+        ...
     },
     ...
 }
 ```
 
+#### Orientation
+
+Everything is worked out in Arnold's body frame: **x forward, y left, z up**. Map each sensor's axes onto that frame, prefixing with `-` to invert an axis. Run `arnold test imu --raw` and check:
+
+| Action                         | Expected                               |
+| ------------------------------ | -------------------------------------- |
+| Sitting flat                   | accelerometer z ≈ +1, x ≈ 0, y ≈ 0     |
+| Nose lifted up                 | accelerometer x goes positive          |
+| Left side lifted up            | accelerometer y goes positive          |
+| Turned left (anti-clockwise)   | gyroscope z goes positive              |
+| Nose lifted up quickly         | gyroscope y goes negative              |
+| Left side lifted up quickly    | gyroscope x goes positive              |
+| Level, facing magnetic north   | magnetometer x at its max, y ≈ 0       |
+| Level, facing magnetic east    | magnetometer y at its max, x ≈ 0       |
+
+Set the orientation before calibrating as the calibration is saved in the body frame.
+
+#### Calibration
+
+```bash
+arnold calibrate imu
+```
+
+Save the output to the `ARNOLD_SENSOR_IMU_BIAS` env var, and set `ARNOLD_SENSOR_IMU_DECLINATION` for true north. The gyroscope is re-zeroed every time the IMU starts, so keep Arnold still for a second on startup.
+
 ### Testing
 
 ```bash
-arnold test imu -a 68
+arnold test imu
+arnold test imu --raw
 ```
 
 ### Usage
@@ -146,19 +175,20 @@ arnold test imu -a 68
 from arnold.sensors.imu import IMU
 
 imu = IMU()
+imu.start()  # Runs the sensor fusion in a background thread
 
-accelerometer_data = imu.get_accelerometer_data()
-gyroscope_data = imu.get_gyroscope_data()
-magnetometer_data = imu.get_magnetometer_data()
-temperature = imu.get_temperature()
-attitude = imu.get_attitude()
+state = imu.get_state()
+print('Movement:', state['movement'])  # forward, backward, moving or stationary
+print('Turning:', state['turning'])  # left, right or straight
+print('Heading:', state['heading'], state['cardinal'])  # 0-360 clockwise from north
+print('Pitch:', state['pitch'], state['pitch_direction'])  # up, down or level
+print('Roll:', state['roll'], state['roll_direction'])  # left, right or level
+print('Slope:', state['slope'])  # uphill, downhill or flat
 
-print('Accelerometer:', accelerometer_data)
-print('Gyroscope:', gyroscope_data)
-print('Magnetometer:', magnetometer_data)
-print('Temperature:', temperature)
-print('Attitude:', attitude)
+imu.close()
 ```
+
+Forward/backward detection integrates the accelerometer, so it is an estimate: it picks up starting off, and holds the direction until Arnold stops. The drivetrain command should be treated as the source of truth with the IMU as confirmation.
 
 ## Camera
 

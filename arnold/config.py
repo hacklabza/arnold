@@ -93,12 +93,43 @@ SENSOR = {
         }
     },
     'imu': {
-        'address': '68',
+        'bus': 1,
+        'address': {
+            'accelerometer': '53',
+            'gyroscope': '68',
+            # None auto-detects HMC5883L (1e), QMC5883 (0d) or VCM5883L (0c)
+            'magnetometer': None
+        },
         'sample_size': 5,
+        # Magnetic declination in degrees (east positive) to turn magnetic north
+        # into true north. Look it up at https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml
+        'declination': float(os.environ.get('ARNOLD_SENSOR_IMU_DECLINATION', 0.0)),
+        'calibrate_gyroscope_on_start': True,
+        # Maps each sensor's axes onto Arnold's body: x forward, y left, z up.
+        # Prefix with `-` to invert an axis, eg. {'x': '-y', 'y': 'x', 'z': 'z'}
         'orientation': {
-            'x': 'x',
-            'y': 'y',
-            'z': 'z'
+            'accelerometer': {'x': 'x', 'y': 'y', 'z': 'z'},
+            'gyroscope': {'x': 'x', 'y': 'y', 'z': 'z'},
+            'magnetometer': {'x': 'x', 'y': 'y', 'z': 'z'}
+        },
+        'filter': {
+            'rate': 100,  # Hz
+            'attitude_time_constant': 0.5,  # secs
+            'attitude_moving_time_constant': 10.0,  # secs
+            'heading_time_constant': 2.0,  # secs
+            'velocity_time_constant': 30.0,  # secs
+            'turn_rate_smoothing': 0.8,
+            'stationary_window': 0.5  # secs
+        },
+        'thresholds': {
+            'velocity': 0.05,  # m/s
+            'reverse_velocity': 0.2,  # m/s
+            'acceleration_deadband': 0.1,  # m/s²
+            'attitude_acceleration': 0.15,  # g
+            'turn_rate': 15.0,  # deg/s
+            'tilt': 5.0,  # deg
+            'stationary_acceleration': 0.015,  # g
+            'stationary_rotation': 3.0  # deg/s
         },
         'bias': json.loads(
             os.environ.get(
@@ -108,7 +139,7 @@ SENSOR = {
                     'gyroscope': [0, 0, 0],
                     'magnetometer': {
                         'hard_iron': [0, 0, 0],
-                        'soft_iron': [0, 0, 0]
+                        'soft_iron': [1, 1, 1]
                     }
                 })
             )

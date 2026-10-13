@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from typing import Optional
@@ -28,19 +29,36 @@ def test():
 # Calibration commands
 @calibrate.command()
 @click.option(
-    '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
-    help='I2C address of the device.'
+    '--bus', '-b', default=config.SENSOR['imu']['bus'], type=int,
+    help='I2C bus number of the device.'
 )
-def imu(address):
-    click.echo(f'Calibrating IMU at {address}')
-    imu = sensors.imu.IMU(address=address)
-    imu.calibrate()
+@click.option(
+    '--duration', '-d', default=30, type=int,
+    help='Number of secs to rotate Arnold for the compass calibration.'
+)
+def imu(bus, duration):
+    click.echo(f'Calibrating IMU on I2C bus {bus}')
+    imu = sensors.imu.IMU(bus=bus)
 
-    click.echo('Save the following values to environmental vars.')
-    click.echo(f'Accelerometer Bias: {imu.sensor.abias}')
-    click.echo(f'Gyroscope Bias: {imu.sensor.gbias}')
-    click.echo(f'Magnetometer Bias (hard iron): {imu.sensor.mbias}')
-    click.echo(f'Magnetometer Scale (soft iron): {imu.sensor.magScale}')
+    click.echo('Place Arnold on a flat, level surface and keep it still.')
+    click.pause()
+    try:
+        imu.calibrate_gyroscope()
+        imu.calibrate_accelerometer()
+        if imu.magnetometer:
+            click.echo(
+                f'Slowly rotate Arnold through at least one full turn, tilting it a '
+                f'little as you go, for {duration} secs.'
+            )
+            click.pause()
+            imu.calibrate_magnetometer(duration=duration)
+    except ValueError as error:
+        raise click.ClickException(str(error))
+    finally:
+        imu.close()
+
+    click.echo('Save the following value to the ARNOLD_SENSOR_IMU_BIAS env var.')
+    click.echo(json.dumps(imu.get_bias()))
 
 
 # Motion tests
@@ -82,59 +100,46 @@ def speaker(phrase, rate, volume):
 # Sensor tests
 @test.command()
 @click.option(
-    '--address', '-a', default=config.SENSOR['imu']['address'], type=str,
-    help='I2C address of the device.'
+    '--bus', '-b', default=config.SENSOR['imu']['bus'], type=int,
+    help='I2C bus number of the device.'
 )
-@click.option('--count', '-c', default=5, help='Number of distance tests to perform.')
-def imu(address, count):  # noqa: F811
-    click.echo(f'Testing IMU at {address}')
-    imu = sensors.imu.IMU(address=address)
+@click.option('--count', '-c', default=20, help='Number of readings to output.')
+@click.option(
+    '--interval', '-i', default=0.5, type=float, help='Secs between readings.'
+)
+@click.option(
+    '--raw', is_flag=True,
+    help='Output the calibrated sensor data instead of the motion state.'
+)
+def imu(bus, count, interval, raw):  # noqa: F811
+    click.echo(f'Testing IMU on I2C bus {bus}')
+    imu = sensors.imu.IMU(bus=bus)
+    compass = imu.magnetometer.chip if imu.magnetometer else 'not found'
+    click.echo(f'Compass: {compass}')
 
-    imu_data = {'accelerometer': [], 'gyroscope': [], 'magnetometer': [], 'attitude': []}
-    for _ in range(count):
-        accelerometer_data = imu.get_accelerometer_data()
-        gyroscope_data = imu.get_gyroscope_data()
-        magnetometer_data = imu.get_magnetometer_data()
-        attitude_data = imu.get_attitude(
-            accelerometer_data=accelerometer_data,
-            magnetometer_data=magnetometer_data
+    def _format(data: Optional[dict]) -> str:
+        if data is None:
+            return '-'
+        return ', '.join(
+            f'{key}: {value:.2f}' if isinstance(value, float) else f'{key}: {value}'
+            for key, value in data.items()
         )
 
-        click.echo(f'Accelerometer: {accelerometer_data}')
-        click.echo(f'Gyroscope: {gyroscope_data}')
-        click.echo(f'Magnetometer: {magnetometer_data}')
-        click.echo(f'Attitude: {attitude_data}')
-        click.echo('-' * 80)
-
-        imu_data['accelerometer'].append(accelerometer_data)
-        imu_data['gyroscope'].append(gyroscope_data)
-        imu_data['magnetometer'].append(magnetometer_data)
-        imu_data['attitude'].append(attitude_data)
-
-        time.sleep(1)
-
-    # Collect and output the collected IMU data variances
-    def _get_variance(data: list, keys: Optional[list] = None) -> dict:
-        keys = keys or ['x', 'y', 'z']
-        variance = {}
-        for key in keys:
-            extract = list(map(lambda x: x[key], data))
-            variance[key] = max(extract) - min(extract)
-        return variance
-
-    accelerometer_variance = _get_variance(imu_data['accelerometer'])
-    gyroscope_variance = _get_variance(imu_data['gyroscope'])
-    magnetometer_variance = _get_variance(imu_data['magnetometer'])
-    attitude_variance = _get_variance(
-        imu_data['attitude'],
-        keys=['roll', 'pitch', 'yaw']
-    )
-
-    click.echo('-' * 80)
-    click.echo(f'Accelerometer variance: {accelerometer_variance}')
-    click.echo(f'Gyroscope variance: {gyroscope_variance}')
-    click.echo(f'Magnetometer variance: {magnetometer_variance}')
-    click.echo(f'Attitude variance: {attitude_variance}')
+    try:
+        if not raw:
+            imu.start()
+        for _ in range(count):
+            if raw:
+                click.echo(f'Accelerometer (g): {_format(imu.get_accelerometer_data())}')
+                click.echo(f'Gyroscope (deg/s): {_format(imu.get_gyroscope_data())}')
+                click.echo(f'Magnetometer: {_format(imu.get_magnetometer_data())}')
+                click.echo(f'Temperature: {imu.get_temperature():.1f}')
+                click.echo('-' * 80)
+            else:
+                click.echo(_format(imu.get_state()))
+            time.sleep(interval)
+    finally:
+        imu.close()
 
 
 @test.command()

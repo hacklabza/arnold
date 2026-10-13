@@ -23,7 +23,6 @@ pyttsx3 = "^2.91"
 smbus2 = "^0.4.3"
 SpeechRecognition = "^3.14.3"
 uvicorn = "^0.30.6"
-mpu9250-jmdev = "^1.0.12"
 openai = "^1.107.3"
 sounddevice = "^0.5.2"
 
