@@ -7,7 +7,7 @@ setup(
     name="arnold",
     description="RPi 4 Based Robotic Platform",
     long_description="".join([open(f, 'r').read() for f in description_files]),
-    version="0.0.1",
+    version="0.9.0",
     author='Hacklab',
     author_email="dev@hacklab.co.za",
     license="BSD",
@@ -17,9 +17,7 @@ setup(
     install_requires=list(open('requirements.txt', 'r').read().splitlines()),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent"
     ],
