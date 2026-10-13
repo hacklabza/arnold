@@ -20,7 +20,7 @@ pyserial = "^3.5"
 python-dotenv = "^1.1.0"
 pyttsx3 = "^2.93rc1"
 smbus2 = "^0.6.1"
-SpeechRecognition = {extras = ["whisper-local"], version = "^3.17.0"}
+SpeechRecognition = "^3.15.0"
 uvicorn = "^0.54.0"
 openai = "^1.79.0"
 sounddevice = "^0.5.3"
