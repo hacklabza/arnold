@@ -110,7 +110,8 @@ SENSOR = {
         'orientation': {
             'accelerometer': {'x': 'x', 'y': 'y', 'z': 'z'},
             'gyroscope': {'x': 'x', 'y': 'y', 'z': 'z'},
-            'magnetometer': {'x': 'x', 'y': 'y', 'z': 'z'}
+            # The SEN0140 V2 compass chip is rotated 90° to the accelerometer
+            'magnetometer': {'x': 'y', 'y': '-x', 'z': 'z'}
         },
         'filter': {
             'rate': 100,  # Hz
