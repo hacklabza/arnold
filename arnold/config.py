@@ -39,7 +39,7 @@ INTEGRATION = {
 # API config
 API = {
     'title': 'Arnold API',
-    'version': '0.1.0',
+    'version': '0..0',
     'host': '0.0.0.0',
     'port': 8000,
     'debug': os.environ.get('ARNOLD_API_DEBUG', 'True').lower() in ('true', '1'),
@@ -103,7 +103,7 @@ SENSOR = {
         'sample_size': 5,
         # Magnetic declination in degrees (east positive) to turn magnetic north
         # into true north. Look it up at https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml
-        'declination': float(os.environ.get('ARNOLD_SENSOR_IMU_DECLINATION', 0.0)),
+        'declination': float(os.environ.get('ARNOLD_SENSOR_IMU_DECLINATION', -20.88)),
         'calibrate_gyroscope_on_start': True,
         # Maps each sensor's axes onto Arnold's body: x forward, y left, z up.
         # Prefix with `-` to invert an axis, eg. {'x': '-y', 'y': 'x', 'z': 'z'}

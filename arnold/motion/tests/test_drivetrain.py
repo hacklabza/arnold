@@ -7,7 +7,7 @@ from arnold.motion import drivetrain
 logging.disable(logging.ERROR)
 
 
-class TestDrivetrain:
+class TestDriveTrain:
 
     def setup_method(self, method):
         self.drive = drivetrain.DriveTrain(enable_pwm=False)
@@ -26,9 +26,9 @@ class TestDrivetrain:
 
         # Ensure that the drive switches even when already performing an maneuver
         self.drive.forward(1)
-        time.sleep(0.2)
+        time.sleep(0.1)
         self.drive.back(1)
-        time.sleep(0.2)
+        time.sleep(0.1)
         assert self.drive.status['right']['direction'] == 'back'
         assert self.drive.delay.is_active()
         time.sleep(1)

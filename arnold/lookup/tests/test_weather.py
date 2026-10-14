@@ -1,134 +1,163 @@
 from datetime import datetime
 import logging
 
-from arnold.lookup import weather
+import pytest
+from arnold.lookup.weather import Location, Weather
 
 
 logging.disable(logging.ERROR)
 
 
-class TestDrivetrain:
+@pytest.fixture
+def mock_requests(mocker):
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = []
+    mock_response.status_code = 200
 
-    def setup_method(self, method):
-        self.location = weather.Location(latitude=-26.15, longitude=28.30)
-        self.weather = weather.Weather(location=self.location)
-        self.config = self.weather.config
-        self.api_response = {
-            'current': {
-                'dt': 1684929490,
-                'sunrise': 1684926645,
-                'sunset': 1684977332,
-                'temp': 292.55,
-                'feels_like': 292.87,
-                'pressure': 1014,
-                'humidity': 89,
-                'dew_point': 290.69,
-                'uvi': 0.16,
-                'clouds': 53,
-                'visibility': 10000,
-                'wind_speed': 3.13,
-                'wind_deg': 93,
-                'wind_gust': 6.71,
-                'weather': [
-                    {
-                        'id': 803,
-                        'main': 'Clouds',
-                        'description': 'broken clouds',
-                        'icon': '04d'
-                    }
-                ]
+    mock_requests_module = mocker.patch(
+        'arnold.lookup.weather.requests'
+    )
+    mock_requests_module.get.return_value = mock_response
+    mock_requests_module.response = mock_response
+
+    return mock_requests_module
+
+
+@pytest.fixture
+def location():
+    return Location(latitude=-26.12345, longitude=28.54321)
+
+
+@pytest.fixture
+def weather(location):
+    return Weather(location=location)
+
+
+@pytest.fixture
+def weather_data():
+    return {
+        'current': {
+            'humidity': 50,
+            'temp': 25.12,
+            'weather': [{'main': 'Cloud'}],
+        },
+        'daily': [
+            {
+                'dt': 1633392000,
+                'humidity': 60,
+                'rain': 0.3,
+                'temp': {'max': 18.51, 'min': 9.35},
             },
-            'daily': [
-                {
-                    'dt': 1684951200,
-                    'sunrise': 1684926645,
-                    'sunset': 1684977332,
-                    'moonrise': 1684941060,
-                    'moonset': 1684905480,
-                    'moon_phase': 0.16,
-                    'summary': 'Expect a day of partly cloudy with rain',
-                    'temp': {
-                        'day': 299.03,
-                        'min': 290.69,
-                        'max': 300.35,
-                        'night': 291.45,
-                        'eve': 297.51,
-                        'morn': 292.55
-                    },
-                    'feels_like': {
-                        'day': 299.21,
-                        'night': 291.37,
-                        'eve': 297.86,
-                        'morn': 292.87
-                    },
-                    'pressure': 1016,
-                    'humidity': 59,
-                    'dew_point': 290.48,
-                    'wind_speed': 3.98,
-                    'wind_deg': 76,
-                    'wind_gust': 8.92,
-                    'weather': [
-                        {
-                            'id': 500,
-                            'main': 'Rain',
-                            'description': 'light rain',
-                            'icon': '10d'
-                        }
-                    ],
-                    'clouds': 92,
-                    'pop': 0.47,
-                    'rain': 0.15,
-                    'uvi': 9.23
-                }
-            ]
-        }
-
-    def test_build_url(self):
-        url = self.weather._build_url()
-
-        # Ensure that the url is built correctly based on the config
-        assert self.config['url'] in url
-        assert f'?lat={self.location.latitude}&lon={self.location.longitude}' in url
-        assert self.config['api_key'] in url
-
-    def test_get_weather_data(self, requests_mock):
-        url = self.weather._build_url()
-        requests_mock.get(url, json=self.api_response)
-        weather_data = self.weather._get_weather_data()
-
-        # Ensure that a dict is returned with the correct top level keys
-        assert isinstance(weather_data, dict)
-        for forcast_type in ['current', 'daily']:
-            assert forcast_type in weather_data
-
-    def test_current(self, requests_mock):
-        url = self.weather._build_url()
-        requests_mock.get(url, json=self.api_response)
-        current_weather_data = self.weather.current
-
-        # Ensure that the current weather is returned correctly
-        assert current_weather_data == {
-            'humidity': self.api_response['current']['humidity'],
-            'rain': self.api_response['current']['weather'][0]['main'] == 'Rain',
-            'temperature': self.api_response['current']['temp'],
-        }
-
-    def test_forecast(self, requests_mock):
-        url = self.weather._build_url()
-        requests_mock.get(url, json=self.api_response)
-        forecast_weather_data = self.weather.forecast
-        forecast_response_data = self.api_response['daily'][0]
-
-        # Ensure that the current weather is returned correctly
-        assert forecast_weather_data[0] == {
-            'date': datetime.fromtimestamp(forecast_response_data['dt']).strftime(
-                '%Y-%m-%d'
-            ),
-            'humidity': forecast_response_data.get('humidity', None),
-            'rain': forecast_response_data['rain'] > 0.2,
-            'temperature': {
-                'maximum': forecast_response_data['temp']['max'],
-                'minimum': forecast_response_data['temp']['min'],
+            {
+                'dt': 1633478400,
+                'humidity': 70,
+                'rain': 0.15,
+                'temp': {'max': 23.19, 'min': 13.02},
             },
-            'summary': forecast_response_data['summary']
+        ],
+    }
+
+
+class TestWeather(object):
+    def test_build_url(self, weather):
+        url = weather._build_url()
+        assert (
+            'https://api.openweathermap.org/data/3.0/onecall?lat=-26.12345&lon=28.54321'
+            in url
+        )
+
+    def test_get_weather_data_from_api(self, weather, weather_data, mock_requests):
+        mock_requests.response.json.return_value = weather_data
+
+        assert weather._get_weather_data() == weather_data
+        mock_requests.get.assert_called_once_with(weather._build_url())
+        mock_requests.response.raise_for_status.assert_called_once_with()
+
+    def test_http_errors_are_propagated(self, weather, mock_requests):
+        mock_requests.response.raise_for_status.side_effect = RuntimeError(
+            'API failure'
+        )
+
+        with pytest.raises(RuntimeError, match='API failure'):
+            weather._get_weather_data()
+
+    def test_current_weather(self, weather, weather_data, mock_requests):
+        mock_requests.response.json.return_value = weather_data
+
+        data = weather.current
+
+        assert isinstance(data, dict)
+        for key in ['humidity', 'rain', 'temperature']:
+            assert key in data
+
+        assert not data['rain']
+        assert data['humidity'] == 50
+        assert data['temperature'] == round(25.12)
+
+    def test_current_weather_detects_rain(
+        self, weather, weather_data, mock_requests
+    ):
+        weather_data['current']['weather'][0]['main'] = 'Rain'
+        mock_requests.response.json.return_value = weather_data
+
+        assert weather.current['rain']
+
+    @pytest.mark.parametrize('current_data', [{}, {'weather': []}])
+    def test_malformed_current_weather_returns_none(
+        self, weather, weather_data, mock_requests, current_data
+    ):
+        weather_data['current'] = current_data
+        mock_requests.response.json.return_value = weather_data
+
+        assert weather.current is None
+
+    def test_current_weather_returns_none_for_empty_response(
+        self, weather, mock_requests
+    ):
+        assert weather.current is None
+
+    def test_forecast_weather(self, weather, weather_data, mock_requests):
+        mock_requests.response.json.return_value = weather_data
+
+        data = weather.forecast
+
+        assert isinstance(data, list)
+        assert len(data) == 2
+        for key in ['date', 'humidity', 'rain', 'temperature']:
+            for item in data:
+                assert key in item
+
+        assert data[0]['date'] == '2021-10-05'
+        assert data[0]['rain']
+        assert data[0]['humidity'] == 60
+        assert data[0]['temperature'] == {
+            'maximum': round(18.51),
+            'minimum': round(9.35)
         }
+
+        assert data[1]['date'] == '2021-10-06'
+        assert not data[1]['rain']
+
+    def test_forecast_uses_defaults_for_optional_fields(
+        self, weather, weather_data, mock_requests
+    ):
+        weather_data['daily'] = [
+            {'dt': 1633392000, 'temp': {'max': 18.51, 'min': 9.35}}
+        ]
+        mock_requests.response.json.return_value = weather_data
+
+        assert weather.forecast[0]['humidity'] is None
+        assert not weather.forecast[0]['rain']
+
+    def test_malformed_forecast_returns_none(
+        self, weather, weather_data, mock_requests
+    ):
+        weather_data['daily'][0]['temp'] = {}
+        mock_requests.response.json.return_value = weather_data
+
+        assert weather.forecast is None
+
+    def test_forecast_returns_none_for_empty_response(
+        self, weather, mock_requests
+    ):
+        assert weather.forecast is None

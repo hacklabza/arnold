@@ -60,9 +60,11 @@ class InterruptibleDelay(object):
 
     """
     def __init__(self, halt_callback: Optional[Callable] = None) -> None:
-        self.interrupt = False
+        self.interrupt = threading.Event()
         self.active = False
         self.halt_callback = halt_callback
+        self._thread: Optional[threading.Thread] = None
+        self._lock = threading.Lock()
 
     def delay(self, duration: int) -> None:
         """
@@ -72,16 +74,21 @@ class InterruptibleDelay(object):
         Args:
             duration (int): The duration to sleep for
         """
-        self.active = True
-        count = 0
-        while count < duration * 10:
-            if self.interrupt:
-                self.interrupt = False
-                break
-            time.sleep(0.1)
-            count += 1
-        self.halt_callback()
-        self.active = False
+        self.terminate()
+        with self._lock:
+            interrupt = threading.Event()
+            self.interrupt = interrupt
+            self.active = True
+        self._wait(duration, interrupt)
+
+    def _wait(self, duration: int, interrupt: threading.Event) -> None:
+        interrupt.wait(duration)
+        if self.halt_callback is not None:
+            self.halt_callback()
+        with self._lock:
+            if self.interrupt is interrupt:
+                self.active = False
+                self._thread = None
 
     def async_delay(self, duration: int) -> None:
         """
@@ -90,7 +97,16 @@ class InterruptibleDelay(object):
         Args:
             duration (int): The duration to sleep for
         """
-        thread = threading.Thread(target=self.delay, args=(duration, ))
+        self.terminate()
+        with self._lock:
+            interrupt = threading.Event()
+            self.interrupt = interrupt
+            self.active = True
+            thread = threading.Thread(
+                target=self._wait,
+                args=(duration, interrupt)
+            )
+            self._thread = thread
         thread.start()
 
     def is_active(self) -> bool:
@@ -106,7 +122,12 @@ class InterruptibleDelay(object):
         """
         Sets interrupt in order to terminate the delay.
         """
-        self.interrupt = True
+        with self._lock:
+            interrupt = self.interrupt
+            thread = self._thread
+            interrupt.set()
+        if thread is not None and thread is not threading.current_thread():
+            thread.join()
 
 
 class CommandParser(object):
